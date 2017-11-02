@@ -23,7 +23,7 @@ Class massivo extends Module
 	use installMaster;
 	public function __construct()
 	{
-		parent::__construct();
+		
 		$this->name = 'massivo';
 	    $this->tab = 'front_office_features';
         $this->version = '0.1';
@@ -32,7 +32,7 @@ Class massivo extends Module
         $this->ps_versions_compliancy = array('min' => '1.6.1', 'max' => '1.7'); 
         $this->bootstrap = true;
         $this->protocol = 'https://';
-        
+        parent::__construct();
         $this->displayName = $this->l('Massivo');
         $this->description = $this->l('Make your life easier with massive actions on your store');
         $this->confirmUninstall = $this->l('Do you really want to uninstall this module?');   
@@ -40,6 +40,26 @@ Class massivo extends Module
 	public function getContent()
 	{
 
+	}
+
+	public function hookDisplayAdminProductsExtra($params)
+	{
+	    if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+	    {
+
+	    }
+	}
+	public function getHookController($hook_name)
+	{
+		// Include the controller file
+		require_once(dirname(__FILE__).'/controllers/hook/'.
+		$hook_name.'.php');
+		// Build the controller name dynamically
+		$controller_name = $this->name.$hook_name.'Controller';
+		// Instantiate controller
+		$controller = new $controller_name();
+		// Return the controller
+		return $controller;
 	}
 }
 
