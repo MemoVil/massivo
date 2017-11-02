@@ -10,7 +10,8 @@ if (!defined('_PS_VERSION_'))
 
 // Adding explicit external files from include folder
 $includes = array(
-				__DIR__ . '/includes/install.php'
+				__DIR__ . '/includes/install.php',
+				__DIR__ . '/classes/ProductAttribute.php'
 			);
 foreach ($includes as $addsource)
 {

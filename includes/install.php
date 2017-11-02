@@ -36,7 +36,7 @@ trait installMaster {
 	public function setController()
 	{
 		if (
-			!$this->installTab('AdminCatalog', 'MassivoProductAttributes','Massivo')
+			!$this->installTab('AdminCatalog', 'AdminMassivo','Massivo')
 			)	
 			return false;
 		return true;
@@ -79,7 +79,7 @@ trait installMaster {
 	}
 	public function unsetController()
 	{
-		if (!$this->uninstallTab('MassivoProductAttributes'))
+		if (!$this->uninstallTab('MassivoProductAttributesController'))
 			return false;
 		return true;
 	}
