@@ -9,6 +9,7 @@
     		$this->className = 'ProductAttribute';
     		$this->page_header_toolbar_title = $this->l('Massivo');
     		$this->bootstrap = true;
+
     		$this->fields_list = array(    	
     			'id_product_attribute' => array(
     				'title' => $this->l('Combination'),
@@ -108,7 +109,7 @@
 	        $helper->sql = $this->_listsql;
 	        $list = $helper->generateList($this->_list, $this->fields_list);
 
-	        return $list;
+	        return $this->ajaxLoader() . $list;
 	    }
     	public function getIdRow()
 		{
@@ -118,6 +119,72 @@
 		{
 			$tpl = $this->context->smarty->createTemplate(_PS_MODULE_DIR_ . '/massivo/views/templates/admin/fastedit.tpl');
 			return $tpl->fetch();
+		}
+		private function ajaxLoader()
+		{
+			$html='<script type="text/javascript">
+			$(document).ready(function() {
+				$("input.reference:text").change(
+					function()
+					{
+						$comb = $(this).parent().parent().children(":first-child").html();
+						$val = $(this).val();
+						console.log($val);
+						if ($comb.length > 0 && $val.length > 0)
+						{
+					       $.ajax({
+				              url: "'._MODULE_DIR_.'massivo/classes/ajax/ajax-controller.php",
+				              method: "POST",
+				              data: { combination : $comb, val : $val, type :"reference"} ,
+				              dataType: "json",
+				              context: document.body,
+				              error: function(xhr,status,error) {               
+				              },
+				              success: function (response) {               
+				                var retorno = response;
+				                if ( retorno == 0 )
+				                {
+				                    
+				                }                
+				          
+				              }
+				            });
+						}
+					}
+				);
+					$("input.ean13:text").change(
+					function()
+					{
+						$comb = $(this).parent().parent().children(":first-child").html();
+						$val = $(this).val();
+						console.log($val);
+						$o = []
+						if ($comb.length > 0 && $val.length > 0)
+						{
+					       $.ajax({
+				              url: "'._MODULE_DIR_.'massivo/classes/ajax/ajax-controller.php",
+				              method: "POST",
+				              data: { combination : $comb.trim(), val : $val, type : "ean13"} ,
+				              dataType: "json",
+				              context: document.body,
+				              error: function(xhr,status,error) {               
+				              },
+				              success: function (response) {               
+				                var retorno = response;
+				                if ( retorno == 0 )
+				                {
+				                    
+				                }                
+				          
+				              }
+				            });
+						}
+					}
+				);
+			});
+	                         
+	        </script>';
+	        return $html;
 		}
 	}
 
