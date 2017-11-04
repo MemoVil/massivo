@@ -128,9 +128,9 @@
 				$("input.reference:text").change(
 					function()
 					{
-						$comb = $(this).parent().parent().children(":first-child").html();
+						$comb = $(this).parent().parent().children(":first-child").html().trim();
 						$val = $(this).val();
-						console.log($val);
+						/**console.log($comb); */
 						if ($comb.length > 0 && $val.length > 0)
 						{
 					       $.ajax({
@@ -156,10 +156,9 @@
 					$("input.ean13:text").change(
 					function()
 					{
-						$comb = $(this).parent().parent().children(":first-child").html();
+						$comb = $(this).parent().parent().children(":first-child").html().trim();
 						$val = $(this).val();
-						console.log($val);
-						$o = []
+						/**console.log($val);*/					
 						if ($comb.length > 0 && $val.length > 0)
 						{
 					       $.ajax({
