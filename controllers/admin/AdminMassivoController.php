@@ -122,6 +122,7 @@
 		}
 		private function ajaxLoader()
 		{
+			$massivoKey = Configuration::get('massivo_key');
 			$html='<script type="text/javascript">
 			$(document).ready(function() {
 				$("input.reference:text").change(
@@ -135,7 +136,7 @@
 					       $.ajax({
 				              url: "'._MODULE_DIR_.'massivo/classes/ajax/ajax-controller.php",
 				              method: "POST",
-				              data: { combination : $comb, val : $val, type :"reference"} ,
+				              data: { combination : $comb, val : $val, type :"reference", massivo_key : "' . $massivoKey . '"} ,
 				              dataType: "json",
 				              context: document.body,
 				              error: function(xhr,status,error) {               
@@ -164,7 +165,7 @@
 					       $.ajax({
 				              url: "'._MODULE_DIR_.'massivo/classes/ajax/ajax-controller.php",
 				              method: "POST",
-				              data: { combination : $comb.trim(), val : $val, type : "ean13"} ,
+				              data: { combination : $comb.trim(), val : $val, type : "ean13", massivo_key : "' . $massivoKey . '"} ,
 				              dataType: "json",
 				              context: document.body,
 				              error: function(xhr,status,error) {               

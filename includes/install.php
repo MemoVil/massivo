@@ -31,6 +31,8 @@ trait installMaster {
 	}
 	public function setVars()
 	{
+		if (!Configuration::updateValue('massivo_key',md5(microtime())) )
+			return false;
 		return true;
 	}
 	public function setController()
@@ -70,6 +72,8 @@ trait installMaster {
 	}
 	public function unsetVars()
 	{
+		if (!Configuration::deleteByName('massivo_key') )
+			return true;
 		return true;
 	}
 	public function unsetHooks()
@@ -79,7 +83,7 @@ trait installMaster {
 	}
 	public function unsetController()
 	{
-		if (!$this->uninstallTab('MassivoProductAttributesController'))
+		if (!$this->uninstallTab('AdminMassivo'))
 			return false;
 		return true;
 	}
@@ -89,6 +93,7 @@ trait installMaster {
 		$id_tab = (int)Tab::getIdFromClassName($class_name);
 		// Load tab
 		$tab = new Tab((int)$id_tab);
+		
 		// Delete it
 		return $tab->delete();
 	}
