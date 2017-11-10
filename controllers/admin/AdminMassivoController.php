@@ -16,10 +16,20 @@
     				'align' => 'center',
     				'remove_onclick' => true
     			),
+    			'image' => array(
+                    'title' => $this->l('Imagen'),
+                    'align' => 'center',              
+                    'width' => 50,
+                    'image' => 'p',  
+                    'image_id' => 'id_image',                               
+                    'filter' => 'false',                    
+                    'search' => 'false',      
+                    'remove_onclick' => true                 
+                ),
     			'id_product' => array(
     				'title' => $this->l('Product'),
     				'align' => 'center',
-    				'remove_onclick' => true    					
+    				'remove_onclick' => true,    					
     			),    			
     			'reference' => array(
     				'title' => $this->l('Reference'),
@@ -59,7 +69,7 @@
 	        	{
 	        		$this->_list[$i]['ean13'] = '';
 	        	}
-	
+				$this->_list[$i]['id_image'] = $this->getAttributeImage($this->_list[$i]['id_product_attribute'], $this->_list[$i]['id_product']);
 	        	$i++;
 	        }
 	        // If list has 'active' field, we automatically create bulk action
@@ -115,11 +125,43 @@
 		{
 			return '1';
 		}
+
+		/*
+		*	function getAttributeImage
+		*	Get associated image for an attribute combination, or returns image for main product if none found
+		*	param: id_product_attribute
+		*/
+		public function getAttributeImage($combination,$product)
+		{
+			//Get Product from combination			
+			$lang = $this->context->language->id;
+			$image = Product::getCombinationImageById($combination,$lang);
+
+			if ($image)
+				$val = $image;
+			else
+			{
+				$prod = new Product($product);
+				$image = $prod->getCover($product)['id_image'];
+				$val = $image;				
+			}
+			return $val;
+		}
+
+		/*
+		*	function renderView
+		*	Renders View Button on list
+		*/
 		public function renderView()
 		{
 			$tpl = $this->context->smarty->createTemplate(_PS_MODULE_DIR_ . '/massivo/views/templates/admin/fastedit.tpl');
 			return $tpl->fetch();
 		}
+		/*
+		 *	function ajaxLoader
+		 *	Adds Ajax script to rendered list
+		 *
+		 */
 		private function ajaxLoader()
 		{
 			$massivoKey = Configuration::get('massivo_key');
