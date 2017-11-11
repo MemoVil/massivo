@@ -16,6 +16,7 @@
     			'id_product_attribute' => array(
     				'title' => $this->l('Combination'),
     				'align' => 'center',
+    				'width' => 100,
     				'remove_onclick' => true
     			),
     			'variation' => array(
@@ -45,6 +46,7 @@
     				'title' => $this->l('Reference'),
     				'type' => 'editable',    				
     				'align' => 'center',
+    				'width' => 'auto',
     				'ajax' => true,
     				'remove_onclick' => true
     			),
@@ -129,7 +131,6 @@
 	        $helper->is_cms = $this->is_cms;
 	        $helper->sql = $this->_listsql;
 	        $list = $helper->generateList($this->_list, $this->fields_list);
-
 	        return $this->ajaxLoader() . $list;
 	    }
     	public function getIdRow()
@@ -190,68 +191,15 @@
 		private function ajaxLoader()
 		{
 			$massivoKey = Configuration::get('massivo_key');
-			$html='<script type="text/javascript">
-			$(document).ready(function() {
-				$("input.reference:text").change(
-					function()
-					{
-						$comb = $(this).parent().parent().children(":first-child").html().trim();
-						$val = $(this).val();
-						/**console.log($comb); */
-						if ($comb.length > 0 && $val.length > 0)
-						{
-					       $.ajax({
-				              url: "'._MODULE_DIR_.'massivo/classes/ajax/ajax-controller.php",
-				              method: "POST",
-				              data: { combination : $comb, val : $val, type :"reference", massivo_key : "' . $massivoKey . '"} ,
-				              dataType: "json",
-				              context: document.body,
-				              error: function(xhr,status,error) {               
-				              },
-				              success: function (response) {               
-				                var retorno = response;
-				                if ( retorno == 0 )
-				                {
-				                    
-				                }                
-				          
-				              }
-				            });
-						}
-					}
-				);
-					$("input.ean13:text").change(
-					function()
-					{
-						$comb = $(this).parent().parent().children(":first-child").html().trim();
-						$val = $(this).val();
-						/**console.log($val);*/					
-						if ($comb.length > 0 && $val.length > 0)
-						{
-					       $.ajax({
-				              url: "'._MODULE_DIR_.'massivo/classes/ajax/ajax-controller.php",
-				              method: "POST",
-				              data: { combination : $comb.trim(), val : $val, type : "ean13", massivo_key : "' . $massivoKey . '"} ,
-				              dataType: "json",
-				              context: document.body,
-				              error: function(xhr,status,error) {               
-				              },
-				              success: function (response) {               
-				                var retorno = response;
-				                if ( retorno == 0 )
-				                {
-				                    
-				                }                
-				          
-				              }
-				            });
-						}
-					}
-				);
-			});
-	                         
-	        </script>';
-	        return $html;
+			$js = _PS_MODULE_DIR_ . '/massivo/js/ajaxLoader.js';
+			$this->context->smarty->assign(
+				array(
+				'module_dir' => _MODULE_DIR_,
+				'massivo_key' => $massivoKey
+				)
+			);
+			$html = $this->context->smarty->fetch($js);
+			return $html;
 		}
 	}
 
