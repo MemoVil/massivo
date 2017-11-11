@@ -1,0 +1,16 @@
+span.group_massivo, span.name_massivo
+{
+	display:inline-block;	
+}
+span.group_massivo
+{
+	color:teal;
+}
+span.group_massivo:first-letter, span.name_massivo:first-letter
+{
+	text-transform: capitalize;
+}
+span.massivo_signal
+{
+	color:blue;
+}

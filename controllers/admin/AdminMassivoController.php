@@ -9,17 +9,26 @@
     		$this->className = 'ProductAttribute';
     		$this->page_header_toolbar_title = $this->l('Massivo');
     		$this->bootstrap = true;
-
+    		$this->colorOnBackground = true;
+    		$this->row_hover = true;
+    		$this->addCSS(_PS_MODULE_DIR_ .'/massivo/css/AdminMassivoController.css');
     		$this->fields_list = array(    	
     			'id_product_attribute' => array(
     				'title' => $this->l('Combination'),
     				'align' => 'center',
     				'remove_onclick' => true
     			),
+    			'variation' => array(
+    				'title' => $this->l('Variación'),
+    				'align' => 'center',
+    				'class' => 'massivo_variation',
+    				'callback' => 'getAttributeResume',    	   				
+    				'remove_onclick' => true
+    			),
     			'image' => array(
                     'title' => $this->l('Imagen'),
                     'align' => 'center',              
-                    'width' => 50,
+                    'width' => 70,
                     'image' => 'p',  
                     'image_id' => 'id_image',                               
                     'filter' => 'false',                    
@@ -29,6 +38,7 @@
     			'id_product' => array(
     				'title' => $this->l('Product'),
     				'align' => 'center',
+    				'width' => 50,
     				'remove_onclick' => true,    					
     			),    			
     			'reference' => array(
@@ -68,10 +78,11 @@
 	        	if ($this->_list[$i]['ean13'] == NULL )
 	        	{
 	        		$this->_list[$i]['ean13'] = '';
-	        	}
-				$this->_list[$i]['id_image'] = $this->getAttributeImage($this->_list[$i]['id_product_attribute'], $this->_list[$i]['id_product']);
+	        	}	        	
+				$this->_list[$i]['id_image'] = $this->getAttributeImage($this->_list[$i]['id_product_attribute'], $this->_list[$i]['id_product']);	        	
+				$this->_list[$i]['variation'] = $this->_list[$i]['id_product_attribute'];			
 	        	$i++;
-	        }
+	        }	 	             
 	        // If list has 'active' field, we automatically create bulk action
 	        if (isset($this->fields_list) && is_array($this->fields_list) && array_key_exists('active', $this->fields_list)
 	            && !empty($this->fields_list['active'])) {
@@ -147,6 +158,20 @@
 			}
 			return $val;
 		}
+		/**
+		 * @param  $combination : Combination id
+		 * @param  $product : Product combination, including all vars
+		 * @return String
+		 */
+		public function getAttributeResume($combination,$product)
+		{			
+			$prod = new Product($product);			
+			$r = $prod->getAttributesParams($product['id_product'],$combination);			
+			$this->context->smarty->assign('rows',$r);
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . '/massivo/views/templates/admin/getAttributeResume.tpl');
+			return $tpl;			
+		}
+
 
 		/*
 		*	function renderView
@@ -154,7 +179,7 @@
 		*/
 		public function renderView()
 		{
-			$tpl = $this->context->smarty->createTemplate(_PS_MODULE_DIR_ . '/massivo/views/templates/admin/fastedit.tpl');
+			$tpl = $this->context->smarty->createTemplate(_PS_MODULE_DIR_ . '/massivo/views/templates/admin/renderView.tpl');
 			return $tpl->fetch();
 		}
 		/*
