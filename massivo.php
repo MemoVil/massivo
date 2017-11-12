@@ -27,7 +27,7 @@ Class massivo extends Module
 		
 		$this->name = 'massivo';
 	    $this->tab = 'front_office_features';
-        $this->version = '0.1';
+        $this->version = '0.3';
         $this->author = 'Juan Parente';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.6.1', 'max' => '1.7'); 
@@ -35,21 +35,28 @@ Class massivo extends Module
         $this->protocol = 'https://';
         parent::__construct();
         $this->displayName = $this->l('Massivo');
-        $this->description = $this->l('Make your life easier with massive actions on your store');
+        $this->description = $this->l('Canonic linking of your products, allowing you at the same time to make referencing them faster and easier');
         $this->confirmUninstall = $this->l('Do you really want to uninstall this module?');   
 	}
 	public function getContent()
 	{
 
 	}
-
+	
 	public function hookDisplayAdminProductsExtra($params)
 	{
 	    if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 	    {
-
+	    	$controller = $this->getHookControlleR('displayAdminProductsExtra');
+	    	return $controller->run();
 	    }
-	}
+	}		
+	
+	/**
+	 * [getHookController description]
+	 * @param  [String] $hook_name [Name of the hook without Controller tag]
+	 * @return [Object]            [Instanced Controller]
+	 */
 	public function getHookController($hook_name)
 	{
 		// Include the controller file

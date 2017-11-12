@@ -12,18 +12,21 @@
     		$this->colorOnBackground = true;
     		$this->row_hover = true;
     		$this->addCSS(_PS_MODULE_DIR_ .'/massivo/css/AdminMassivoController.css');
+    		$this->_select = "m.`canonic_product` as canonic_product";
+    		$this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'massivo` m ON (m.`id_product` = a.`id_product`)';
+
     		$this->fields_list = array(    	
     			'id_product_attribute' => array(
-    				'title' => $this->l('Combination'),
+    				'title' => $this->l('Set'),
     				'align' => 'center',
-    				'width' => 100,
+    				'width' => 60,
     				'remove_onclick' => true
     			),
     			'variation' => array(
     				'title' => $this->l('Variación'),
     				'align' => 'center',
     				'class' => 'massivo_variation',
-    				'callback' => 'getAttributeResume',    	   				
+    				'callback' => 'displayAttributeResume',    	   				
     				'remove_onclick' => true
     			),
     			'image' => array(
@@ -32,14 +35,19 @@
                     'width' => 70,
                     'image' => 'p',  
                     'image_id' => 'id_image',                               
-                    'filter' => 'false',                    
-                    'search' => 'false',      
+                    'filter' => false,                           
+                    'search' => false,      
                     'remove_onclick' => true                 
                 ),
     			'id_product' => array(
     				'title' => $this->l('Product'),
     				'align' => 'center',
-    				'width' => 50,
+    				'width' => 'auto',
+    				'filter_type' => 'int',
+    				'filter_key' => 'a!id_product',
+    				'search' => true,
+    				'filter' => true,
+    				'callback' => 'displayProductLink',
     				'remove_onclick' => true,    					
     			),    			
     			'reference' => array(
@@ -58,7 +66,7 @@
     			),
     			'canonic_product' => array(
     				'title' => $this->l('Canonic'),
-    				'type' => 'editable',
+    				'type' => 'text',
     				'align' => 'center',
     				'remove_onclick' => true
     			)    
@@ -81,8 +89,9 @@
 	        	{
 	        		$this->_list[$i]['ean13'] = '';
 	        	}	        	
-				$this->_list[$i]['id_image'] = $this->getAttributeImage($this->_list[$i]['id_product_attribute'], $this->_list[$i]['id_product']);	        	
-				$this->_list[$i]['variation'] = $this->_list[$i]['id_product_attribute'];			
+				$this->_list[$i]['id_image'] = $this->displayAttributeImage($this->_list[$i]['id_product_attribute'], $this->_list[$i]['id_product']);	        	
+				$this->_list[$i]['variation'] = $this->_list[$i]['id_product_attribute'];		        	
+	        	if (!is_int((int)$this->_list[$i]['canonic_product'])) $this->_list[$i]['canonic_product'] = $this->l('Not set');
 	        	$i++;
 	        }	 	             
 	        // If list has 'active' field, we automatically create bulk action
@@ -143,7 +152,7 @@
 		*	Get associated image for an attribute combination, or returns image for main product if none found
 		*	param: id_product_attribute
 		*/
-		public function getAttributeImage($combination,$product)
+		public function displayAttributeImage($combination,$product)
 		{
 			//Get Product from combination			
 			$lang = $this->context->language->id;
@@ -164,15 +173,36 @@
 		 * @param  $product : Product combination, including all vars
 		 * @return String
 		 */
-		public function getAttributeResume($combination,$product)
+		public function displayAttributeResume($combination,$product)
 		{			
 			$prod = new Product($product);			
 			$r = $prod->getAttributesParams($product['id_product'],$combination);			
 			$this->context->smarty->assign('rows',$r);
-			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . '/massivo/views/templates/admin/getAttributeResume.tpl');
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/displayAttributeResume.tpl');
 			return $tpl;			
 		}
 
+		/**
+		 * [displayProductLink Link ]
+		 * @param  [type] $combination [description]
+		 * @param  [type] $product     [description]
+		 * @return [type]              [description]
+		 */
+		public function displayProductLink($combination,$product)
+		{
+			$prod = new Product($product['id_product']);			
+			$r = $this->context->link->getAdminLink('AdminProducts');					
+			$this->context->smarty->assign(
+				array(
+					'productControllerLink' => $r,
+					'productId' => $prod->id,
+					'productName' => $prod->name[$this->context->language->id]
+				)
+			);			
+
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/displayProductControllerLink.tpl');
+			return $tpl;
+		}
 
 		/*
 		*	function renderView

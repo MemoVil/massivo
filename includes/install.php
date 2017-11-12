@@ -21,7 +21,7 @@ trait installMaster {
 	public function setHooks()
 	{
 		if (
-		 	!$this->alterTable('add') OR        
+		 	!$this->createTable() OR        
 			!$this->registerHook('displayAdminProductsExtra') OR
 			!$this->registerHook('actionAdminControllerSetMedia') OR
         	!$this->registerHook('actionProductUpdate') 
@@ -35,6 +35,9 @@ trait installMaster {
 			return false;
 		return true;
 	}
+	/**
+	 * [setController hooks controller on catalog tab]
+	 */
 	public function setController()
 	{
 		if (
@@ -63,7 +66,7 @@ trait installMaster {
 	public function uninstall()
 	{
 		if (!parent::uninstall()			
-			|| !$this->alterTable('remove')  
+			|| !$this->removeTable()  
 			|| !$this->unsetHooks()
 			|| !$this->unsetController()
 			|| !$this->unsetVars())			
@@ -87,6 +90,11 @@ trait installMaster {
 			return false;
 		return true;
 	}
+	/**
+	 * [uninstallTab Removes controller main tab on Catalog]
+	 * @param  [String] $class_name [Controller class name]
+	 * @return [boolean]             [fail state]
+	 */
 	public function uninstallTab($class_name)
 	{
 		// Retrieve Tab ID
@@ -99,22 +107,31 @@ trait installMaster {
 	}
 
 	//3 Other Metods
-	public function alterTable($method)
-	{
-	    switch ($method) {
-	        case 'add':
-	            $sql = 'ALTER TABLE ' . _DB_PREFIX_ . 'product_attribute ADD `canonic_product` INT(8) ';
-	            break;
-	         
-	        case 'remove':
-	            $sql = 'ALTER TABLE ' . _DB_PREFIX_ . 'product_attribute DROP COLUMN `canonic_product`';
-	            break;
-	    }
-	     
-	    if(!Db::getInstance()->Execute($sql))
-	        return false;
-	    return true;
-	}
+	/**
+	 * [createTable Creates massivo table]
+	 * @return [boolean] [fail state]
+	 */
+	public function createTable()
+    {
+        $return = true;
+        $return &= Db::getInstance()->execute('
+            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'massivo` (
+                `id_product` INT UNSIGNED NOT NULL AUTO_INCREMENT,                               
+                `canonic_product` INT,
+                `active` INT,
+                PRIMARY KEY (id_product)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
+        return $return;
+    }
+    /**
+     * [removeTable Removes massivo table]
+     * @return [boolean] [fail state]
+     */
+    public function removeTable()
+    {        
+        return Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'massivo`');
+    }
+   
 
 }
 ?>
