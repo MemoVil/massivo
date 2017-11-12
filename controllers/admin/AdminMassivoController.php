@@ -68,6 +68,7 @@
     				'title' => $this->l('Canonic'),
     				'type' => 'text',
     				'align' => 'center',
+    				'callback' => 'displayCanonicProductLink',
     				'remove_onclick' => true
     			)    
     		);
@@ -190,7 +191,29 @@
 		 */
 		public function displayProductLink($combination,$product)
 		{
-			$prod = new Product($product['id_product']);			
+			$prod = new Product($product['id_product']);						
+			$r = $this->context->link->getAdminLink('AdminProducts');					
+			$this->context->smarty->assign(
+				array(
+					'productControllerLink' => $r,
+					'productId' => $prod->id,
+					'productName' => $prod->name[$this->context->language->id]
+				)
+			);			
+
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/displayProductControllerLink.tpl');
+			return $tpl;
+		}
+
+		/**
+		 * [displayCanonicProductLink description]
+		 * @param  [type] $combination [description]
+		 * @param  [type] $product     [description]
+		 * @return [type]              [description]
+		 */
+		public function displayCanonicProductLink($combination,$product)
+		{
+			$prod = new Product($product['canonic_product']);						
 			$r = $this->context->link->getAdminLink('AdminProducts');					
 			$this->context->smarty->assign(
 				array(
