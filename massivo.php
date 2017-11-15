@@ -48,7 +48,7 @@ Class massivo extends Module
 	    if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 	    {
 	    	$controller = $this->getHookControlleR('displayAdminProductsExtra');
-	    	return $controller->run();
+	    	return $controller->run($product,$params);
 	    }
 	}		
 	

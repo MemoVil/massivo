@@ -8,9 +8,9 @@
 			$this->context = Context::getContext();
 			$this->_path = $path;
 		}
-		public function run()
+		public function run($product,$params)
 		{
-			return 'test';
+			ddd($product);
 		}
 	}
 ?>

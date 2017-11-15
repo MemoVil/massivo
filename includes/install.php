@@ -121,6 +121,14 @@ trait installMaster {
                 `active` INT,
                 PRIMARY KEY (id_product)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
+        $return &= Db::getInstance()->execute('
+            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'massivo_script` (
+                `id_script` INT UNSIGNED NOT NULL AUTO_INCREMENT,                
+                `script` BLOB ,
+                `exclude_categories` VARCHAR(65535),
+                `exclude_products` VARCHAR(65535),
+                PRIMARY KEY (id_script)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
         return $return;
     }
     /**
@@ -129,7 +137,9 @@ trait installMaster {
      */
     public function removeTable()
     {        
-        return Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'massivo`');
+        return ( Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'massivo`;') &&
+        		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'massivo_script`;')
+    	);
     }
    
 
