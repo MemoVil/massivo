@@ -137,24 +137,45 @@ class AjaxWorker {
 	public function run($debug)
 	{
 		$post = $this->post;
-		foreach ($this->keys as $key)
-		{			
-			if (in_array($key,$post))
-			{					
-				$reference = array (
-								'param' => $post['val'],
-								'type' => $key
-							);
-				if ($this->setAttribute($post['combination'],$reference,$debug))
-				{
-					//Si la combinacion se ha fijado correctamente devolvemos un OK
-					header($this->header);
-					echo 'OK';
-				}	
-				else $this->debug();
-				return;
-			}
+		switch ($this->post['operation'])
+		{
+			case "update":		
+				foreach ($this->keys as $key)
+				{			
+					if (in_array($key,$post))
+					{					
+						$reference = array (
+										'param' => $post['val'],
+										'type' => $key
+									);
+						if ($this->setAttribute($post['combination'],$reference,$debug))
+						{
+							//Si la combinacion se ha fijado correctamente devolvemos un OK
+							header($this->header);
+							echo 'OK';
+						}	
+						else $this->debug();
+						return;
+					}
+				}
+			break;
+			case "tab":
+				return $this->runTab($this->post['tab']);
+			break;
 		}
+	}
+	/**
+	 * [runTab Generates bootstrap forms and refills them on tab click]
+	 * @param  String $tab [description]
+	 * @return [type]       [description]
+	 */
+	public function runTab($tab = 'editTab')
+	{
+		switch ($tab)
+		{
+			case 'editTab': 
+		}
+		return;		
 	}
 	/**
 	 * Display error message. Halt.
@@ -183,7 +204,6 @@ $ajax = new AjaxWorker();
 
 if ( !$ajax->validatePost($_POST) ) 
 {
-
 	$ajax->displayError();	
 }
 else {

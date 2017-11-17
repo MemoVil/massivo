@@ -1,6 +1,6 @@
 <?php  
-	
-
+	if (!defined('_PS_VERSION_'))
+  		exit;
 	class AdminMassivoController extends ModuleAdminController
 	{
 		public function __construct()
@@ -23,14 +23,14 @@
     				'remove_onclick' => true
     			),
     			'variation' => array(
-    				'title' => $this->l('Variación'),
+    				'title' => $this->l('Variation'),
     				'align' => 'center',
     				'class' => 'massivo_variation',
     				'callback' => 'displayAttributeResume',    	   				
     				'remove_onclick' => true
     			),
     			'image' => array(
-                    'title' => $this->l('Imagen'),
+                    'title' => $this->l('Image'),
                     'align' => 'center',              
                     'width' => 70,
                     'image' => 'p',  
@@ -141,7 +141,7 @@
 	        $helper->is_cms = $this->is_cms;
 	        $helper->sql = $this->_listsql;
 	        $list = $helper->generateList($this->_list, $this->fields_list);
-	        return $this->ajaxLoader() . $list;
+	        return $this->ajaxLoader() . $this->displayTabsHeader() . $this->renderEditTab($list) .  $this->renderApplyTab() . $this->renderCreateTab() . '</div>';
 	    }
     	public function getIdRow()
 		{
@@ -253,6 +253,47 @@
 			);
 			$html = $this->context->smarty->fetch($js);
 			return $html;
+		}
+		/**
+		 * [displayTabs Display Tabs on top of admincontroller]
+		 * @return [type] [description]
+		 */
+		private function displayTabsHeader($tab = 3)
+		{
+			$this->context->smarty->assign(
+				array(
+					"massivo_key" => Configuration::get('massivo_key'),
+					"product" => $this->product,
+					"tab" => $tab					
+				)
+			);
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/tabs/massivoTabsHeader.tpl');			
+			return $tpl;
+		}
+		/**
+		 * [renderEditTab description]
+		 * @return [type] [description]
+		 */
+		private function renderEditTab($list)
+		{
+			$this->context->smarty->assign('editlist',$list);
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/tabs/renderEditTab.tpl');
+			return $tpl;
+		}
+		/** [renderApplyTab renders hidden Apply Tab] */
+		private function renderApplyTab()
+		{
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/tabs/renderApplyTab.tpl');
+			return $tpl;
+		}
+		/**
+		 * [renderCreateTab renders hidden Create Tab]
+		 * @return [type] [description]
+		 */
+		private function renderCreateTab()
+		{
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/tabs/renderCreateTab.tpl');
+			return $tpl;
 		}
 	}
 
