@@ -123,10 +123,9 @@ trait installMaster {
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
         $return &= Db::getInstance()->execute('
             CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'massivo_script` (
-                `id_script` INT UNSIGNED NOT NULL AUTO_INCREMENT,                
-                `script` BLOB ,
-                `exclude_categories` VARCHAR(65535),
-                `exclude_products` VARCHAR(65535),
+                `id_script` INT UNSIGNED NOT NULL AUTO_INCREMENT,   
+                `name` VARCHAR(1000) NOT NULL,             
+                `script` BLOB  
                 PRIMARY KEY (id_script)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
         return $return;

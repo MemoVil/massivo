@@ -262,8 +262,7 @@
 		{
 			$this->context->smarty->assign(
 				array(
-					"massivo_key" => Configuration::get('massivo_key'),
-					"product" => $this->product,
+					"massivo_key" => Configuration::get('massivo_key'),				
 					"tab" => $tab					
 				)
 			);
@@ -292,8 +291,35 @@
 		 */
 		private function renderCreateTab()
 		{
+			$scriptsTable = $this->renderExistingScriptsTable();
 			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/tabs/renderCreateTab.tpl');
 			return $tpl;
+		}
+		private function renderExistingScriptsTable()
+		{
+			$scripts = $this->getScripts();
+
+			$fields = array(
+				'id_script' => array(
+				)
+
+			);
+			
+			//createSkeletonHelperTable
+			//Add functions to buttons
+		}
+
+		/**
+		 * [getScripts return Scripts list on massivo_script table]
+		 * @return [array] [list of arrays with each row]
+		 */
+		private function getScripts()
+		{
+			$sql = new DBQuery();
+			$sql->select('*');
+			$sql->from('massivo_script');
+			$scripts = Db::getInstance()->executeS($sql);
+			return $scripts;
 		}
 	}
 

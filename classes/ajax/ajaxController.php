@@ -1,6 +1,7 @@
 <?php 
 include_once('../../../../config/config.inc.php');
 include_once('../../../../init.php');
+include_once(_PS_MODULE_DIR_.'massivo/includes/scription.php');
 $debug = true;
 
 class DATA {
@@ -19,7 +20,9 @@ class DATA {
 	const	ATTRIBUTELANG = _DB_PREFIX_ . 'attribute_lang';
 	const	ATTRIBUTEGROUPLANG = _DB_PREFIX_ . 'attribute_group_lang';
 }
-class AjaxWorker {	
+class AjaxWorker {
+	/** Trait to gain Script Manager Habilities */
+	use scription;
 	/**
 	 * @var $safe, public. State true if $post has been validated
 	 */
