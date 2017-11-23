@@ -3,11 +3,7 @@
 	{
 		public $modulename = 'massivo';
 		public $moduleDb = 'massivo_script';
-		const ERROR_NAME_TOO_SHORT = 1;
-		const ERROR_NAME_ALREADY_EXIST_OR_MISSING_DB = 2;
-		const BLANK_SCRIPT_CREATED = 3;
-		const ERROR_ON_UPDATE_VARS = 4;
-		const TABLE_MASSIVO_UPDATED = 5;
+
 		/**
 		 * [createScript Creates a script skeleton]
 		 * @param  [String] $name [name of script]
@@ -16,12 +12,12 @@
 		public function createScript($name)
 		{
 			if ( strlen($name) < 1)
-				return ERROR_NAME_TOO_SHORT;
+				return $this;
 			$sql = new DBQuery();
 			$sql->select('name')->from($moduleDb)->where('name =' . $name);
 			$r = Db::getInstance()->executeS($sql);
 			if (count($r) > 0)
-				return ERROR_NAME_ALREADY_EXIST_OR_MISSING_DB;
+				return $this;
 			
 			Db::getInstance()->insert($moduleDb, array(
 				'name' => pSQL($name)
@@ -93,6 +89,15 @@
 		{
 			$script = $this->getScript((int)$id_script);
 			$script[(int)$id_trigger] = $trigger_params;
+			return $this;
+		}
+
+		/**
+		 * 	Changes position of id_trigger to position
+		 */
+		public function setTriggerPosition($id_script,$position)
+		{
+			
 			return $this;
 		}
 	}

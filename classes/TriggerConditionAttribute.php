@@ -19,7 +19,7 @@
 			$sql = new DBQuery();
 			$sql->select('*')
 				->from('product_attribute_combinations','pac')
-				->where('id_product_attribute =' . $combination . 'AND id_attribute=' (int)$this->param);
+				->where('id_product_attribute =' . $combination . 'AND id_attribute=' . (int)$this->param);
 			$r = Db::getInstance()->executeS($sql);
 			if (count($r) > 0)
 				return true;

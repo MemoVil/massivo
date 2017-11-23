@@ -1,3 +1,25 @@
+.adminmassivo .col-xs-12
+{
+	width:100%;
+}
+#createTab .bootstrap .col-xs-8
+{
+	width:66.66667%;
+}
+#createTab .bootstrap .col-xs-4
+{
+	width: 33.3333%;	
+}
+
+div#createTab .col-xs-8
+{
+  	width: 66.66667%;
+}
+div#createTab .col-xs-4
+{
+  	width: 33.3%;
+}
+
 span.group_massivo, span.name_massivo
 {
 	display:inline-block;	
@@ -14,3 +36,4 @@ span.massivo_signal
 {
 	color:blue;
 }
+

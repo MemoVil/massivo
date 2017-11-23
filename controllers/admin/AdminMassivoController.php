@@ -1,8 +1,11 @@
 <?php  
 	if (!defined('_PS_VERSION_'))
   		exit;
+  	$include = _PS_MODULE_DIR_ . '/massivo/includes/scription.php';
+  	include_once($include);
 	class AdminMassivoController extends ModuleAdminController
 	{
+		use scription;
 		public function __construct()
 		{
 			$this->table = 'product_attribute';
@@ -26,7 +29,8 @@
     				'title' => $this->l('Variation'),
     				'align' => 'center',
     				'class' => 'massivo_variation',
-    				'callback' => 'displayAttributeResume',    	   				
+    				'callback' => 'displayAttributeResume', 
+    				'width' => 'auto',   	   				
     				'remove_onclick' => true
     			),
     			'image' => array(
@@ -63,14 +67,14 @@
     				'type' => 'editable',    				
     				'align' => 'center',
     				'remove_onclick' => true
-    			),
+    			)/*,
     			'canonic_product' => array(
     				'title' => $this->l('Canonic'),
     				'type' => 'text',
     				'align' => 'center',
     				'callback' => 'displayCanonicProductLink',
-    				'remove_onclick' => true
-    			)    
+    				'remove_onclick' => true    				
+    			)  */  
     		);
     		$this->context = Context::getContext();
     		$this->addRowAction('view');    
@@ -310,7 +314,7 @@
 		}
 
 		/**
-		 * [getScripts return Scripts list on massivo_script table]
+		 * [getScripts return Scripts list on massivo_script table. A Script can have N triggers]
 		 * @return [array] [list of arrays with each row]
 		 */
 		private function getScripts()
