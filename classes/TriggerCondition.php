@@ -13,6 +13,7 @@
 		/** @var [condition] [] */
 		private $condition;
 		private $param;
+		private $lang;
 
 		public function __construct($init)
 		{
@@ -23,6 +24,7 @@
 			$this->type = $init['type'];
 			$this->condition = $init['condition'];
 			$this->param = $init['param'];
+			$this->lang = $init['lang'] ? $init['lang'] : Context::getContext()->language->id;
 		}
 		/**
 		 * [check main method, used to return true or false on heirs of this class, must be overriden]
