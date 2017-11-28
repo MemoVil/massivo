@@ -2,15 +2,15 @@
 <div class="panel">
 	<div>
 		<ul class="nav nav-tabs massivo_header">			
-			<li  class="createTab">				
+			<li  class="{if $tab == 1}active {/if}createTab">				
 				<a>					
 					{l s="Create a recipe" mod="massivo"}
 				</a>
 			</li>
-			<li  class="applyTab">				
+			<li  class="{if $tab == 2}active {/if}applyTab">				
 				<a>{l s="Apply a recipe" mod="massivo"}</a>
 			</li>
-			<li  class="{if $tab=3}active {/if}editTab">				
+			<li  class="{if $tab == 3}active {/if}editTab">				
 				<a>{l s="Edit combinations" mod="massivo"}</a>
 			</li>
 		</ul>

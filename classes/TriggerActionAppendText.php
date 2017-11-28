@@ -10,7 +10,7 @@
 	{
 		public function run($reference)
 		{
-				return $reference . $this->param;
+				$this->trigger->reference = $this->trigger->reference . $this->param;
 		}
 	}
 ?>

@@ -122,8 +122,8 @@ trait installMaster {
                 PRIMARY KEY (id_product)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
         $return &= Db::getInstance()->execute('
-            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'massivo_script` (
-                `id_script` INT UNSIGNED NOT NULL AUTO_INCREMENT,   
+            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'massivo_recipes` (
+                `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,   
                 `name` VARCHAR(1000) NOT NULL,             
                 `script` BLOB  
                 PRIMARY KEY (id_script)
@@ -137,7 +137,7 @@ trait installMaster {
     public function removeTable()
     {        
         return ( Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'massivo`;') &&
-        		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'massivo_script`;')
+        		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'massivo_recipes`;')
     	);
     }
    

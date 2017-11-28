@@ -1,8 +1,14 @@
 <?php  
 	if (!defined('_PS_VERSION_'))
   		exit;
-  	$include = _PS_MODULE_DIR_ . '/massivo/includes/scription.php';
-  	include_once($include);
+  	$include = array(
+  	    _PS_MODULE_DIR_ . 'massivo/includes/scription.php',
+  	    _PS_MODULE_DIR_ . 'massivo/classes/HelperMassivo.php'
+  	 );
+  	foreach ($include as $inc)
+  	{
+  		include_once($inc);
+  	}
 	class AdminMassivoController extends ModuleAdminController
 	{
 		use scription;
@@ -262,7 +268,7 @@
 		 * [displayTabs Display Tabs on top of admincontroller]
 		 * @return [type] [description]
 		 */
-		private function displayTabsHeader($tab = 3)
+		private function displayTabsHeader($tab = 1)
 		{
 			$this->context->smarty->assign(
 				array(
@@ -295,10 +301,13 @@
 		 */
 		private function renderCreateTab()
 		{
-			$scriptsTable = $this->renderExistingScriptsTable();
+			$helper = new HelperMassivo();
+			$scripts = $this->getScripts();	
+			$scriptsTable = $helper->renderExistingScriptsTable($scripts);
 			$this->context->smarty->assign(
 				array(
-					'scriptsTable' => $scriptsTable
+					'scriptsTable' => $scriptsTable,
+					'scripts' => $scripts
 				)
 			);			
 			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/tabs/renderCreateTab.tpl');
@@ -306,52 +315,14 @@
 		}
 		private function renderExistingScriptsTable()
 		{
-			$scripts = $this->getScripts();		
+				
 			$scripts = array(
 				array(
 					'id_script' => 0,
 					'name' => 'test'
 				)
 			);	
-       		$fields_form[0]['form'] = array(
-       			'input' => array(
-					array(
-					  'type' => 'select',                              
-					  'label' => $this->l('Select or create a new recipe:'),         					  
-					  'name' => 'select_recipe',                     
-					  'required' => true,                              
-					  'options' => array(
-					    'query' => $scripts,                           
-					    'id' => 'id_script',                           
-					    'name' => 'name'                               
-					  )
-					)       	
-				)		 
-       		);
-			$helper = new HelperForm();
-             // Module, token and currentIndex
-            $helper->module = $this;
-            $helper->name_controller = $this->name;
-            $helper->token = Tools::getAdminTokenLite('AdminModules');
-            $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;  
-            // Language
-            $helper->default_form_language = $lang;
-            $helper->allow_employee_form_lang = $lang;
-             
-            // Title and toolbar
-            $helper->title = $this->displayName;
-            $helper->show_toolbar = true;        // false -> remove toolbar
-            $helper->toolbar_scroll = true;      // yes - > Toolbar is always visible on the top of the screen.
-            $helper->submit_action = 'arbol'.$this->name;
-  
-            $helper->tpl_vars = array(
-                //'fields_value' => $scripts,
-                'languages' => $this->context->controller->getLanguages(),
-                'id_language' => $this->context->language->id
-            );
-    
-            return $helper->generateForm($fields_form);
-			
+  			
 			//createSkeletonHelperTable
 			//Add functions to buttons
 		}

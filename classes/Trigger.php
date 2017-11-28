@@ -3,24 +3,123 @@
   		exit;
   	/* Conditions for Triggers, see TriggerCondition for base class */
 	include_once(__DIR__ .'/TriggerCondition.php');
-	include_once(__DIR__ .'/TriggerConditionAttributeGroup.php');
-	include_once(__DIR__ .'/TriggerConditionAttribute.php');
-	include_once(__DIR__ .'/TriggerConditionCategory.php');
-	include_once(__DIR__ .'/TriggerConditionTag.php');
-	include_once(__DIR__ .'/TriggerConditionName.php');
+	include_once(__DIR__ .'/TriggerConditionProductAttributeGroup.php');
+	include_once(__DIR__ .'/TriggerConditionProductAttribute.php');
+	include_once(__DIR__ .'/TriggerConditionProductCategory.php');
+	include_once(__DIR__ .'/TriggerConditionProductTag.php');
+	include_once(__DIR__ .'/TriggerConditionProductName.php');
 	include_once(__DIR__ .'/TriggerAction.php');
 	include_once(__DIR__ .'/TriggerActionAppendText.php');
 
+	/**
+	 *  Structure of a Trigger:
+	 *  unserialize(trigger):
+	 *  	id:
+	 *  	position:
+	 *  	conditions:
+	 *  		unserialize(conditions)
+	 *  	actions:
+	 *  		unserialize(actions)
+	 */
 	class Trigger
 	{
 		/** @var INT id_script, INT name_script, INT order position, (Container of this trigger) */
-		public $id_script; 
-		public $name_script; 
+		public $recipe;	
+		/** @var Starting by 0 */
 		public $position;	
 		public $id; /** One id, multiple positions */
+		public $name;
+		private $save;
+		/* Array of heir objects */
 		public $conditions = array();
 		public $actions = array();
-		public $product;
+		/* Objects to be operated from Conditions, depending on context * Future work */
+		public $product;		
+		public $reference;
+		public $ean13;
+		public $cart;
+		public $category;
+		public $tag;
+		public $client;
+
+		public function __construct()
+		{
+			$this->id = microtime(true);
+		}
+		/**
+		 * [addCondition adds a Condition to this trigger]
+		 * @param [type] $type      [TriggerConditionAttribute ....]
+		 * @param [type] $condition [has,hasNot,match,left,right,left3,right3,...]
+		 * @param [type] $param     [text param to match with condition]
+		 * @param [type] $lang      [language id]
+		 */
+		public function addCondition($type,$condition,$param,$lang = null)
+		{
+			$init = array(
+				'id' => microtime(true),
+				'type' => $type,
+				'condition' => $condition,
+				'param' => $param,
+				'lang' => $lang
+			);
+			$condition = new $type($init,$this);
+			$this->conditions[] = $condition;
+			if ($save) $this->recipe->save();
+		}
+		
+		/**
+		 * [removeCondition Removes a condition from this trigger bassed on its microtime]
+		 * @param  [type] $microtime [description]
+		 * @return [type]            [description]
+		 */
+		public function removeCondition($microtime)
+		{
+			foreach ($this->conditions as $key => $condition)	
+			{
+				if ($condition->getId() == $microtime)
+				{
+					unset($this->conditions[$key]);
+					if ($save) $this->recipe->save();
+				}
+			}
+		}
+		/**
+		 * [addAction adds an action to this trigger]
+		 * @param [type] $type      [TriggerActionAppendText ....]
+		 * @param [type] $action    [reference,price,ean13....]
+		 * @param [type] $param     [text param to match with condition]
+		 * @param [type] $lang      [language id]
+		 */
+		public function addAction($type,$action,$param,$lang = null)
+		{
+			$init = array(
+				'id' => microtime(true),
+				'type' => $type,
+				'action' => $action,
+				'param' => $param,
+				'lang' => $lang
+			);
+			$action = new $type($init,$this);
+			$this->actions[] = $action;
+			if ($save) $this->recipe->save();
+		}
+		
+		/**
+		 * [removeAction Removes an action from this trigger bassed on its microtime]
+		 * @param  [type] $microtime [description]
+		 * @return [type]            [description]
+		 */
+		public function removeAction($microtime)
+		{
+			foreach ($this->actions as $key => $actions)	
+			{
+				if ($action->getId() == $microtime)
+				{
+					unset($this->actions[$key]);
+					if ($save) $this->recipe->save();
+				}
+			}
+		}
 
 		/** [load Instead of a constructor, this helper class loads from an array its values] */
 		public function load($t)
@@ -30,37 +129,8 @@
 			{
 				$this->id = (int)$t['id'];
 				$this->position = (int)$t['position'];				
-				$p = unserialize($t['conditions']);
-				// We run through the array...
-				foreach ($p as $i => $v)
-				{
-					//Each condition must have three basic fields:
-					//
-					//	1. Type (To select processing class)
-					//	2. Condition itself (Equal, Not Equal, In, Not In)
-					//	3. Param from user
-					//	
-					//	Conditions MUST return a boolean value
-					//						
-					$conditionType = TriggerCondition::getType($v);
-					$condition = new $conditionType($v);
-					$this->conditions[] = $condition;
-				}
-				$p = unserialize($t['actions']);
-				foreach ($p as $i => $v)
-				{
-					//Each condition must have three basic fields:
-					//
-					//	1. Type (To select processing class)
-					//	2. Condition itself (Equal, Not Equal, In, Not In)
-					//	3. Param from user
-					//	
-					//	Conditions MUST return a boolean value
-					//						
-					$actionType = TriggerAction::getType($v);
-					$action = new $actionType($v);
-					$this->actions[] = $condition;
-				}
+				$this->conditions = $t['conditions'];
+				$this->actions = $t['actions'];
 			}
 		}
 		/**
@@ -72,12 +142,19 @@
 			$this->product = (int)$product;
 			return $this;
 		}
-
+		/**
+		 * [setSave AutoSave on edition]
+		 * @param [type] $save [description]
+		 */
+		public function setSave($save)
+		{
+			$this->save = $save;
+		}
 		/**
 		 * [runTrigger Runs trigger over selected product and provided string Reference]
 		 * @param  [type] $reference [String we are creating]
 		 */
-		public function runTrigger($reference)
+		public function runTrigger()
 		{
 			$sql = new DBQuery();
 			$sql->select('*');
@@ -89,7 +166,7 @@
 			foreach ($r as $row)
 			{
 				foreach ($this->conditions as $i => $condition)
-				{
+				{					
 					/** One of the conditions fail */
 					if ( !$condition->run($row['id_product_attribute'])) 
 						return $this;
@@ -97,7 +174,7 @@
 				foreach ($this->actions as $i => $action)
 				{
 					/** We perform changes one by one */
-					$reference = $action->run($reference);
+					$action->run(Product);
 				}
 			}
 		}

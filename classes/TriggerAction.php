@@ -14,8 +14,10 @@
 		 */
 		private $position;
 		private $param;
+		public $trigger;
+		public $worksOn;
 
-		public function __construct($init)
+		public function __construct($init,$trigger)
 		{
 			if (count($init) < 3)
 				return false;
@@ -24,6 +26,7 @@
 			$this->type = $init['type'];
 			$this->action = $init['action'];
 			$this->param = $init['param'];
+			$this->trigger = $trigger;
 		}
 		/**
 		 * [run runs action and return new reference, to be overloaded]

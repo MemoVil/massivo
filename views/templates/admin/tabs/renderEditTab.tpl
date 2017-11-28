@@ -1,3 +1,3 @@
-<div id="editTab">
+<div id="editTab" class="hidden">
 	{$editlist}
 </div>

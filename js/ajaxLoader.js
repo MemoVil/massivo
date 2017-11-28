@@ -2,10 +2,27 @@
 <script type="text/javascript">
 $(document).ready(function() {
 		/** Header tabs */
+		$("li[class$='Tab'] ").each(
+			function(i,val) {
+				$class = $(this).attr('class').replace('hidden','').replace('active ',''); 					
+				if ( !$(this).hasClass('active') )
+				{					
+					$temp_class = $(this).attr('class'); 					
+					$('#' + $temp_class).addClass('hidden');
+				}
+				else
+				{
+					console.log($class);
+					$('#' + $class).removeClass('hidden');
+				}
+			}
+		);
 		$("li[class$='Tab']").click(			
 			function()
 			{ 
-				$class = $(this).attr('class');
+				$class = $(this).attr('class');				
+				if ( $(this).hasClass('active'))
+				 	return true;																		
 				$("ul.massivo_header > li").each(
 					function(i,val) {							
 						$(this).removeClass('active');
@@ -40,6 +57,27 @@ $(document).ready(function() {
 		);
 		/** Apply formula */
 		/** Create formula */
+		$(".linav").click(
+				function(){
+					$class = $(this).attr('class').replace('active','').replace('linav','').trim();
+					console.log($class);
+					switch ($class)
+					{
+						case 'l1':
+							$(".l2").removeClass('active');
+							$(".l1").addClass('active');
+							$(".unav2").addClass('hidden');
+							$(".unav1").removeClass('hidden');
+							break;
+						case 'l2':
+							$(".l1").removeClass('active');
+							$(".l2").addClass('active');
+							$(".unav1").addClass('hidden');
+							$(".unav2").removeClass('hidden');
+							break;
+					}
+				}
+		);
 		/** Edit tab inputs*/ 
 		$("input.reference:text").change(
 			function()
