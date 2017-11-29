@@ -28,11 +28,15 @@
 			$this->param = $init['param'];
 			$this->trigger = $trigger;
 		}
+		public function checkDependencies()
+		{
+			return false;
+		}
 		/**
 		 * [run runs action and return new reference, to be overloaded]
 		 * @param  [String] $reference [new string we are creating]		 
 		 */
-		public function run($reference)
+		public function run()
 		{
 			return $this;
 		}
@@ -42,8 +46,7 @@
 		 * @return [type]       [description]
 		 */
 		public function update($init)
-		{
-			$this->type = $init['type'];
+		{			
 			$this->action = $init['action'];
 			$this->param = $init['param'];
 		}

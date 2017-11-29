@@ -1,14 +1,9 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-	class TriggerConditionProductAttributeGroup extends TriggerCondition
+	class TriggerConditionProductAttributeGroup extends TriggerConditionProductAttribute
 	{
-		public $combination;
-		public function __construct($init,$trigger)
-		{
-			parent::_construct($init,$trigger);
-			$this->workOn = 'ProductCombination';
-		}
+	
 		/**
 		 * [run Override]
 		 * 

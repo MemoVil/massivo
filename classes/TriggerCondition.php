@@ -33,6 +33,20 @@
 			$this->lang = $init['lang'] ? $init['lang'] : Context::getContext()->language->id;
 			$this->trigger = $trigger;
 		}
+		public function setParam($param)
+		{
+			$this->param = $param;
+			return $this;
+		}
+		public function setCondition($conditionDetail)
+		{
+			$this->condition = $conditionDetail;
+			return $this;
+		}
+		public function setLang($lang)
+		{
+			$this->lang = $lang;
+		}
 		/**
 		 * [check main method, used to return true or false on heirs of this class, must be overriden]
 		 * @return [type] [description]
@@ -48,6 +62,24 @@
 		public function getId()
 		{
 			return $this->id;
+		}
+		
+		/* Saving using Trigger save method */
+		public function save()
+		{
+			$this->trigger->save();
+			return $this;
+		}
+		/**
+		 * Allow us to iterate based on TriggerCondition specific needs
+		 */
+		public static function iterator($trigger,$condition)
+		{
+			return false;
+		}
+		public function checkDependencies()
+		{
+			return false;
 		}
 	}
 ?>

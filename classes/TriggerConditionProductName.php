@@ -1,14 +1,9 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-	class TriggerConditionProductName extends TriggerCondition
+	class TriggerConditionProductName extends TriggerConditionProductAttribute
 	{
-		public $combination;
-		public function __construct($init,$trigger)
-		{
-			parent::_construct($init,$trigger);
-			$this->workOn = 'ProductCombination';
-		}
+	
 		/**
 		 * [$width Passed as $this->condition, user can select length of match on left of right compares]
 		 * @var integer

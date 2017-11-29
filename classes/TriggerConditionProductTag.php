@@ -1,7 +1,7 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-	class TriggerConditionProductTag extends TriggerCondition
+	class TriggerConditionProductTag extends TriggerConditionProduct
 	{
 		public function __construct($init,$trigger)
 		{
@@ -13,13 +13,13 @@
 		 * 
 		 * @return [boolean] [true or false]
 		 */
-		public function run($combination,$product)
+		public function run()
 		{
-			if ( strcmp($this->condition,'has') == 0 ) return $this->has($combination,$product);
-				else return $this->hasNot($combination,$product);
+			if ( strcmp($this->condition,'has') == 0 ) return $this->has($this->trigger->product);
+				else return $this->hasNot($this->trigger->product);
 		}
-		/** True if this combination has this attribute */
-		private function has($combination,$product)
+		/** True if this product has this attribute */
+		private function has($product)
 		{
 			$tags = Tag::getProductTags($product);
 			$sucess = false;
@@ -32,9 +32,9 @@
 			}
 			return $success;			
 		}
-		private function hasNot($combination,$product)
+		private function hasNot($product)
 		{
-			return !$this->has($combination,$product);
+			return !$this->has($product);
 		}
 	}
 ?>

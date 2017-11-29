@@ -1,13 +1,8 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-	class TriggerConditionProductCategory extends TriggerCondition
-	{
-		public function __construct($init,$trigger)
-		{
-			parent::_construct($init,$trigger);
-			$this->workOn = 'Product';
-		}
+	class TriggerConditionProductCategory extends TriggerConditionProduct
+	{	
 		/**
 		 * [run Override]
 		 * 

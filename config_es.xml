@@ -2,8 +2,8 @@
 <module>
 	<name>massivo</name>
 	<displayName><![CDATA[Massivo]]></displayName>
-	<version><![CDATA[0.1]]></version>
-	<description><![CDATA[Make your life easier with massive actions on your store]]></description>
+	<version><![CDATA[0.3]]></version>
+	<description><![CDATA[Canonic linking of your products, allowing you at the same time to make referencing them faster and easier]]></description>
 	<author><![CDATA[Juan Parente]]></author>
 	<tab><![CDATA[front_office_features]]></tab>
 	<confirmUninstall><![CDATA[¿Realmente quieres desinstalar este módulo?]]></confirmUninstall>

@@ -3,11 +3,12 @@
   		exit;
   	/* Conditions for Triggers, see TriggerCondition for base class */
 	include_once(__DIR__ .'/TriggerCondition.php');
-	include_once(__DIR__ .'/TriggerConditionProductAttributeGroup.php');
+	include_once(__DIR__ .'/TriggerConditionProduct.php');
 	include_once(__DIR__ .'/TriggerConditionProductAttribute.php');
+	include_once(__DIR__ .'/TriggerConditionProductAttributeGroup.php');	
 	include_once(__DIR__ .'/TriggerConditionProductCategory.php');
-	include_once(__DIR__ .'/TriggerConditionProductTag.php');
 	include_once(__DIR__ .'/TriggerConditionProductName.php');
+	include_once(__DIR__ .'/TriggerConditionProductTag.php');	
 	include_once(__DIR__ .'/TriggerAction.php');
 	include_once(__DIR__ .'/TriggerActionAppendText.php');
 
@@ -34,13 +35,24 @@
 		public $conditions = array();
 		public $actions = array();
 		/* Objects to be operated from Conditions, depending on context * Future work */
-		public $product;		
+		public $product; /* Working int for Conditions and Actions */
+		public $products; /* Array of input of $product to iterate*/
+		public $product_combinations;		
 		public $reference;
+		public $references;
 		public $ean13;
+		public $ean13s;
 		public $cart;
+		public $carts;
 		public $category;
+		public $categories;
 		public $tag;
+		public $tags;
 		public $client;
+		public $clients;
+
+		/* Bulk var to output result for actions */
+		public $output;
 
 		public function __construct()
 		{
@@ -137,9 +149,29 @@
 		 * [setProductToTrigger sets target of Trigger to one product id, useful for iterations]
 		 * @param [type] $product [description]
 		 */
-		public function setProduct($product)
+		public function setProducts($products)
 		{
-			$this->product = (int)$product;
+			$this->products = (int)$products;
+			return $this;
+		}
+
+		/**
+		 * [setProductCombinations Load product combinations for selected products]
+		 * @param [array] $products [array of product ids (int), to be condensed on where clause]
+		 */
+		public function setProductCombinations($products)
+		{
+			$sql = new DBQuery();
+			$sql->select('*');
+			$sql->from('product_attribute','p');
+			foreach ($products as $product)
+			{
+				$sql->where('id_product =' . $product);	
+			}
+			$sql->innerJoin('product_attribute_combination','pac','p.id_product_attribute = pa.id_product_attribute');	
+			$r = Db::getInstance()->executeS($sql);
+			if (count($r) > 0)
+				$this->product_combinations = $r;
 			return $this;
 		}
 		/**
@@ -149,6 +181,7 @@
 		public function setSave($save)
 		{
 			$this->save = $save;
+			return $this;
 		}
 		/**
 		 * [runTrigger Runs trigger over selected product and provided string Reference]
@@ -156,27 +189,50 @@
 		 */
 		public function runTrigger()
 		{
-			$sql = new DBQuery();
-			$sql->select('*');
-			$sql->from('product_attribute','p');
-			$sql->where('id_product =' . $this->product);	
-			$sql->innerJoin('product_attribute_combination','pac','p.id_product_attribute = pa.id_product_attribute');	
-			$r = Db::getInstance()->executeS($sql);
-			//We want to perform changes for each combination of each product
-			foreach ($r as $row)
-			{
-				foreach ($this->conditions as $i => $condition)
-				{					
-					/** One of the conditions fail */
-					if ( !$condition->run($row['id_product_attribute'])) 
-						return $this;
-				}
-				foreach ($this->actions as $i => $action)
+			/** We check if condition dependencies are right (product loaded, category, and so on) */
+			foreach ($this->conditions as $i => $condition)
+			{			
+				if (!$condition->checkDependencies())
 				{
-					/** We perform changes one by one */
-					$action->run(Product);
-				}
+					return false;
+				}				
 			}
+			/* Dependencies ok, we run over conditions */
+			foreach ($this->conditions as $i => $condition)
+			{	
+				$className = get_class($condition);
+				if ( !call_user_func(array($className, 'iterator'), $trigger, $condition) )
+						return false;
+				/*
+				switch ($condition->worksOn)
+				{
+					case 'ProductCombination':
+						foreach($this->product_combinations as $combination)
+						{
+							$condition->combination = $combination;
+							if (!$condition->run())
+								return false;
+						}
+						break;
+					case 'Product':
+						foreach($this->products as $product)
+						{
+							$this->product = $product;
+							if (!$condition->run())
+								return false;
+						}
+						break;
+				}		*/			
+			}
+			/* No false, so conditions are met, we try with Actions now */
+			foreach ($this->actions as $i => $action)
+			{			
+				if (!$action->checkDependencies())
+				{
+					return false;
+				}				
+			}
+	
 		}
 
 	}
