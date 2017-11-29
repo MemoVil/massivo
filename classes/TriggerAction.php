@@ -36,7 +36,17 @@
 		{
 			return $this;
 		}
-
+		/**
+		 * [update Updates params on action, even type]
+		 * @param  [type] $init [description]
+		 * @return [type]       [description]
+		 */
+		public function update($init)
+		{
+			$this->type = $init['type'];
+			$this->action = $init['action'];
+			$this->param = $init['param'];
+		}
 		/**
 		 * [getType returns class name for run operation]
 		 * @param  [type] $blob [description]

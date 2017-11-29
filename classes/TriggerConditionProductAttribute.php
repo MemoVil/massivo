@@ -3,23 +3,24 @@
   		exit;
 	class TriggerConditionProductAttribute extends TriggerCondition
 	{
+		public $combination;
 		public function __construct($init,$trigger)
 		{
 			parent::_construct($init,$trigger);
-			$this->workOn = 'Product';
+			$this->workOn = 'ProductCombination';
 		}
 		/**
 		 * [run Override]
 		 * 
 		 * @return [boolean] [true or false]
 		 */
-		public function run($combination,$product)
+		public function run()		
 		{
-			if ( strcmp($this->condition,'has') == 0 ) return $this->has($combination,$product);
-				else return $this->hasNot($combination,$product);
+			if ( strcmp($this->condition,'has') == 0 ) return $this->has($this->combination);
+				else return $this->hasNot($this->combination);
 		}
 		/** True if this combination has this attribute */
-		private function has($combination,$product)
+		private function has($combination)
 		{
 			$sql = new DBQuery();
 			$sql->select('*')
@@ -30,9 +31,9 @@
 				return true;
 			else return false;
 		}
-		private function hasNot($combination,$product)
+		private function hasNot($combination)
 		{
-			return !$this->has($combination,$product);
+			return !$this->has($combination);
 		}
 	}
 ?>

@@ -36,4 +36,8 @@ span.massivo_signal
 {
 	color:blue;
 }
+.createTab, .applyTab, .editTab  {
+	cursor:pointer;
+	cursor:hand;
+}
 

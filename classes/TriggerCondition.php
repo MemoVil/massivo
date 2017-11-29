@@ -37,7 +37,7 @@
 		 * [check main method, used to return true or false on heirs of this class, must be overriden]
 		 * @return [type] [description]
 		 */
-		public function run($combination,$product)
+		public function run()
 		{
 			return $this;
 		}

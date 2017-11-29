@@ -3,10 +3,11 @@
   		exit;
 	class TriggerConditionProductName extends TriggerCondition
 	{
+		public $combination;
 		public function __construct($init,$trigger)
 		{
 			parent::_construct($init,$trigger);
-			$this->workOn = 'Product';
+			$this->workOn = 'ProductCombination';
 		}
 		/**
 		 * [$width Passed as $this->condition, user can select length of match on left of right compares]
@@ -19,33 +20,33 @@
 		 * @return [boolean] [true or false]
 		 */
 		
-		public function run($combination,$product)
+		public function run()
 		{
+			$product = $this->trigger->product;
 			switch ($this->condition)
 			{
 				case 'match':
-					return $this->match((int)$combination,(int)$product);
+					return $this->match($this->combination,$this->trigger->product);
 				case 'notmatch':
-					return !$this->match((int)$combination,(int)$product);
+					return !$this->match($this->combination,$this->trigger->product);
 				//If condition is left1,left4,left5...
 				case 1 == preg_match('/left\d+/',$this->condition):
 					$this->width = (int)str_replace('left','',$this->condition);
-					return $this->left((int)$combination,(int)$product);
+					return $this->left($this->combination,$this->trigger->product);
 				//Or is "Not left1,left2..left3..."					
 				case 1 == preg_match('/notleft\d+/',$this->condition):
 					$this->width = (int)str_replace('left','',$this->condition);
-					return !$this->left((int)$combination,(int)$product);
+					return !$this->left($this->combination,$this->trigger->product);
 				//If condition is right1,right2,right3...(Or Not)
 				case 1 == preg_match('/right\d+/',$this->condition):
 					$this->width = (int)str_replace('right','',$this->condition);
-					return $this->right((int)$combination,(int)$product);	
+					return $this->right($this->combination,$this->trigger->product);	
 				case 1 == preg_match('/notright\d+/',$this->condition):
 					$this->width = (int)str_replace('right','',$this->condition);
-					return !$this->right((int)$combination,(int)$product);	
+					return !$this->right($this->combination,$this->trigger->product);	
 				case 'wildcard':
-					return $this->wildcard((int)$combination,(int)$product);
+					return $this->wildcard($this->combination,$this->trigger->product);
 			}
-			
 		}
 		/** True if this combination has this attribute */
 		private function match($combination,$product)
