@@ -1,23 +1,22 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-  	class TriggerAction
+  	class StepAction
   	{
   		private $id;
-		/** @var [type] [TriggerActionType.php] */
+		/** @var [type] [StepActionType.php] */
 		private $type;
 		/** @var [action] [] */
 		private $action;
 		/**
-		 * [$position Actions MUST have a precedence order, just in case]
+		 * [$position Actions MUST have a precedence order, just in case, in parent step]
 		 * @var [type]
-		 */
-		private $position;
+		 */		
 		private $param;
-		public $trigger;
+		public $step;
 		public $worksOn;
 
-		public function __construct($init,$trigger)
+		public function __construct($init,$step)
 		{
 			if (count($init) < 3)
 				return false;
@@ -25,8 +24,8 @@
 			$this->id = $init['id'];
 			$this->type = $init['type'];
 			$this->action = $init['action'];
-			$this->param = $init['param'];
-			$this->trigger = $trigger;
+			$this->param = $init['param'];			
+			$this->step = $step;
 		}
 		public function checkDependencies()
 		{
@@ -64,6 +63,10 @@
 		public function getId()
 		{
 			return $this->id;
+		}
+		public static function iterator($step,$action)
+		{
+			return;
 		}
   	}
  ?>

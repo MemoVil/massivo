@@ -1,17 +1,17 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-	class TriggerConditionProductAttribute extends TriggerCondition
+	class StepConditionProductAttribute extends StepCondition
 	{
 		public $combination;
-		public function __construct($init,$trigger)
+		public function __construct($init,$step)
 		{
-			parent::_construct($init,$trigger);
+			parent::_construct($init,$step);
 			$this->workOn = 'ProductCombination';
 		}
 		public function checkDependencies()
 		{
-			if (count($this->trigger->product_combinations) > 0)
+			if (count($this->step->product_combinations) > 0)
 				return true;
 			return false;
 		}
@@ -20,8 +20,9 @@
 		 * 
 		 * @return [boolean] [true or false]
 		 */
-		public function run()		
+		public function run()				
 		{
+			parent::run();
 			if ( strcmp($this->condition,'has') == 0 ) return $this->has($this->combination);
 				else return $this->hasNot($this->combination);
 		}
@@ -42,9 +43,9 @@
 			return !$this->has($combination);
 		}
 		/* Iterator for combinations, we need to use both product and combination values */
-		public static function iterator($trigger,$condition)
+		public static function iterator($step,$condition)
 		{
-			foreach($trigger->product_combinations as $combination)
+			foreach($step->product_combinations as $combination)
 			{
 				$condition->combination = $combination;
 				if (!$condition->run())

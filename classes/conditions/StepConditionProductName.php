@@ -1,7 +1,7 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-	class TriggerConditionProductName extends TriggerConditionProductAttribute
+	class StepConditionProductName extends StepConditionProductAttribute
 	{
 	
 		/**
@@ -17,30 +17,31 @@
 		
 		public function run()
 		{
-			$product = $this->trigger->product;
+			parent::run();
+			$product = $this->step->product;
 			switch ($this->condition)
 			{
 				case 'match':
-					return $this->match($this->combination,$this->trigger->product);
+					return $this->match($this->combination,$this->step->product);
 				case 'notmatch':
-					return !$this->match($this->combination,$this->trigger->product);
+					return !$this->match($this->combination,$this->step->product);
 				//If condition is left1,left4,left5...
 				case 1 == preg_match('/left\d+/',$this->condition):
 					$this->width = (int)str_replace('left','',$this->condition);
-					return $this->left($this->combination,$this->trigger->product);
+					return $this->left($this->combination,$this->step->product);
 				//Or is "Not left1,left2..left3..."					
 				case 1 == preg_match('/notleft\d+/',$this->condition):
 					$this->width = (int)str_replace('left','',$this->condition);
-					return !$this->left($this->combination,$this->trigger->product);
+					return !$this->left($this->combination,$this->step->product);
 				//If condition is right1,right2,right3...(Or Not)
 				case 1 == preg_match('/right\d+/',$this->condition):
 					$this->width = (int)str_replace('right','',$this->condition);
-					return $this->right($this->combination,$this->trigger->product);	
+					return $this->right($this->combination,$this->step->product);	
 				case 1 == preg_match('/notright\d+/',$this->condition):
 					$this->width = (int)str_replace('right','',$this->condition);
-					return !$this->right($this->combination,$this->trigger->product);	
+					return !$this->right($this->combination,$this->step->product);	
 				case 'wildcard':
-					return $this->wildcard($this->combination,$this->trigger->product);
+					return $this->wildcard($this->combination,$this->step->product);
 			}
 		}
 		/** True if this combination has this attribute */

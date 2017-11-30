@@ -1,11 +1,11 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-	class TriggerConditionProductTag extends TriggerConditionProduct
+	class StepConditionProductTag extends StepConditionProduct
 	{
-		public function __construct($init,$trigger)
+		public function __construct($init,$step)
 		{
-			parent::_construct($init,$trigger);
+			parent::_construct($init,$step);
 			$this->workOn = 'Product';
 		}
 		/**
@@ -15,8 +15,9 @@
 		 */
 		public function run()
 		{
-			if ( strcmp($this->condition,'has') == 0 ) return $this->has($this->trigger->product);
-				else return $this->hasNot($this->trigger->product);
+			parent::run();
+			if ( strcmp($this->condition,'has') == 0 ) return $this->has($this->step->product);
+				else return $this->hasNot($this->step->product);
 		}
 		/** True if this product has this attribute */
 		private function has($product)

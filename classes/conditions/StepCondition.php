@@ -4,25 +4,25 @@
 	/**
 	 * Skeleton for nested Condition types
 	 */
-	class TriggerCondition
+	class StepCondition
 	{
 		/** @var [id] [Unique id of this condition] */
 		private $id;
-		/** @var [type] [TriggerConditionType.php] */
+		/** @var [type] [StepConditionType.php] */
 		private $type;
 		/** @var [condition] [] */
 		private $condition;
 		private $param;
 		private $lang;
-		public $trigger;
-		/* Restriction::Info that Trigger should apport to TriggerCondition 
+		public $step;
+		/* Restriction::Info that Step should apport to StepCondition 
 			IE: product,cart,reference,ean13,category,client. 
 
 			Determined by each ConditionType.
 		*/
 		public $worksOn;
 
-		public function __construct($init,$trigger)
+		public function __construct($init,$step)
 		{
 			if (count($init) < 3)
 				return false;			
@@ -31,8 +31,9 @@
 			$this->condition = $init['condition'];
 			$this->param = $init['param'];
 			$this->lang = $init['lang'] ? $init['lang'] : Context::getContext()->language->id;
-			$this->trigger = $trigger;
+			$this->step = $step;
 		}
+
 		public function setParam($param)
 		{
 			$this->param = $param;
@@ -64,16 +65,16 @@
 			return $this->id;
 		}
 		
-		/* Saving using Trigger save method */
+		/* Saving using Step save method */
 		public function save()
 		{
-			$this->trigger->save();
+			$this->step->save();
 			return $this;
 		}
 		/**
-		 * Allow us to iterate based on TriggerCondition specific needs
+		 * Allow us to iterate based on StepCondition specific needs
 		 */
-		public static function iterator($trigger,$condition)
+		public static function iterator($step,$condition)
 		{
 			return false;
 		}

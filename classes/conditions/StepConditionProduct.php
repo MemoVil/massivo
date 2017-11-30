@@ -4,20 +4,24 @@
 	/**
 	 * Skeleton for nested Condition types
 	 */
-	class TriggerConditionProduct extends TriggerCondition
+	class StepConditionProduct extends StepCondition
 	{
+		public function run()
+		{
+			parent::run();
+		}
 		public function checkDependencies()
 		{
-			if (isset($this->trigger->products) )
+			if (isset($this->step->products) )
 				return true;
 			return false;
 		}
 		//Override
-		public static function iterator($trigger,$condition)
+		public static function iterator($step,$condition)
 		{
-			foreach($trigger->products as $product)
+			foreach($step->products as $product)
 			{
-				$trigger->product = $product;
+				$step->product = $product;
 				if (!$condition->run())
 					return false;
 			}

@@ -1,7 +1,7 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-	class TriggerConditionProductAttributeGroup extends TriggerConditionProductAttribute
+	class StepConditionProductAttributeGroup extends StepConditionProductAttribute
 	{
 	
 		/**
@@ -11,6 +11,7 @@
 		 */
 		public function run()
 		{	
+			parent::run();
 			if ( strcmp($this->condition,'has') == 0 ) return $this->has($this->combination);
 				else return $this->notHas($this->combination);			
 		}
