@@ -10,7 +10,10 @@
 	include_once(__DIR__ .'/conditions/StepConditionProductName.php');
 	include_once(__DIR__ .'/conditions/StepConditionProductTag.php');	
 	include_once(__DIR__ .'/actions/StepAction.php');
-	include_once(__DIR__ .'/actions/StepActionReferenceAppendText.php');
+	include_once(__DIR__ .'/actions/StepActionCombination.php');
+	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendProductDetail.php');
+	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendDelete.php');
+	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendText.php');
 
 	/**
 	 *  Structure of a Step:
@@ -224,7 +227,7 @@
 		 */
 		public function setProducts($products)
 		{
-			$this->products = (int)$products;
+			$this->products = $products;
 			return $this;
 		}
 
@@ -244,7 +247,14 @@
 			$sql->innerJoin('product_attribute_combination','pac','p.id_product_attribute = pa.id_product_attribute');	
 			$r = Db::getInstance()->executeS($sql);
 			if (count($r) > 0)
-				$this->product_combinations = $r;
+			{
+				//We create an array of combinations, to perform changes on them from Actions later, by accessing them as $this->step->product_combinations[id_combination]
+				foreach($r as $db_combination)
+				{
+					$n = new Combination($db_combination['id_product_attribute']);
+					$this->product_combinations[$db_combination['id_product_attribute']] = $n;
+				}
+			}
 			return $this;
 		}
 		/**

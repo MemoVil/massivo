@@ -45,7 +45,7 @@
 		/* Iterator for combinations, we need to use both product and combination values */
 		public static function iterator($step,$condition)
 		{
-			foreach($step->product_combinations as $combination)
+			foreach($step->product_combinations as $combination => $comb)
 			{
 				$condition->combination = $combination;
 				if (!$condition->run())
