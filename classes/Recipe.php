@@ -188,6 +188,23 @@
 			return unserialize($r['recipe']);
 		}
 		/**
+		 * [exist Static Boolean to verify if name of a Recipe is already used]
+		 * @param  [string] $name [Name of recipe]
+		 * @return [boolean]       [true/false]
+		 */
+		public static function exist($name)
+		{
+			$sql = new DBQuery();
+			$sql->select('*')->from('massivo_recipes')->where('id=' . (int)$id);
+			$r = Db::getInstance()->executeS($sql);
+			foreach($r as $row)
+			{
+				if ( strcmp($name,$row['name']) == 0 )
+					return 0;
+			}
+			return $row['id_recipe'];
+		}
+		/**
 		 * [setProductToStep sets target of Step to one product id, useful for iterations]
 		 * @param [array] $product [description]
 		 */

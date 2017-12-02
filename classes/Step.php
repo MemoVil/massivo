@@ -13,7 +13,7 @@
 	include_once(__DIR__ .'/actions/StepActionCombination.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendProductDetail.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendDelete.php');
-	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendText.p hp');
+	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendText.php');
 
 	/**
 	 *  Structure of a Step:
