@@ -19,7 +19,7 @@
     		$this->page_header_toolbar_title = $this->l('Massivo');
     		$this->bootstrap = true;
     		$this->colorOnBackground = true;
-    		$this->row_hover = true;
+    		$this->row_hover = true;    		
     		$this->addCSS(_PS_MODULE_DIR_ .'/massivo/css/AdminMassivoController.css');
     		$this->_select = "m.`canonic_product` as canonic_product";
     		$this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'massivo` m ON (m.`id_product` = a.`id_product`)';

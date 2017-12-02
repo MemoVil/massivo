@@ -13,7 +13,7 @@
 	include_once(__DIR__ .'/actions/StepActionCombination.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendProductDetail.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendDelete.php');
-	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendText.php');
+	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendText.p hp');
 
 	/**
 	 *  Structure of a Step:
@@ -39,35 +39,16 @@
 	{
 		/** @var INT id_script, INT name_script, INT order position, (Container of this step) */
 		public $recipe;	
-		/** @var Starting by 0 */
-		public $position;	
+		
 		public $id; /** One id, multiple positions */
 		public $name;
 		private $save;
 		/* Array of heir objects */
 		public $conditions = array();
 		public $actions = array();
-		/* Objects to be operated from Conditions, depending on context * Future work */
-		public $product; /* Working int for Conditions and Actions */
-		public $products; /* Array of input of $product to iterate*/
-		public $product_combinations;		
-		public $reference;
-		public $references;
-		public $ean13;
-		public $ean13s;
-		public $cart;
-		public $carts;
-		public $category;
-		public $categories;
-		public $tag;
-		public $tags;
-		public $client;
-		public $clients;
-
-		/* Bulk array var to input result for actions (based in)*/
-		public $input = array();
-		/* Bulk array var to output result for actions */
-		public $output = array();
+		/* To be operated from Conditions, depending on context * Future work */
+		public $product;
+		/* Deprecated, moved to Recipe class */
 
 
 		public function __construct($type = null)
@@ -208,9 +189,6 @@
 					case 'id':
 						$this->id = $value;
 						break;
-					case 'position':
-						$this->position = $value;
-						break;
 					case 'actions':
 						$this->actions = $value;
 						break;
@@ -222,41 +200,21 @@
 			}
 		}
 		/**
-		 * [setProductToStep sets target of Step to one product id, useful for iterations]
-		 * @param [type] $product [description]
+		 * [getProducts gets products on recipe]
+		 * @return [array] [int]
 		 */
-		public function setProducts($products)
+		public function getProducts()
 		{
-			$this->products = $products;
-			return $this;
+			return $this->recipe->products;
+		}
+		public function getProductCombinations($id = null)
+		{
+			if ($id)
+				return $this->recipe->product_combinations[$id];
+			return $this->recipe->product_combinations;
 		}
 
-		/**
-		 * [setProductCombinations Load product combinations for selected products]
-		 * @param [array] $products [array of product ids (int), to be condensed on where clause]
-		 */
-		public function setProductCombinations($products)
-		{
-			$sql = new DBQuery();
-			$sql->select('*');
-			$sql->from('product_attribute','p');
-			foreach ($products as $product)
-			{
-				$sql->where('id_product =' . $product);	
-			}
-			$sql->innerJoin('product_attribute_combination','pac','p.id_product_attribute = pa.id_product_attribute');	
-			$r = Db::getInstance()->executeS($sql);
-			if (count($r) > 0)
-			{
-				//We create an array of combinations, to perform changes on them from Actions later, by accessing them as $this->step->product_combinations[id_combination]
-				foreach($r as $db_combination)
-				{
-					$n = new Combination($db_combination['id_product_attribute']);
-					$this->product_combinations[$db_combination['id_product_attribute']] = $n;
-				}
-			}
-			return $this;
-		}
+		
 		/**
 		 * [setSave AutoSave on edition]
 		 * @param [type] $save [description]
@@ -299,15 +257,14 @@
 					call_user_func(array($className, 'iterator'), $step, $action);						
 				}							
 			}
-			if ( count($this->output) > 0 )
-				foreach ($this->output as $type => $output)
+			//If we have loaded product combinations we must save them after actions are performed all over the tree
+			if (count($this->recipe->product_combinations))
+			{
+				foreach($this->getProductCombinations() as $i => $combination)
 				{
-					switch ($type)
-					{
-						case 'reference':
-							
-					}
-				}				
+					$combination->save();
+				}
+			}			
 			return true;
 		}
 

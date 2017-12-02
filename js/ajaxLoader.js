@@ -78,6 +78,36 @@ $(document).ready(function() {
 					}
 				}
 		);
+		$(".addRecipeButton").click(
+			function(){
+				$.ajax({
+		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxController.php",
+		              method: "POST",
+		              data: { ajax: "true", operation: "addRecipe", massivo_key:{/literal}"{$massivo_key}"{literal},param: $('.addRecipeText').val()} ,
+		              dataType: "json",
+		              context: document.body,
+		              error: function(xhr,status,error) {
+		               
+		              },
+		              success: function (response) {
+		                alert('ok');
+		                var retorno = response;
+		                var keys = Object.keys(retorno);
+		                var arrayLength = keys.length;
+		                for (var i = 0; i < arrayLength; i++ )
+		                {
+		                    var html = "";
+		                    html = html.concat("#",keys[i],"_1");
+		                    $(html).val(retorno[keys[i]]);
+		                    console.log(keys[i]);
+		                }
+		                $("#id_tag_1").val(retorno["id_tag"]);
+		                 $("#id_tag_1").val(retorno["id_tag"]);
+		                console.log(retorno["css"]);
+		              }
+		        }) 
+			}
+   		);         
 		/** Edit tab inputs*/ 
 		$("input.reference:text").change(
 			function()

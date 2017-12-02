@@ -12,14 +12,14 @@
 		}
 		public function checkDependencies()
 		{
-			if (isset($this->step->products) )
+			if (isset($this->step->recipe->products) )
 				return true;
 			return false;
 		}
 		//Override
 		public static function iterator($step,$condition)
 		{
-			foreach($step->products as $product)
+			foreach($step->getProducts() as $product)
 			{
 				$step->product = $product;
 				if (!$condition->run())

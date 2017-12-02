@@ -2,6 +2,7 @@
 include_once('../../../../config/config.inc.php');
 include_once('../../../../init.php');
 include_once(_PS_MODULE_DIR_.'massivo/includes/scription.php');
+include_once(_PS_MODULE_DIR_.'massivo/classes/Recipe.php');
 $debug = true;
 
 class DATA {
@@ -164,6 +165,8 @@ class AjaxWorker {
 			break;
 			case "tab":
 				return $this->runTab($this->post['tab']);
+			case "addRecipe":
+				echo 'addRecipeTriggered';
 			break;
 		}
 	}

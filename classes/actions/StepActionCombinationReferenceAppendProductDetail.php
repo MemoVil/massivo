@@ -20,7 +20,7 @@
 					$param = $this->combination;
 					break;				
 			}
-			$this->step->product_combinations[$this->combination]->reference .=  $param;
+			$this->step->getProductCombinations($this->combination)->reference .=  $param;
 		}	
 	}
 ?>

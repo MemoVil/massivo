@@ -11,10 +11,19 @@
 	width: 33.3333%;	
 }
 
+div#createTab .col-xs-10
+{
+	width: 83.3% ;
+}
 div#createTab .col-xs-8
 {
   	width: 66.66667%;
 }
+div#createTab .col-xs-6
+{
+	width: 50%;
+}
+
 div#createTab .col-xs-4
 {
   	width: 33.3%;

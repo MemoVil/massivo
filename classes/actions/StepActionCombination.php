@@ -8,12 +8,10 @@
   	 */
 	class StepActionCombination extends StepAction
 	{
-		public $combination;
-
-		
+		public $combination;		
 		public static function iterator($step,$action)
 		{
-			foreach($step->product_combinations as $combination => $comb)
+			foreach($step->getProductCombinations() as $combination => $comb)
 			{
 				$action->combination = $combination;
 				$action->run();

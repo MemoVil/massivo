@@ -10,7 +10,7 @@
 	{
 		public function run()		
 		{			
-			$this->step->product_combinations[$this->combination]->reference .=  $this->param;
+			$this->step->getProductCombinations($this->combination)->reference .=  $this->param;
 		}		
 	}
 ?>
