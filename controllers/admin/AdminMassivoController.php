@@ -306,10 +306,10 @@
 			$scriptsTable = $helper->renderExistingScriptsTable($scripts);
 			$this->context->smarty->assign(
 				array(
-					'scriptsTable' => $scriptsTable,
-					'scripts' => $scripts
+					'recipesTable' => $scriptsTable,
+					'recipes' => $scripts
 				)
-			);			
+			);						
 			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/tabs/renderCreateTab.tpl');
 			return $tpl;
 		}
@@ -335,7 +335,7 @@
 		{
 			$sql = new DBQuery();
 			$sql->select('*');
-			$sql->from('massivo_script');
+			$sql->from('massivo_recipes');
 			$scripts = Db::getInstance()->executeS($sql);
 			return $scripts;
 		}

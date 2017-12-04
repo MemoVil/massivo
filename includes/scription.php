@@ -24,6 +24,11 @@
 			));
 			return $this;
 		}
+		public function getTime()
+		{
+		 list($usec, $sec) = explode(" ", microtime());
+		 return $sec;
+		}
 		/**
 		 * [update updates a record on DB]
 		 * @param  [INT] $id   [Script ID]

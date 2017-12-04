@@ -28,7 +28,10 @@ div#createTab .col-xs-4
 {
   	width: 33.3%;
 }
-
+div#createTab ul.createTabSelector.nav.nav-pills
+{
+	margin-bottom: 8px;
+}
 span.group_massivo, span.name_massivo
 {
 	display:inline-block;	

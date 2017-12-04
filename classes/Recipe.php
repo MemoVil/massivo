@@ -165,15 +165,18 @@
 		 */
 		public function save()
 		{
-			$sql = Db::getInstance();
-			$sql->update(
+			$sql = Db::getInstance()->insert(
 				'massivo_recipes',
 				array(
 					'id' => $this->id,
 					'name' => pSQL($this->name),
 					'recipe' => serialize($this)
-				)
+				),
+				false,
+				true,
+				Db::REPLACE
 			);			
+			return $this;
 		}
 		/** 
 		 * Returns an unserialized object to be instantiated from scription trait,
@@ -195,14 +198,16 @@
 		public static function exist($name)
 		{
 			$sql = new DBQuery();
-			$sql->select('*')->from('massivo_recipes')->where('id=' . (int)$id);
-			$r = Db::getInstance()->executeS($sql);
+			$sql->select('*')->from('massivo_recipes')->where('name="' . $name . '"');
+			$r = Db::getInstance()->executeS($sql);					
 			foreach($r as $row)
 			{
 				if ( strcmp($name,$row['name']) == 0 )
-					return 0;
+				{				
+					return $row['id'];
+				}
 			}
-			return $row['id_recipe'];
+			return 0;
 		}
 		/**
 		 * [setProductToStep sets target of Step to one product id, useful for iterations]

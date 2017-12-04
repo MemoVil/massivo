@@ -58,8 +58,8 @@ class AjaxWorker {
 		}
 
 		foreach($post as $key => $value)
-		{
-			if (Validate::isRoutePattern($value))
+		{		
+			if ($this->isLegal($value))
 			{
 				$this->intEcho += 10; 
 			}
@@ -68,7 +68,7 @@ class AjaxWorker {
 				$this->safe = false;
 				$this->intEcho = -1;
 			}
-		}
+		}		
 		return $this->safe;
 	}
 	public function verifyReference($reference)
@@ -76,6 +76,13 @@ class AjaxWorker {
 		return preg_match('/[^a-z_\-0-9\/]/i',$reference);
 	}
 
+	public function isLegal($pattern)
+    {
+        if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
+            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9 \(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
+        }
+        return preg_match('/^[_a-zA-Z0-9 \(\)\.{}:\/\-]+$/', $pattern);
+    }
 	/**
 	 * Load ajax array submited via post.
 	 * Verifies $key is alpha and $value is valid for each element on the array
@@ -88,7 +95,7 @@ class AjaxWorker {
 		foreach ($post as $key=>$value)
 		{
 			$key = strtolower($key);
-			if (Validate::isModuleName($key) && Validate::isRoutePattern($value))
+			if (Validate::isModuleName($key) && $this->isLegal($value))
 			$this->post[$key] = $value;
 		}
 	}
@@ -165,12 +172,13 @@ class AjaxWorker {
 			break;
 			case "tab":
 				return $this->runTab($this->post['tab']);
-			case "addRecipe":
-				echo 'addRecipeTriggered';
+			case "addRecipe":				
+				return $this->triggerNewRecipe($this->post['param']);						
 			break;
 		}
 	}
 	/**
+	 * Deprecated
 	 * [runTab Generates bootstrap forms and refills them on tab click]
 	 * @param  String $tab [description]
 	 * @return [type]       [description]
@@ -183,6 +191,61 @@ class AjaxWorker {
 		}
 		return;		
 	}
+	public function triggerNewRecipe($newRecipe)
+	{
+		if ($this->addRecipe($newRecipe))
+		{
+			//Echo Recipes
+		}
+		else;
+			//Echo Warning
+		return;
+	}
+	/**
+	 * [addRecipe adds a new Recipe called $name to database, without steps]
+	 * @param [String] $name [new Recipe name]
+	 * @return  Recipe or false
+	 */
+	public function addRecipe($name)
+	{
+		$id = Recipe::exist($name);				
+		if ($id == 0)
+		{			
+			$newRecipe = new Recipe();			
+			$newRecipe->name = pSQL($name);
+			$newRecipe->id = $this->getTime();						
+			$newRecipe->save();
+			return $newRecipe;
+		}
+		else return false;
+	}
+	/**
+	 * [addStep adds a blank Step to $recipe]
+	 * @param [Recipe] $recipe [description]
+	 * @param [String] $step   [description]
+	 */
+	public function addBlankStep($recipe,$step)
+	{
+		if (get_class($recipe) != "Recipe")
+			return false;
+		if (strlen($step) < 2 )
+			$step = $this->generateRandomString();
+		$s = new Step();
+		$s->name = $step;
+		$s->recipe = $recipe;
+		$recipe->addStep($s);
+		$recipe->save();
+		return true;	
+	}
+	/**
+	 * [generateRandomString Generates a random string]
+	 * @param  integer $length [description]
+	 * @return [type]          [description]
+	 */
+	public function generateRandomString($length = 10) {
+    	return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+	}
+
 	/**
 	 * Display error message. Halt.
 	 * 

@@ -11,8 +11,7 @@ $(document).ready(function() {
 					$('#' + $temp_class).addClass('hidden');
 				}
 				else
-				{
-					console.log($class);
+				{					
 					$('#' + $class).removeClass('hidden');
 				}
 			}
@@ -64,16 +63,28 @@ $(document).ready(function() {
 					switch ($class)
 					{
 						case 'l1':
-							$(".l2").removeClass('active');
 							$(".l1").addClass('active');
-							$(".unav2").addClass('hidden');
+							$(".l2").removeClass('active');
+							$(".l3").removeClass('active');							
 							$(".unav1").removeClass('hidden');
+							$(".unav2").addClass('hidden');
+							$(".unav3").addClass('hidden');
 							break;
-						case 'l2':
+						case 'l2':							
 							$(".l1").removeClass('active');
 							$(".l2").addClass('active');
+							$(".l3").removeClass('active');
 							$(".unav1").addClass('hidden');
 							$(".unav2").removeClass('hidden');
+							$(".unav3").addClass('hidden');
+							break;
+						case 'l3':
+							$(".l1").removeClass('active');
+							$(".l2").removeClass('active');
+							$(".l3").addClass('active');
+							$(".unav1").addClass('hidden');
+							$(".unav2").addClass('hidden');
+							$(".unav3").removeClass('hidden');
 							break;
 					}
 				}
@@ -89,9 +100,15 @@ $(document).ready(function() {
 		              error: function(xhr,status,error) {
 		               
 		              },
-		              success: function (response) {
-		                alert('ok');
+		              success: function (response) {		                
 		                var retorno = response;
+		                if (retorno.length == 0 )
+		                {
+		                	$('.selectAddRecipe').append($('<option>', {
+							    value: 1,
+							    text:  $('.addRecipeText').val()
+							}));
+		                }
 		                var keys = Object.keys(retorno);
 		                var arrayLength = keys.length;
 		                for (var i = 0; i < arrayLength; i++ )
