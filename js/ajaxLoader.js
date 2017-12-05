@@ -37,21 +37,7 @@ $(document).ready(function() {
 						}						
 					}
 				);								
-				$('#' + $class).removeClass('hidden');
-				
-				/**
-				$.ajax({
-					url:"{/literal}{$module_dir}{literal}/massivo/classes/ajax/ajaxController.php",
-					method:"POST",
-					data: {operation:"tab",tab:$class},
-					dataType: "json",
-					context:document.body,
-					error: function(xhr,status,error) {               
-		              },
-		            success: function (response) {     
-		             
-		             }
-				});**/			
+				$('#' + $class).removeClass('hidden');			
 			}
 		);
 		/** Apply formula */
@@ -89,42 +75,27 @@ $(document).ready(function() {
 					}
 				}
 		);
+		function appendCard(response){
+   			$("#recipelist").append(response);   			
+   		}
 		$(".addRecipeButton").click(
 			function(){
 				$.ajax({
 		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxController.php",
 		              method: "POST",
 		              data: { ajax: "true", operation: "addRecipe", massivo_key:{/literal}"{$massivo_key}"{literal},param: $('.addRecipeText').val()} ,
-		              dataType: "json",
+		              dataType: "html",
 		              context: document.body,
 		              error: function(xhr,status,error) {
-		               
+		              	
 		              },
-		              success: function (response) {		                
-		                var retorno = response;
-		                if (retorno.length == 0 )
-		                {
-		                	$('.selectAddRecipe').append($('<option>', {
-							    value: 1,
-							    text:  $('.addRecipeText').val()
-							}));
-		                }
-		                var keys = Object.keys(retorno);
-		                var arrayLength = keys.length;
-		                for (var i = 0; i < arrayLength; i++ )
-		                {
-		                    var html = "";
-		                    html = html.concat("#",keys[i],"_1");
-		                    $(html).val(retorno[keys[i]]);
-		                    console.log(keys[i]);
-		                }
-		                $("#id_tag_1").val(retorno["id_tag"]);
-		                 $("#id_tag_1").val(retorno["id_tag"]);
-		                console.log(retorno["css"]);
-		              }
-		        }) 
+		              success:  function (response) {
+		              	appendCard(response)   		              	                     
+              		  }		          
+		        }); 
 			}
    		);         
+   	
 		/** Edit tab inputs*/ 
 		$("input.reference:text").change(
 			function()

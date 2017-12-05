@@ -105,5 +105,17 @@
 			
 			return $this;
 		}
+		/**
+		 * [getScripts return Scripts list on massivo_script table. A Script can have N triggers]
+		 * @return [array] [list of scripts, each row]
+		 */
+		public static function getScripts()
+		{
+			$sql = new DBQuery();
+			$sql->select('*');
+			$sql->from('massivo_recipes');
+			$scripts = Db::getInstance()->executeS($sql);
+			return $scripts;
+		}
 	}
 ?>

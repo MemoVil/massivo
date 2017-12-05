@@ -28,6 +28,7 @@ class AjaxWorker {
 	 * @var $safe, public. State true if $post has been validated
 	 */
 	public $safe = false;
+	public $context;
 	/**
 	 * @var intEcho, just for debugging purposes
 	 */
@@ -44,7 +45,11 @@ class AjaxWorker {
 	 * @return true if valid, false if unvalid. 
 	 * 
 	 */ 
-	
+	public function __construct()
+	{
+		$this->context = Context::getContext();
+	}
+
 	public function validatePost($post)
 	{		
 		$massivoKey = Configuration::get('massivo_key');
@@ -79,9 +84,9 @@ class AjaxWorker {
 	public function isLegal($pattern)
     {
         if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
-            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9 \(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
+            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9 \,\;\"\(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
         }
-        return preg_match('/^[_a-zA-Z0-9 \(\)\.{}:\/\-]+$/', $pattern);
+        return preg_match('/^[_a-zA-Z0-9 áéíóúÁÉÍÓÚäëïöüçñÑàèìòù#\,\;\(\)\.{}:\/\-]+$/', $pattern);
     }
 	/**
 	 * Load ajax array submited via post.
@@ -175,7 +180,10 @@ class AjaxWorker {
 			case "addRecipe":				
 				return $this->triggerNewRecipe($this->post['param']);						
 			break;
-		}
+			case "refreshRecipes":
+				return $this->displayAllRecipes();
+			break;	
+			}
 	}
 	/**
 	 * Deprecated
@@ -193,9 +201,13 @@ class AjaxWorker {
 	}
 	public function triggerNewRecipe($newRecipe)
 	{
-		if ($this->addRecipe($newRecipe))
-		{
-			//Echo Recipes
+		if ($recipe = $this->addRecipe($newRecipe))
+		{			
+			$display = $this->displayAppendRecipe(
+				$recipe
+			);		
+			echo $display;	
+			return true;
 		}
 		else;
 			//Echo Warning
@@ -245,7 +257,37 @@ class AjaxWorker {
 	public function generateRandomString($length = 10) {
     	return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
 	}
-
+	/**
+	 * [displayAllRecipes Designed to overwrite recipelist id on content tab]
+	 * direct echo via ajax
+	 */
+	public function displayAllRecipes()
+	{
+		$this->context->smarty->assign(
+			'recipes',  $this::getScripts(),
+			'lang', $this->context->language->id
+		);
+		$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/displayAllRecipes.tpl');
+		return $tpl;
+	}
+	/**
+	 * [displayAppendRecipe appends a recipe to recipe list]
+	 * @param  [type] $recipe [description]
+	 * @return [type]         [description]
+	 */
+	public function displayAppendRecipe($recipe)
+	{		
+		$this->context->smarty->assign(
+			array(
+				'id' => $recipe->id,
+				'text' => $recipe->name,
+				'pos' => count($this::getScripts()),
+				'lang' => $this->context->language->id
+			)
+		);
+		$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/displayCard.tpl');		
+		return $tpl;
+	}
 	/**
 	 * Display error message. Halt.
 	 * 
