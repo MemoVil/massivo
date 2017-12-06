@@ -3,6 +3,8 @@ include_once('../../../../config/config.inc.php');
 include_once('../../../../init.php');
 include_once(_PS_MODULE_DIR_.'massivo/includes/scription.php');
 include_once(_PS_MODULE_DIR_.'massivo/classes/Recipe.php');
+//On this class we will generate our custom forms for module
+include_once(_PS_MODULE_DIR_.'massivo/classes/HelperMassivo.php');
 $debug = true;
 
 class DATA {
@@ -81,13 +83,7 @@ class AjaxWorker {
 		return preg_match('/[^a-z_\-0-9\/]/i',$reference);
 	}
 
-	public function isLegal($pattern)
-    {
-        if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
-            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9 \,\;\"\(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
-        }
-        return preg_match('/^[_a-zA-Z0-9 áéíóúÁÉÍÓÚäëïöüçñÑàèìòù#\,\;\(\)\.{}:\/\-]+$/', $pattern);
-    }
+
 	/**
 	 * Load ajax array submited via post.
 	 * Verifies $key is alpha and $value is valid for each element on the array
@@ -147,7 +143,7 @@ class AjaxWorker {
 		return true;
 	}
 	/**
-	 * Executes POST and returns info
+	 * Main method, Executes POST and returns info
 	 * @return type
 	 */
 	public function run($debug)
@@ -183,7 +179,23 @@ class AjaxWorker {
 			case "refreshRecipes":
 				return $this->displayAllRecipes();
 			break;	
+			case "loadSteps":
+				return $this->displayCreateTabStepsForm($this->post['param']);
+			break;
 			}
+	}
+	public function displayCreateTabStepsForm($recipe)
+	{
+		$recipe = (int)$recipe;
+		if (!$r = Recipe::existById($recipe))
+		{			
+			$this->displayError();
+			return;
+		}
+		$o = Recipe::load($recipe);				
+		$h = new HelperMassivo();
+		$form = $h->load('CreateTabStepsForm',$o);
+		echo $form;
 	}
 	/**
 	 * Deprecated
@@ -249,14 +261,7 @@ class AjaxWorker {
 		$recipe->save();
 		return true;	
 	}
-	/**
-	 * [generateRandomString Generates a random string]
-	 * @param  integer $length [description]
-	 * @return [type]          [description]
-	 */
-	public function generateRandomString($length = 10) {
-    	return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
-	}
+
 	/**
 	 * [displayAllRecipes Designed to overwrite recipelist id on content tab]
 	 * direct echo via ajax
@@ -268,7 +273,7 @@ class AjaxWorker {
 			'lang', $this->context->language->id
 		);
 		$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/displayAllRecipes.tpl');
-		return $tpl;
+		echo $tpl;
 	}
 	/**
 	 * [displayAppendRecipe appends a recipe to recipe list]

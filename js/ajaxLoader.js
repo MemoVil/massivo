@@ -75,9 +75,32 @@ $(document).ready(function() {
 					}
 				}
 		);
+		function loadSteps(recipe)
+		{		$.ajax({
+		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxController.php",
+		              method: "POST",
+		              data: { ajax: "true", operation: "loadSteps", massivo_key:{/literal}"{$massivo_key}"{literal},param: recipe} ,
+		              dataType: "html",
+		              context: document.body,
+		              error: function(xhr,status,error) {
+		              	
+		              },
+		              success:  function (response) {
+		              	$("#ajaxCreateTab").html(response);   		              	                     
+              		  }		          
+		        }); 	
+		}
+		/* Click on Add Recipe button */
 		function appendCard(response){
    			$("#recipelist").append(response);   			
    		}
+   		$("div.card, .editRecipe").click(
+   			function(){
+   				var recipe = $(this).attr('recipeid');
+   				loadSteps(recipe);
+   			}
+   		);
+
 		$(".addRecipeButton").click(
 			function(){
 				$.ajax({

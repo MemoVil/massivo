@@ -300,45 +300,17 @@
 		 * @return [type] [description]
 		 */
 		private function renderCreateTab()
-		{
-			$helper = new HelperMassivo();
+		{			
 			$scripts = $this->getScripts();	
-			$scriptsTable = $helper->renderExistingScriptsTable($scripts);
 			$this->context->smarty->assign(
-				array(
-					'recipesTable' => $scriptsTable,
+				array(					
 					'recipes' => $scripts
 				)
 			);						
 			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/tabs/renderCreateTab.tpl');
 			return $tpl;
-		}
-		private function renderExistingScriptsTable()
-		{
-				
-			$scripts = array(
-				array(
-					'id_script' => 0,
-					'name' => 'test'
-				)
-			);	
-  			
-			//createSkeletonHelperTable
-			//Add functions to buttons
-		}
+		}	
 
-		/**
-		 * [getScripts return Scripts list on massivo_script table. A Script can have N triggers]
-		 * @return [array] [list of scripts, each row]
-		 */
-		private function getScripts()
-		{
-			$sql = new DBQuery();
-			$sql->select('*');
-			$sql->from('massivo_recipes');
-			$scripts = Db::getInstance()->executeS($sql);
-			return $scripts;
-		}
 	}
 
 ?>

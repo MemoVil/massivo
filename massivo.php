@@ -12,7 +12,7 @@ if (!defined('_PS_VERSION_'))
 $includes = array(
 				__DIR__ . '/includes/install.php',
 				__DIR__ . '/classes/ProductAttribute.php',
-				__DIR__ . '/classes/Trigger.php'
+				__DIR__ . '/classes/Step.php'
 			);
 foreach ($includes as $addsource)
 {

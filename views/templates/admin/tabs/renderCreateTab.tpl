@@ -39,14 +39,15 @@
 					*}
 					<div id="recipelist">						
 					{foreach name=buclecard from=$recipes key=pos item=recipe}
-						{include file="../displayCard.tpl" text="{$recipe.name}" id={$recipe.id} pos={$pos} + 1}
+						{include file="../displayCard.tpl" text="{$recipe.name}" id="{$recipe.id}" pos={$pos} + 1}
 					{/foreach}
 					</div>
-				</div>
-				<hr />
+					<hr />
+					<div id="ajaxCreateTab">
+					</div>
+				</div>				
 				
-				<div id="ajaxCreateTab">
-				</div>
+				
 			</div>
 	  	</div>
 	</div>

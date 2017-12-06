@@ -12,7 +12,7 @@
 	include_once(__DIR__ .'/actions/StepAction.php');
 	include_once(__DIR__ .'/actions/StepActionCombination.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendProductDetail.php');
-	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendDelete.php');
+	include_once(__DIR__ .'/actions/StepActionCombinationReferenceDelete.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendText.php');
 
 	/**

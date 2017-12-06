@@ -1,5 +1,5 @@
  <div class="col-sm-6 col-md-4 col-lg-3 mt-4">
-    <div class="card">       
+    <div class="card" recipeid="{$id}">       
         <div class="card-block">            
             <h4 class="card-title mt-3"><span class="icon-book"></span>
                 {l s="Recipe" mod="massivo"} {$pos}

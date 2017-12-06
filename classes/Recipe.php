@@ -187,8 +187,9 @@
 		{
 			$sql = new DBQuery();
 			$sql->select('*')->from('massivo_recipes')->where('id=' . (int)$id);
-			$r = Db::getInstance()->executeS($sql);
-			return unserialize($r['recipe']);
+			$r = Db::getInstance()->executeS($sql);			
+			$ob = unserialize($r[0]['recipe']);				
+			return $ob;
 		}
 		/**
 		 * [exist Static Boolean to verify if name of a Recipe is already used]
@@ -203,6 +204,25 @@
 			foreach($r as $row)
 			{
 				if ( strcmp($name,$row['name']) == 0 )
+				{				
+					return $row['id'];
+				}
+			}
+			return 0;
+		}
+		/**
+		 * [existById Static Boolean to verify if id of a Recipe is already used]
+		 * @param  [string] $id [id of recipe]
+		 * @return [boolean]       [true/false]
+		 */
+		public static function existById($id)
+		{
+			$sql = new DBQuery();
+			$sql->select('*')->from('massivo_recipes')->where('id="' . $id . '"');
+			$r = Db::getInstance()->executeS($sql);					
+			foreach($r as $row)
+			{
+				if ( strcmp($id,$row['id']) == 0 )
 				{				
 					return $row['id'];
 				}
