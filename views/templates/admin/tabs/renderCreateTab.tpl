@@ -3,12 +3,7 @@
 	  	<div class="col-xs-12">
 	  		<div class="panel ">	  	  									
 	  			<div class="panel-body">	  			
-	  				<div class="alert alert-info">{l s="Here you can create Recipes for your Store. A Recipe is a list of actions to perform over your Store based on conditions that you can define" mod="massivo"}</div>
-	  				{*<ul class="createTabSelector hidden nav nav-pills  col-xs-12 col-m-12">  						
-  						<li role="presentation" class="active linav l1"><a href="#">{l s="Create a new Recipe" mod="massivo"}</a></li>
-  						<li role="presentation" class="linav l2"><a href="#">{l s="Load existing Recipe" mod="massivo"}</a></li>  						
-  						<li role="presentation" class="linav l3"><a href="#">{l s="Delete existing Recipe(s)" mod="massivo"}</a></li>
-  					</ul> *}
+	  				<div class="alert alert-info">{l s="Here you can create Recipes for your Store. A Recipe is a list of actions to perform over your Store based on conditions that you can define" mod="massivo"}</div>					
 				    <div class="unav1 col-xs-12">    					
 				    	 <input type="text" class="col-xs-10 addRecipeText" placeholder="Add a new recipe by typing its name here..." aria-label="addRecipe">		
 					      <span class="input-group-btn col-xs-2 ">
@@ -43,11 +38,9 @@
 					{/foreach}
 					</div>
 					<hr />
-					<div id="ajaxCreateTab">
-					</div>
-				</div>				
-				
-				
+				</div>	
+			</div>
+			<div id="ajaxCreateTab" class="panel">	  	  									
 			</div>
 	  	</div>
 	</div>
