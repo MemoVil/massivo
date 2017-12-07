@@ -72,6 +72,7 @@ class AjaxWorker {
 			}
 			else
 			{
+				ddd($value);				
 				$this->safe = false;
 				$this->intEcho = -1;
 			}
@@ -182,7 +183,16 @@ class AjaxWorker {
 			case "loadSteps":
 				return $this->displayCreateTabStepsForm($this->post['param']);
 			break;
-			}
+			case "addBlankStep":				
+				$r = Recipe::load($this->post['recipeid']);		
+				if ( $this->addBlankStep($r,$this->post['step']) )
+				{
+					echo 1;
+				}
+				else echo 0;
+			break;
+
+		}
 	}
 	public function displayCreateTabStepsForm($recipe)
 	{
@@ -193,7 +203,7 @@ class AjaxWorker {
 			return;
 		}
 		$o = Recipe::load($recipe);				
-		$h = new HelperMassivo();
+		$h = new HelperMassivo();		
 		$form = $h->load('CreateTabStepsForm',$o);
 		echo $form;
 	}

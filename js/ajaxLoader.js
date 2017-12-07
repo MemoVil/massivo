@@ -1,6 +1,7 @@
 {literal}
 <script type="text/javascript">
 $(document).ready(function() {
+	
 		/** Header tabs */
 		$("li[class$='Tab'] ").each(
 			function(i,val) {
@@ -86,13 +87,24 @@ $(document).ready(function() {
 		              	
 		              },
 		              success:  function (response) {
-		              	$("#ajaxCreateTab").html(response);   		              	                     
+		              	$("#ajaxCreateTab").html(response);  
+		              	$('[data-toggle="tooltip"]').tooltip(); 	
+		              	$("#ajaxCreateTab").find("script").each(function(i) {		              			
+                    			eval($(this).text());
+                		});
               		  }		          
 		        }); 	
 		}
 		/* Click on Add Recipe button */
 		function appendCard(response){
-   			$("#recipelist").append(response);   			
+   			$("#recipelist").append(response);   	
+   			/** We add again this item to click listener */
+   			$("div.card, .editRecipe").click(
+	   			function(){
+	   				var recipe = $(this).attr('recipeid');
+	   				loadSteps(recipe);
+	   			}
+   			);		
    		}
    		$("div.card, .editRecipe").click(
    			function(){

@@ -3,11 +3,21 @@
   		exit;
 	class StepConditionProductAttribute extends StepCondition
 	{
-		public $combination;
+		public $combination;	
+		
 		public function __construct($init,$step)
 		{
 			parent::_construct($init,$step);
 			$this->workOn = 'ProductCombination';
+			$this->conditionDescription = array(
+				"long_description_left" => $this->l("If selected product(s) combination"),
+				"long_description_right" => $this->l(" attribute "),
+				"short_description" => $this->l("Attribute match")
+			);
+			$this->verbConditionDescription = array(
+				"has" => $this->l(" has "),
+				"hasNot" => $this->l(" hasn't ")
+			);
 		}
 		public function checkDependencies()
 		{

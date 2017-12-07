@@ -15,6 +15,7 @@
 		private $param;
 		public $step;
 		public $worksOn;
+		public $actionDescription;		
 
 		public function __construct($init,$step)
 		{

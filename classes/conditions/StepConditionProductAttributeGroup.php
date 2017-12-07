@@ -3,7 +3,20 @@
   		exit;
 	class StepConditionProductAttributeGroup extends StepConditionProductAttribute
 	{
-	
+		
+		public function __construct($init,$step)
+		{
+			parent::_construct($init,$step);
+			$this->conditionDescription = array(
+				"long_description_left" => $this->l("If selected product(s) combination"),
+				"long_description_right" => $this->l("attributes from group "),
+				"short_description" => $this->l("Attribute group match")
+			);
+			$this->verbConditionDescription = array(
+			"has" => $this->l(" has "),
+			"hasNot" => $this->l(" hasn't ")
+			);	
+		}
 		/**
 		 * [run Override]
 		 * 

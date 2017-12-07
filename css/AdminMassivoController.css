@@ -163,6 +163,9 @@ div#createTab ul.createTabSelector.nav.nav-pills
 {
 	margin-bottom: 8px;
 }
+.fancyAdd input {
+    width:80%;
+}
 span.group_massivo, span.name_massivo
 {
 	display:inline-block;	

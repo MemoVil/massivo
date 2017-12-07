@@ -7,7 +7,12 @@
   	 * Subclass to concatenate String at end of reference
   	 */
 	class StepActionCombinationReferenceAppendText extends StepActionCombination
-	{
+	{		
+		public function __construct($init,$step)
+		{
+			parent::__construct($init,$step);
+			$this->actionDescription = $this->l("Appends a text to its reference");
+		}
 		public function run()		
 		{			
 			$this->step->getProductCombinations($this->combination)->reference .=  $this->param;

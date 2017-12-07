@@ -40,6 +40,12 @@
 					<hr />
 				</div>	
 			</div>
+			<div class="alert alert-success hidden stepadded">
+				{l s="Step was added successfully" mod="massivo"}
+			</div>
+			<div class="alert alert-warning hidden stepadderror">
+				{l s="Step was not added" mod="massivo"}
+			</div>
 			<div id="ajaxCreateTab" class="panel">	  	  									
 			</div>
 	  	</div>

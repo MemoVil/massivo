@@ -29,10 +29,13 @@
       {        
         //Steps is an array of objects Step
         $steps = $recipe->getAllSteps();
+        $massivoKey = Configuration::get('massivo_key');
         $this->context->smarty->assign(
           array(
             'recipe' => $recipe,
-            'steps' => $steps
+            'steps' => $steps,
+            'module_dir' => _MODULE_DIR_,
+            'massivo_key' => $massivoKey
           )
         );
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayCreateTabStepsForm.tpl');        

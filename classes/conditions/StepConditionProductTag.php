@@ -2,11 +2,19 @@
 	if (!defined('_PS_VERSION_'))
   		exit;
 	class StepConditionProductTag extends StepConditionProduct
-	{
+	{		
 		public function __construct($init,$step)
 		{
-			parent::_construct($init,$step);
-			$this->workOn = 'Product';
+			parent::__construct($init,$step);			
+			$this->conditionDescription = array(
+				"long_description_left" => $this->l("If selected product(s)"),
+				"long_description_right" => $this->l("tag "),
+				"short_description" => $this->l("Product tag match")
+			);
+			$this->verbConditionDescription = array(
+				"has" => $this->l(" has "),
+				"hasNot" => $this->l(" hasn't ")
+			);	
 		}
 		/**
 		 * [run Override]

@@ -6,6 +6,11 @@
 	 */
 	class StepConditionProduct extends StepCondition
 	{
+		public function __construct($init,$step)
+		{
+			parent::__construct($init,$step);
+			$this->workOn ="Product";
+		}
 		public function run()
 		{
 			parent::run();
