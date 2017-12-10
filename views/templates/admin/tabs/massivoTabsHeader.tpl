@@ -1,5 +1,5 @@
-
-<div class="panel">
+	
+<div class="toppanel panel">
 	<div>
 		<ul class="nav nav-tabs massivo_header">			
 			<li  class="{if $tab == 1}active {/if}createTab">				

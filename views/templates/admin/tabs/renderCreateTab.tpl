@@ -9,45 +9,30 @@
 					      <span class="input-group-btn col-xs-2 ">
 					        <button class="btn btn-danger addRecipeButton" type="button">{l s="Add recipe" mod="massivo"}</button>
 					      </span>			     
-				    </div>
-				    {*<ul class="unav2 nav nav-pills hidden col-xs-12">
-				    	<select class="selectpicker selectLoadRecipe" >
-  					{foreach name=external from=$recipes key=pos item=celda}
-  						<option role="presentation" class="loadRecipe {$celda.id}">
-  							{$celda.name}
-  						</option>    						  				
-  					{/foreach}
-  						</select>
-					</ul>					
-					<ul class="unav3 nav nav-pills hidden col-xs-12 col-m-12">
-				    	<select class="selectpicker col-xs-10 selectDeleteRecipe" multiple>
-  					{foreach name=external from=$recipes key=pos item=celda}
-  						<option role="presentation" class="deleteRecipe {$celda.id}">
-  							{$celda.name}
-  						</option>    						  				
-  					{/foreach}
-  						</select>
-  						 <span class="input-group-btn col-xs-2">
-					        <button class="btn btn-danger addRecipeButton" type="button">{l s="Delete" mod="massivo"}</button>
-					      </span>		
-					</ul>	
-					*}
-					<div id="recipelist">						
+					</div>
+					<div id="recipelist">				
+							<table id="recipetable" class="table table-striped table-highlight table-hover text-info table product">
+		 					<thead>
+		 						<th>
+		 							{l s="Recipe" mod="massivo"}
+		 						</th>
+		 						<th>
+		 							{l s="Description" mod="massivo"}
+		 						</th>
+		 						<th>
+		 							{l s="Actions" mod="massivo"}
+		 						</th> 		
+		 					</thead> 		
 					{foreach name=buclecard from=$recipes key=pos item=recipe}
 						{include file="../displayCard.tpl" text="{$recipe.name}" id="{$recipe.id}" pos={$pos} + 1}
 					{/foreach}
+							</table>
 					</div>
 					<hr />
 				</div>	
 			</div>
-			<div class="alert alert-success hidden stepadded">
-				{l s="Step was added successfully" mod="massivo"}
-			</div>
-			<div class="alert alert-warning hidden stepadderror">
-				{l s="Step was not added" mod="massivo"}
-			</div>
-			<div id="ajaxCreateTab" class="panel">	  	  									
-			</div>
 	  	</div>
+	</div>
+	<div id='ajaxCreateTab' class='hidden panel'>
 	</div>
 </div>

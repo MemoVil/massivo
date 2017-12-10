@@ -1,133 +1,4 @@
-/**CreateTab cards */
 
-#createTab h5 {
-    font-size: 1.28571429em;
-    font-weight: 700;
-    line-height: 1.2857em;
-    margin: 0;
-    color:#999999;
-}
-#createTab h4 {
-   
-   color:#e83910;
-}
-
-#createTab .card {
-    font-size: 1em;
-    overflow: hidden;
-    padding: 0;
-    border: none;
-    border-radius: .28571429rem;
-    margin-bottom:5px;
-    box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
-}
-
-#createTab .card-block {
-    font-size: 1em;
-    position: relative;
-    margin: 0;
-    padding: 1em;
-    padding-top: 3px;
-    border: none;
-    border-top: 1px solid rgba(34, 36, 38, .1);
-    box-shadow: none;
-    background-color:azure;
-    min-height:100px;
-}
-
-#createTab .card-img-top {
-    display: block;
-    width: 100%;
-    height: auto;
-}
-
-#createTab .card-title {
-    font-size: 1.28571429em;
-    font-weight: 700;
-    line-height: 1.2857em;
-}
-
-#createTab .card-text {
-    clear: both;
-    margin-top: .5em;
-    color: rgba(0, 0, 0, .68);
-}
-
-#createTab .card-footer {
-    font-size: 1em;
-    position: static;
-    top: 0;
-    left: 0;
-    max-width: 100%;
-    
-    color: rgba(0, 0, 0, .4);
-    border-top: 1px solid rgba(0, 0, 0, .05) !important;
-    background: lightblue;
-    padding:2px;
-}
-
-#createTab .card-inverse .btn {
-    border: 1px solid rgba(0, 0, 0, .05);
-}
-
-#createTab .profile {
-    position: absolute;
-    top: -12px;
-    display: inline-block;
-    overflow: hidden;
-    box-sizing: border-box;
-    width: 25px;
-    height: 25px;
-    margin: 0;
-    border: 1px solid #fff;
-    border-radius: 50%;
-}
-
-#createTab .profile-avatar {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 50%;
-}
-
-#createTab .profile-inline {
-    position: relative;
-    top: 0;
-    display: inline-block;
-}
-
-#createTab .profile-inline ~ .card-title {
-    display: inline-block;
-    margin-left: 4px;
-    vertical-align: top;
-}
-
-#createTab .text-bold {
-    font-weight: 700;
-}
-
-#createTab .meta {
-    font-size: 1em;
-    color: rgba(0, 0, 0, .4);
-}
-#createTab .profile_budget{
-    padding-top:15px;
-    color:#757575;
-}
-
-#createTab .meta h5 {
-    text-decoration: none;
-   
-    font-weight:normal;
-}
-#createTab .card-footer .icon{
-    padding:10px 10px;
-}
-.card-footer .icon a{
-    color:#ef6645;
-}
-
-/* End Cards */
 
 .adminmassivo .col-xs-12
 {
@@ -162,6 +33,10 @@ div#createTab .col-xs-4
 div#createTab ul.createTabSelector.nav.nav-pills
 {
 	margin-bottom: 8px;
+}
+div#createTab td.editable {
+text-decoration:underline;
+text-decoration-style: dotted;
 }
 .fancyAdd input {
     width:80%;

@@ -23,14 +23,14 @@ class DATA {
 	const	ATTRIBUTELANG = _DB_PREFIX_ . 'attribute_lang';
 	const	ATTRIBUTEGROUPLANG = _DB_PREFIX_ . 'attribute_group_lang';
 }
-class AjaxWorker {
+class AjaxWorker extends ModuleAdminController {
 	/** Trait to gain Script Manager Habilities */
 	use scription;
 	/**
 	 * @var $safe, public. State true if $post has been validated
 	 */
 	public $safe = false;
-	public $context;
+	
 	/**
 	 * @var intEcho, just for debugging purposes
 	 */
@@ -183,15 +183,32 @@ class AjaxWorker {
 			case "loadSteps":
 				return $this->displayCreateTabStepsForm($this->post['param']);
 			break;
-			case "addBlankStep":				
+			case "addBlankStep":								
 				$r = Recipe::load($this->post['recipeid']);		
-				if ( $this->addBlankStep($r,$this->post['step']) )
-				{
-					echo 1;
-				}
-				else echo 0;
-			break;
 
+				if ( $s = $this->addBlankStep($r,$this->post['step']) )
+				{
+					$this->success('Step aded$' . $this->post['step'] . '$' . $s->id);
+				}
+				else  $this->error('An error appeared during step addition');
+			break;
+			case 'renameRecipe':
+				$r = Recipe::load($this->post['recipeid']);
+				if (strcmp($this->post['param'],$this->post['recipeid']) != 0)
+				{
+					$r->name = $this->post['param'];
+					$r->save();
+					$this->success('Recipe name changed');
+				}
+				else $this->error('Similar or ilegal newname');
+			break;
+			case 'deleteRecipe':
+					$r = Recipe::deleteById($this->post['recipeid']);																
+					if ($r)
+						$this->success('Recipe ' . $this->post['recipeid'] . ' deleted');
+					else
+						$this->error('There was an error while removing recipe');
+			break;
 		}
 	}
 	public function displayCreateTabStepsForm($recipe)
@@ -205,6 +222,7 @@ class AjaxWorker {
 		$o = Recipe::load($recipe);				
 		$h = new HelperMassivo();		
 		$form = $h->load('CreateTabStepsForm',$o);
+
 		echo $form;
 	}
 	/**
@@ -259,7 +277,7 @@ class AjaxWorker {
 	 * @param [String] $step   [description]
 	 */
 	public function addBlankStep($recipe,$step)
-	{
+	{		
 		if (get_class($recipe) != "Recipe")
 			return false;
 		if (strlen($step) < 2 )
@@ -268,8 +286,8 @@ class AjaxWorker {
 		$s->name = $step;
 		$s->recipe = $recipe;
 		$recipe->addStep($s);
-		$recipe->save();
-		return true;	
+		$recipe->save();		
+		return $s;	
 	}
 
 	/**
@@ -291,15 +309,15 @@ class AjaxWorker {
 	 * @return [type]         [description]
 	 */
 	public function displayAppendRecipe($recipe)
-	{		
+	{			
 		$this->context->smarty->assign(
 			array(
 				'id' => $recipe->id,
 				'text' => $recipe->name,
-				'pos' => count($this::getScripts()),
-				'lang' => $this->context->language->id
+				'pos' => count($this::getScripts())
 			)
 		);
+
 		$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/displayCard.tpl');		
 		return $tpl;
 	}

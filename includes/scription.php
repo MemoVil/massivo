@@ -45,5 +45,14 @@
 			$scripts = Db::getInstance()->executeS($sql);
 			return $scripts;
 		}
+		/** Showing msgs via Ajax */
+		public function success($message)
+		{
+			echo 'Success$' . $message;
+		}
+		public function error($message)
+		{
+			echo 'Error$' . $message;
+		}
 	}
 ?>

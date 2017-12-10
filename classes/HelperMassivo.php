@@ -1,14 +1,14 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-  	class HelperMassivo extends ModuleAdminController
+    class HelperMassivo 
   	{      
   		public function __construct()
 		  {
 			  $this->bootstrap = true;
     		$this->colorOnBackground = true;
     		$this->row_hover = true;
-    		$this->context = Context::GetContext();
+        $this->context = Context::getContext();  
 		  }		 
 
       /**
@@ -18,7 +18,7 @@
        */
   		public function load($type,$params)
       {
-        call_user_func(array($this,'display' . $type),$params);
+        return call_user_func(array($this,'display' . $type),$params);
       }
       /**
        * [displayCreateTabStepsForm Renders Steps Form on CreateTab]
@@ -29,17 +29,17 @@
       {        
         //Steps is an array of objects Step
         $steps = $recipe->getAllSteps();
-        $massivoKey = Configuration::get('massivo_key');
+        $massivoKey = Configuration::get('massivo_key');                
         $this->context->smarty->assign(
           array(
             'recipe' => $recipe,
             'steps' => $steps,
             'module_dir' => _MODULE_DIR_,
-            'massivo_key' => $massivoKey
+            'massivo_key' => $massivoKey                  
           )
-        );
-        $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayCreateTabStepsForm.tpl');        
-        echo $tpl;
+        );        
+        $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayCreateTabStepsForm.tpl');                        
+        return $tpl;
       }
   	}
 ?>

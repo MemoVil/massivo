@@ -2,6 +2,7 @@
 	if (!defined('_PS_VERSION_'))
   		exit;
   	/* Conditions for Steps, see StepCondition for base class */
+  	/* Important, they must be registered on step constructor */
 	include_once(__DIR__ .'/conditions/StepCondition.php');
 	include_once(__DIR__ .'/conditions/StepConditionProduct.php');
 	include_once(__DIR__ .'/conditions/StepConditionProductAttribute.php');
@@ -37,6 +38,7 @@
 	 */
 	class Step
 	{
+		use scription;
 		/** @var INT id_script, INT name_script, INT order position, (Container of this step) */
 		public $recipe;	
 		
@@ -49,11 +51,51 @@
 		/* To be operated from Conditions, depending on context * Future work */
 		public $product;
 		/* Deprecated, moved to Recipe class */
+		/**
+		 * [$declaredClasses Classes loaded on this file: conditions and actions]
+		 * @var [type]
+		 */
+		public $declaredConditions;
+		public $declaredActions;
 
 
 		public function __construct($type = null)
 		{
-			$this->id = microtime(true);			
+			$this->id = $this->getTime();	
+			$this->registerConditionsAndActions();			
+		}
+		/*
+			Important: We need to register them to bucle over it later *
+		 */
+		public function registerConditionsAndActions()
+		{
+			$t = get_declared_classes();
+			foreach ($t as $class)
+			{
+				if (strpos($class,'Condition') )
+					$this->declaredConditions[] = $class;
+				if (strpos($class,'Action') )
+					$this->declaredActions[] = $class;
+			}
+		}
+		/* Input for combos */
+		public function getConditionText($i)
+		{
+			if ($this->declaredConditions[$i])
+			{
+				$c = new $this->declaredConditions[$i]();
+				return $c->getText();
+			}
+			return false;			 
+		}
+		public function getActionText($i)
+		{
+			if ($this->declaredActions[$i])
+			{
+				$c = new $this->declaredActions[$i]();
+				return $c->getText();
+			}
+			return false;			 
 		}
 		/**
 		 * [addCondition adds a Condition to this step]

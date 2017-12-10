@@ -33,7 +33,7 @@
 			if (get_class($newStep) != 'Step')
 				return false;
 			/* Is this step already added? */
-			foreach ($steps as $indice => $step)
+			foreach ($this->steps as $indice => $step)
 			{
 				if 	($step->id == $newStep->id)
 					return false;
@@ -186,8 +186,8 @@
 		public static function load($id)
 		{
 			$sql = new DBQuery();
-			$sql->select('*')->from('massivo_recipes')->where('id=' . (int)$id);
-			$r = Db::getInstance()->executeS($sql);			
+			$sql->select('*')->from('massivo_recipes')->where('id=' . (int)$id);			
+			$r = Db::getInstance()->executeS($sql);						
 			$ob = unserialize($r[0]['recipe']);				
 			return $ob;
 		}
@@ -228,6 +228,22 @@
 				}
 			}
 			return 0;
+		}
+
+		public static function deleteById($id)
+		{			
+			$sql = new DBQuery();
+			$sql->select('*')->from('massivo_recipes')->where('id="' . $id . '"');
+			$r = Db::getInstance()->executeS($sql);								
+			foreach($r as $row)
+			{
+				if ( strcmp($id,$row['id']) == 0 )
+				{
+					$t = Db::getInstance()->delete('massivo_recipes','id="' . $id . '"');								
+					return $t;
+				}
+			}
+			return false;
 		}
 		/**
 		 * [setProductToStep sets target of Step to one product id, useful for iterations]

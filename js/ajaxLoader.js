@@ -76,9 +76,119 @@ $(document).ready(function() {
 					}
 				}
 		);
+		function showError(error) {
+			var divError = '<div class="ajaxError alert alert-warning ">' + error + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
+			$('.toppanel').before(divError);
+		}
+		function showSuccess(message) {
+			var divSuccess = '<div class="ajaxSuccess alert alert-success ">' + message + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
+			$('.toppanel').before(divSuccess);
+		}
+		/* Begin editable rows */
+		function getStyle(el, cssprop) {
+			if (el.currentStyle)
+				return el.currentStyle[cssprop];	 // IE
+			else if (document.defaultView && document.defaultView.getComputedStyle)
+				return document.defaultView.getComputedStyle(el, "")[cssprop];	// Firefox
+			else
+				return el.style[cssprop]; //try and get inline style
+		}
+
+		function applyEdit(tabID, editables) {
+			var tab = document.getElementById(tabID);
+			if (tab) {
+				var rows = tab.getElementsByTagName("tr");
+				for(var r = 0; r < rows.length; r++) {
+					var tds = rows[r].getElementsByTagName("td");
+					for (var c = 0; c < tds.length; c++) {
+						if (editables.indexOf(c) > -1)
+							tds[c].onclick = function () { beginEdit(this); };
+					}
+				}
+			}
+		}
+		var oldColor, oldText, padTop, padBottom = "";
+		function beginEdit(td) {
+
+			if (td.firstChild && td.firstChild.tagName == "INPUT")
+				return;
+
+			oldText = td.innerHTML.trim();
+			if  ( $(td).hasClass('even') )
+				oldColor = "#fff";
+			else
+				oldColor = "#f9f9f9";
+			
+
+			padTop = getStyle(td, "paddingTop");
+			padBottom = getStyle(td, "paddingBottom");
+
+			var input = document.createElement("input");
+			input.value = oldText;
+
+			//// ------- input style -------
+			var left = getStyle(td, "paddingLeft").replace("px", "");
+			var right = getStyle(td, "paddingRight").replace("px", "");
+			input.style.width = '100%'//td.offsetWidth - left - right - (td.clientLeft * 2) - 2 + "px";
+			input.style.height = td.offsetHeight - (td.clientTop * 2) - 2 + "px";
+			input.style.border = "0px";
+			input.style.fontFamily = "inherit";
+			input.style.fontSize = "inherit";
+			input.style.textAlign = "inherit";
+			input.style.backgroundColor = "white";
+
+			input.onblur = function () { endEdit(this); };
+			$(input).keyup(function(e){
+				if (e.which !== 13) {
+   				    return;
+  				}
+  				endEdit(input);
+			});
+
+			td.innerHTML = "";
+			td.style.paddingTop = "0px";
+			td.style.paddingBottom = "0px";
+			td.style.backgroundColor = "LightGoldenRodYellow";
+			td.insertBefore(input, td.firstChild);
+			input.select();
+		}
+		function endEdit(input) {
+			var td = input.parentNode;
+			td.removeChild(td.firstChild);	//remove input
+			td.innerHTML = input.value;
+			if (oldText != input.value.trim() )
+				td.style.color = "red";
+
+			td.style.paddingTop = padTop;
+			td.style.paddingBottom = padBottom;
+			td.style.backgroundColor = oldColor;
+			if (oldText != input.value.trim() ) {
+				$.ajax({
+		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+		              method: "POST",
+		              data: { ajax: "true", operation: "renameRecipe", massivo_key:{/literal}"{$massivo_key}"{literal},param: input.value, recipeid: $(td).parent().attr('recipeid')} ,
+		              dataType: "html",
+		              context: document.body,
+		              error: function(xhr,status,error) {
+		              	
+		              },
+		              success:  function (response) {
+		              	var t = response.split("$");
+		              	if (t[0] == "Error")
+		              		showError(t[1]);
+		              	else
+		              		showSuccess(t[1]);
+              		  }		          
+		        }); 	
+			}	
+
+		}
+		applyEdit("recipetable", [1]);
+		
+		/* End Editable rows */
 		function loadSteps(recipe)
 		{		$.ajax({
-		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxController.php",
+		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
 		              data: { ajax: "true", operation: "loadSteps", massivo_key:{/literal}"{$massivo_key}"{literal},param: recipe} ,
 		              dataType: "html",
@@ -87,6 +197,7 @@ $(document).ready(function() {
 		              	
 		              },
 		              success:  function (response) {
+		              	$("#ajaxCreateTab").removeClass("hidden");
 		              	$("#ajaxCreateTab").html(response);  
 		              	$('[data-toggle="tooltip"]').tooltip(); 	
 		              	$("#ajaxCreateTab").find("script").each(function(i) {		              			
@@ -95,42 +206,93 @@ $(document).ready(function() {
               		  }		          
 		        }); 	
 		}
+		function deleteRecipe(recipe)
+   		{
+			$.ajax({
+	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+	              method: "POST",
+	              data: { ajax: "true", operation: "deleteRecipe", massivo_key:{/literal}"{$massivo_key}"{literal},recipeid: recipe} ,
+	              dataType: "html",
+	              context: document.body,
+	              error: function(xhr,status,error) {
+	              	
+	              },
+	              success:  function (response) {
+      	           	var t = response.split("$");
+	              	if (t[0] == "Error")
+	              		showError(t[1]);
+	              	else {
+	              		$('tr[recipeid="' + recipe +'"').remove();
+	              		showSuccess(t[1]);	
+	              		
+	              	}
+	      		  }		          
+	        }); 
+   		}	
+
 		/* Click on Add Recipe button */
-		function appendCard(response){
-   			$("#recipelist").append(response);   	
+		function appendCard(response){   			
+   			$('#recipelist tr:last').after(response);
    			/** We add again this item to click listener */
-   			$("div.card, .editRecipe").click(
+   			$("div.card, .editrecipe").click(
 	   			function(){
 	   				var recipe = $(this).attr('recipeid');
 	   				loadSteps(recipe);
 	   			}
    			);		
+   			$(".deleterecipe").click(
+	   			function(){
+	   				var recipe = $(this).attr('recipeid');
+	   				deleteRecipe(recipe);
+	   			}
+   			);
+			applyEdit("recipetable", [1]);
    		}
-   		$("div.card, .editRecipe").click(
+   		function addRecipe(name)
+   		{
+				$.ajax({
+	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+	              method: "POST",
+	              data: { ajax: "true", operation: "addRecipe", massivo_key:{/literal}"{$massivo_key}"{literal},param: name} ,
+	              dataType: "html",
+	              context: document.body,
+	              error: function(xhr,status,error) {
+	              	
+	              },
+	              success:  function (response) {
+	              	appendCard(response);		              	   		              	                     
+	      		  }		          
+	        }); 
+   		}
+   		$(".addRecipeButton").click(
+			function(){
+				addRecipe($('.addRecipeText').val());
+			}
+   		);         
+
+		$('.addRecipeText').keyup(function(e){
+			if (e.which !== 13) {
+				    return;
+				}
+				addRecipe($('.addRecipeText').val());
+		});
+   		/* Click on edit recipe button*/
+   		$(".editrecipe").click(
    			function(){
    				var recipe = $(this).attr('recipeid');
    				loadSteps(recipe);
    			}
    		);
-
-		$(".addRecipeButton").click(
-			function(){
-				$.ajax({
-		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxController.php",
-		              method: "POST",
-		              data: { ajax: "true", operation: "addRecipe", massivo_key:{/literal}"{$massivo_key}"{literal},param: $('.addRecipeText').val()} ,
-		              dataType: "html",
-		              context: document.body,
-		              error: function(xhr,status,error) {
-		              	
-		              },
-		              success:  function (response) {
-		              	appendCard(response)   		              	                     
-              		  }		          
-		        }); 
-			}
-   		);         
    	
+   		/* Click on delete recipe button */
+		$(".deleterecipe").click(
+   			function(){
+   				var recipe = $(this).attr('recipeid');
+   				deleteRecipe(recipe);
+   			}
+   		);
+
+
 		/** Edit tab inputs*/ 
 		$("input.reference:text").change(
 			function()
@@ -141,7 +303,7 @@ $(document).ready(function() {
 				if ($comb.length > 0 && $val.length > 0)
 				{
 			       $.ajax({
-		              url: "{/literal}{$module_dir}{literal}/massivo/classes/ajax/ajaxController.php",
+		              url: "{/literal}{$module_dir}{literal}/massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
 		              data: { operation:"update", combination : $comb, val : $val, type :"reference", massivo_key:{/literal}"{$massivo_key}"{literal}} ,
 		              dataType: "json",
@@ -169,7 +331,7 @@ $(document).ready(function() {
 				if ($comb.length > 0 && $val.length > 0)
 				{
 			       $.ajax({
-		              url: "{/literal}{$module_dir}{literal}/massivo/classes/ajax/ajaxController.php",
+		              url: "{/literal}{$module_dir}{literal}/massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
 		              data: { operation:"update", combination : $comb.trim(), val : $val, type : "ean13", massivo_key:{/literal}"{$massivo_key}"{literal}} ,
 		              dataType: "json",

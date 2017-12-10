@@ -92,5 +92,21 @@
 		{
 			return false;
 		}
+		public function getFullDescription()
+		{
+			$return[] = $this->conditionDescription['long_description_left'];
+			$return[] = $this->verbDescription[$this->condition];
+			$return[] = $this->conditionDescription['long_description_right'];
+			$return[] = $this->param;
+			return implode($return);
+ 		}
+ 		public function getText()
+ 		{
+ 			return $this->conditionDescription['short_description'];
+ 		}
+ 		public function getDescription()
+ 		{
+ 			return $this->getText();	
+ 		}
 	}
 ?>

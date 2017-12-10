@@ -36,8 +36,12 @@ Class massivo extends Module
         $this->protocol = 'https://';
         parent::__construct();
         $this->displayName = $this->l('Massivo');
-        $this->description = $this->l('Canonic linking of your products, allowing you at the same time to make referencing them faster and easier');
-        $this->confirmUninstall = $this->l('Do you really want to uninstall this module?');   
+        $this->description = $this->l('Tool for massive actions on your store');
+        $this->confirmUninstall = $this->l('Do you really want to uninstall this module?');  
+        $this->quickTranslations = array(
+        	'edit' => $this->l('Edit'),
+        	'delete' => $this->l('Delete')
+        ); 
 	}
 	public function getContent()
 	{
