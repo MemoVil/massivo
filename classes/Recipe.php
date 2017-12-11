@@ -44,38 +44,73 @@
 			return $this;
 		}
 		/**
+		 * [deleteSteps Deletes steps on string, based on its position on array]
+		 * @param  [type] $steps [description]
+		 * @return [Array] $ok       [Array signing ok or ko]
+		 */
+		public function deleteSteps($steps)
+		{
+			$steps = explode(" ",$steps);
+			
+			foreach ($steps as $step)
+			{
+				// We must down $step by 1 as arrays are indexed from 0
+			 	$step = $step - 1;					 	
+			 	if ( isset($this->steps[$step]) ){			 		
+			 		$realStep[] = $this->steps[$step];		
+			 	} 
+			}						
+			$ok = 0;
+			
+			//Once we know objects to be deleted, we clear them
+			foreach ($realStep as $real)
+			{	
+				if ($this->removeStep($real))
+			 	{
+			 		$ok++;
+			 	}			 	
+			}			
+			return $ok;
+		}
+		/**
 		 * [removeStep removes a Step object from array list of this recipe]
 		 * @param  [Step] $removeStep [step to be removed]
 		 *         [Boolean] $save
 		 * @return [boolean]                [true if deleted, false if not found]
 		 */
 		public function removeStep($removeStep,$save = true)
-		{
+		{			
+			
 			if (get_class($removeStep) != 'Step')
 				return false;
+			
 			foreach ($this->steps as $indice => $step)
-			{
-				if 	($step->unicId == $removeStep->unicId)
-				{
-					unset($this->steps[$indice]);				
+			{				
+				if 	($step->id == $removeStep->id)
+				{						
 					$key = $indice;
 				}					
-				if (isset($key) && $indice > $key)
-				{					
-					$this->steps[$indice - 1] = $step;
-				}				
 			}
-			/* If we found the key we must delete old duplicated key at end of bucle */
 			if (isset($key))
 			{
-				if ( $key <= count($this->steps) )
-					unset($this->steps[count($this->steps)]);
+				if ($key == (count($this->steps) - 1) )
+				{
+					unset($this->steps[$key]);
+				}
+				else {
+					foreach ($this->steps as $indice => $step)	
+					{	
+						if ($indice >= $key)
+						{
+							$this->steps[$indice] = $this->steps[$indice + 1];		
+						}
+					}
+					unset($this->steps[count($this->steps) - 1]);
+				}				
 				if ($save) $this->save();
 				return true;
 			}
-			/* We didn't found the key */
 			else return false;
-			
 		}
 		/**
 		 * [getStep gets a Step bassed on its step order, as id is not intended for this purpose]

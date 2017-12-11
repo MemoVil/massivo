@@ -11,7 +11,7 @@
 		public function getTime()		
 		{
 		 list($usec, $sec) = explode(" ", microtime());
-		 return $sec;
+		 return $sec + (int)(round($usec * 1000));
 		}
 		/**
 		 * [isLegal Checks if a string is secure]

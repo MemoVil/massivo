@@ -44,9 +44,9 @@
 		  			</tr>	  				
 	  			</thead>
 	  			 {foreach name=buclecard from=$steps key=pos item=step}
-	  			 <tr class='bucle'>
+	  			 <tr class='bucle' order="{$pos+1}">
 	  			 	<td>
-	  			 		<input type="checkbox" class="checkStep"></input>
+	  			 		<input type="checkbox" class="checkStep" order="{$pos+1}"></input>
 	  			 	</td>
 		  			 <td class="text-center">
 						{$pos + 1}
@@ -55,7 +55,7 @@
 		  			 	{$step->name}
 		  			 </td>		  
 		  			 <td>
-		  			 	<table class="table  table-condensed table-highlight table-hover text-info table product" small>
+		  			 	<table class="table  table-condensed table-highlight table-hover text-info table product small">
 		  			 		<thead>  
 		  			 			<tr class="success">
 				  			 		<th class="text-center">
@@ -66,20 +66,20 @@
 			  			 		</tr>
 		  			 		</thead>
 		  			 		{if $step->conditions|is_array && $step->conditions|@count > 0}
-		  			 		{foreach name=conditionbucle from=$step->conditions key=cpos item=stepcondition}
-		  			 			<tr>
-					  			 	<td>
-					  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" conditionstep="{$cpos}">
-											{$stepcondition->getFullDescription()}
-					  			 		</p>
-					  			 	</td>
-					  			 	<td>		  			 		        
-								        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" conditionstep="{$cpos}">
-								            {l s="Delete" mod="massivo"}
-								        </button>
-			    					</td>
-		    					</tr>
-		  			 		{/foreach}
+			  			 		{foreach name=conditionbucle from=$step->conditions key=cpos item=stepcondition}
+			  			 			<tr>
+						  			 	<td>
+						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" conditionstep="{$cpos}">
+												{$stepcondition->getFullDescription()}										
+						  			 		</p>
+						  			 	</td>
+						  			 	<td>		  			 		        
+									        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" conditionstep="{$cpos}">
+									            {l s="Delete" mod="massivo"}
+									        </button>
+				    					</td>
+			    					</tr>
+			  			 		{/foreach}
 		  			 		{else}
 		  			 			<tr >
 			  			 			<td class="text-center">
@@ -105,20 +105,20 @@
 			  			 		</tr>
 		  			 		</thead>
 		  			 		{if $step->actions|is_array && $step->actions|@count > 0}
-		  			 		{foreach name=actionsbucle from=$step->actions key=cpos item=stepaction}
-		  			 			<tr>
-					  			 	<td>
-					  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" actionstep="{$cpos}">
-											{$stepaction->getFullDescription()}
-					  			 		</p>
-					  			 	</td>
-					  			 	<td>		  			 		        
-								        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" actionstep="{$cpos}">
-								            {l s="Delete" mod="massivo"}
-								        </button>
-			    					</td>
-		    					</tr>
-		  			 		{/foreach}
+			  			 		{foreach name=actionsbucle from=$step->actions key=cpos item=stepaction}
+			  			 			<tr>
+						  			 	<td>
+						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" actionstep="{$cpos}">
+												{$stepaction->getFullDescription()}
+						  			 		</p>
+						  			 	</td>
+						  			 	<td>		  			 		        
+									        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" actionstep="{$cpos}">
+									            {l s="Delete" mod="massivo"}
+									        </button>
+				    					</td>
+			    					</tr>
+			  			 		{/foreach}
 		  			 		{else}
 		  			 			<tr>
 			  			 			<td class="text-center">
@@ -151,10 +151,41 @@
 </div>
 {literal}
 	<script type="text/javascript" id="runCreateTabStepsForm">
+		var recipeId = {/literal}{$recipe->id}{literal};
+		function showError(error) {
+			var divError = '<div class="ajaxError alert alert-warning ">' + error + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
+			$('.toppanel').before(divError);
+			$('.ajaxError').delay(5000).fadeOut();
+		}
+		function showSuccess(message) {
+			var divSuccess = '<div class="ajaxSuccess alert alert-success ">' + message + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
+			$('.toppanel').before(divSuccess);
+			$('.ajaxSuccess').delay(5000).fadeOut();
+		}
+		function attachEditableFunctionToStepList(el)
+		{
+				var recipeid = el.attr('recipe');
+    			var stepid = el.attr('step');
+    			if (el.attr('stepaction'))
+    			{
+    				var stepaction = el.attr('stepaction');
+    				var a = {operation: "displayActionSelector", recipe: recipeid, step:stepid, action: stepaction};
+    			}
+    			if (el.attr('stepcondition'))
+    			{
+    				var stepcondition = el.attr('stepcondition');
+    				var a = {operation: "displayConditionSelector", recipe: recipeid, step:stepid, condition: stepcondition};
+    			}
+    			
+    			el.load(
+    				{/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+    				a
+    			);	
+		}
 		function doAjaxForMe(vStep)		
 		{	
 			var ajaxStep = vStep;
-			var recipeId = {/literal}{$recipe->id}{literal};
+			
 			var t = $.ajax({
 	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
@@ -172,25 +203,30 @@
 	              		showSuccess(t[1]);	
 	              		var rows = $('tr.bucle').length;
 	              		rows = rows + 1;
-	              		$html = '<tr class="bucle"><td class="text-center"><input type="checkbox" class="checkStep"></td>';
+	              		$html = '<tr class="bucle" order="' + rows + '"><td order="' + rows + '"><input type="checkbox" class="checkStep" order="'+rows+'"></td>';
 	              		$html = $html + ' <td class="text-center">' + rows + '</td><td class="text-center">' + t[2] + '</td>';
 	              		$html = $html + '<td><table class="table table-condensed table-highlight table-hover text-info table product small"><thead> <tr class="success"><th class="text-center">{/literal}{l s="Conditions" mod="massivo"}{literal}</th><th></th></tr></thead>';
-	              		$html = $html + '<tbody><tr><td class="text-center">{/literal}<p class="editable" recipe="' + recipeId +'" step="' + t[3] +'" conditionstep="1"><em>{l s="There are no conditions for this step at this time, press here to create a new one" mod="massivo"}</em></p> {literal}</td></tr></tbody></table>';
-	              		console.log($html);
+	              		$html = $html + '<tbody><tr><td class="text-center">{/literal}<p class="editable" recipe="' + recipeId +'" step="' + t[3] +'" conditionstep="1"><em>{l s="There are no conditions for this step at this time, press here to create a new one" mod="massivo"}</em></p> {literal}</td></tr></tbody></table>';	              		
 	              		$html = $html + '<table class="table table-condensed table-highlight table-hover text-info table product small"><thead> <tr class="warning"><th class="text-center">{/literal}{l s="Actions" mod="massivo"}{literal}</th><th></th></tr></thead>';
 	              		$html = $html + '<tbody><tr><td class="text-center">{/literal}<p class="editable" recipe="' + recipeId +'" step="' + t[3] +'" actionstep="1"><em>{l s="There are no actions for this step at this time, press here to create a new one" mod="massivo"}</em></p> {literal}</td></tr></tbody></table></td></tr>';
-	              		console.log($html);
-	              		if ( $('#steplist tr.bucle') ) {
-	              			$('#steplist tr.bucle').last().after($html);
+	              		
+	              		if ( $('tr.bucle').length ) {
+	              			$('tr.bucle').last().after($html);	              			
 	              		}
 	              		else {
-	              			$('#steplist tr:last').after($html);	              		
+	              			$('#steplist').append($html);	              		
 	              		}
-	              		//$('#steplist tr:last').after($html);	              		
+	              		$("table p.editable").unbind("click");
+	              		$("table p.editable").click(
+	              			function()
+	              			{
+	              				attachEditableFunctionToStepList($(this));	              				
+	              			});
 	              	}
           		  }		          
 	        }); 
 		}
+		$("a.addStep").unbind("click");
     	$("a.addStep").click(
 	    		function(){
 		    		$html = $("#addNewStep").html();		    		    		
@@ -218,31 +254,49 @@
 	    			}   		
     		});
     	})
+    	$("a.deleteStep").unbind("click");
     	$("a.deleteStep").click(
     		function() {
-    			var $checks = $('input[class=checkStep]:checked');
-    			console.log($checks);
+    			var $checks = $('input[class=checkStep]:checked');  
+    			var i = new Array();  			
+    			$checks.each(
+    				function(){
+    					i.push($(this).attr('order'));
+    				}
+    			);
+    			$.ajax({
+		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+		              method: "POST",
+		              data: { ajax: "true", operation: "deleteSteps", massivo_key:{/literal}"{$massivo_key}"{literal},param: i.join(' '), recipeid: recipeId} ,
+		              dataType: "html",
+		              context: document.body,
+		              error: function(xhr,status,error) {		              	
+		              },
+		              success:  function (response) {
+		              	var t = response.split("$");
+		             	if (t[0] == "Error")
+	              			showError(t[1]);
+		              	else {	              		
+		              		showSuccess(t[1]);			              		
+			             	$('tr.bucle').each(
+			              		function() {
+			              			var order = $(this).attr('order');	  	
+			              			var t = jQuery.inArray(order,i);			              			
+			              			if ( t >= 0 ){
+			              				$(this).remove();
+			              			}
+			              		}
+			              	);
+		              	}
+		              	
+              		  }		          
+		        }); 	    			
     	});
+    	$("table p.editable").unbind("click");
     	$("table p.editable").click(
     		function(){
-    			var recipeid = $(this).attr('recipe');
-    			var stepid = $(this).attr('step');
-    			if ($(this).attr('stepaction'))
-    			{
-    				var stepaction = $(this).attr('stepaction');
-    				var a = {operation: "displayActionSelector", recipe: recipeid, step:stepid, action: stepaction};
-    			}
-    			if ($(this).attr('stepcondition'))
-    			{
-    				var stepcondition = $(this).attr('stepcondition');
-    				var a = {operation: "displayConditionSelector", recipe: recipeid, step:stepid, condition: stepcondition};
-    			}
-    			
-    			$(this).load(
-    				{/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
-    				a
-    			);
-    		}
+    			attachEditableFunctionToStepList($(this));
+    		}   		
     	);
 	</script>
 
