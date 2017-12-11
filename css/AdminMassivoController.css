@@ -62,6 +62,11 @@ span.massivo_signal
 	cursor:hand;
 }
 
+table.fulltr th
+{
+	width: 100%;
+}
+
 div.unav1
 {
     display:inline-block;

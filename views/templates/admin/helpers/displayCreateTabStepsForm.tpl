@@ -55,83 +55,69 @@
 		  			 	{$step->name}
 		  			 </td>		  
 		  			 <td>
-		  			 	<table class="table  table-condensed table-highlight table-hover text-info table product small">
+		  			 	<table class="fulltr table  table-condensed table-highlight table-hover text-info table product small">
 		  			 		<thead>  
 		  			 			<tr class="success">
 				  			 		<th class="text-center">
 				  			 			{l s="Conditions" mod="massivo"}
-				  			 		</th>
-				  			 		<th>
-				  			 		</th>
+				  			 		</th>				  			 		
 			  			 		</tr>
 		  			 		</thead>
 		  			 		{if $step->conditions|is_array && $step->conditions|@count > 0}
 			  			 		{foreach name=conditionbucle from=$step->conditions key=cpos item=stepcondition}
-			  			 			<tr>
+			  			 			<tr type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  param="{$cpos}">
 						  			 	<td>
-						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" stepcondition="{$cpos}">
+						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" param="{$cpos}">
 												{$stepcondition->getFullDescription()}										
 						  			 		</p>
-						  			 	</td>
-						  			 	<td>		  			 		        
-									        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" stepcondition="{$cpos}">
-									            {l s="Delete" mod="massivo"}
-									        </button>
-				    					</td>
+						  			 	</td>						  			 	  			 		        
+								        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" param="{$cpos}">
+								            {l s="Delete" mod="massivo"}
+								        </button>				    					
 			    					</tr>
 			  			 		{/foreach}
-		  			 		{else}
-		  			 			<tr >
+		  			 		{/if}
+		  			 			<tr type="newcondition" recipe="{$recipe->id}" step="{$step->id}"  param="{$step->conditions|@count}">
 			  			 			<td class="text-center subtablenewcondition">
-			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" newcondition="1" >
+			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" param="{$step->conditions|@count}" >
 			  			 					<em>
-			  			 						{l s="There are no conditions for this step at this time, press here to create a new one" mod="massivo"}
+			  			 						{l s="Press here to add a new condition" mod="massivo"}
 			  			 					</em>
 			  			 				</p>
-			  			 			</td>
-			  			 			<td>
-			  			 			</td>
-		  			 			</tr>
-		  			 		{/if}
+			  			 			</td>			  			 
+		  			 			</tr>		  			 		
 		  			 	 </table>
 		  			 	 <table class="table table-condensed table-highlight table-hover text-info table product small">
 		  			 		<thead>  
 		  			 			<tr class="warning">
 				  			 		<th class="text-center">
 				  			 			{l s="Actions" mod="massivo"}
-				  			 		</th>
-				  			 		<th>
-				  			 		</th>
+				  			 		</th>				  			 		
 			  			 		</tr>
 		  			 		</thead>
 		  			 		{if $step->actions|is_array && $step->actions|@count > 0}
 			  			 		{foreach name=actionsbucle from=$step->actions key=cpos item=stepaction}
-			  			 			<tr>
+			  			 			<tr type="stepaction"  recipe="{$recipe->id}" step="{$step->id}"  param="{$cpos}">
 						  			 	<td>
-						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" stepaction="{$cpos}">
+						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepaction" param="{$cpos}">
 												{$stepaction->getFullDescription()}
 						  			 		</p>
-						  			 	</td>
-						  			 	<td>		  			 		        
-									        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" stepaction="{$cpos}">
+						  			 	</td>						  			 	
+									     <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" type="deletestepaction" param="{$cpos}">
 									            {l s="Delete" mod="massivo"}
-									        </button>
-				    					</td>
+									     </button>				    					
 			    					</tr>
 			  			 		{/foreach}
-		  			 		{else}
-		  			 			<tr>
+		  			 		{/if}
+		  			 			<tr type="newaction" recipe="{$recipe->id}" step="{$step->id}"  param="{$step->actions|@count}">
 			  			 			<td class="text-center subtablenewaction">
-			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" newaction="1">
+			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newaction" param="{$step->actions|@count}">
 			  			 					<em>
-			  			 						{l s="There are no actions for this step at this time, press here to create a new one" mod="massivo"}
+			  			 						{l s="Press here to create a new action" mod="massivo"}
 			  			 					</em>
 			  			 				</p>
 			  			 			</td>
-			  			 			<td>
-			  			 			</td>
-		  			 			</tr>
-		  			 		{/if}
+		  			 			</tr>		  			 		
 		  			 	 </table>
 		  			 </td>			 
 	  			 </tr>
@@ -167,25 +153,28 @@
 				var id = el.attr('recipe');
     			var stepid = el.attr('step'); 
     			var massivokey = {/literal}"{$massivo_key}"{literal};
-    			var atad = { recipeid: id, step:stepid, massivo_key: massivokey};    			
-    			if (el.attr('stepaction'))
+    			var perform = el.attr('type');
+    			if (el.attr('param')) var cpos = el.attr('param');
+    			var atad = { recipeid: id, step:stepid, massivo_key: massivokey, action: perform};   
+    			if ( cpos )
+    				atad.param = cpos; 	
+    			switch (perform)
     			{
-    				var action = el.attr('stepaction');
-    				atad.operation = "displayActionSelector";
-    				atad.stepaction = action;    				
-    			}    			
-    			if (el.attr('stepcondition'))
-    			{    				
-    				var condition = el.attr('stepcondition');
-    				atad.operation = "displayConditionSelector";
-    				atad.stepcondition = condition;    				
-    			}
-    			if (el.attr('newcondition')){
-    				atad.operation = "displayNewConditionSelector";    				
-    			}
-    			if (el.attr('newaction')){
-    				atad.operation = "displayNewActionSelector";
-    			}
+    				case 'stepaction': 
+    					atad.operation = "displayActionSelector";
+    					atad.stepaction = perform;
+    					break;
+    				case 'stepcondition':
+    				    atad.operation = "displayConditionSelector";
+    					atad.stepcondition = perform;
+    					break;				
+    				case 'newcondition':
+    					atad.operation = "displayNewConditionSelector";
+    					break;
+    				case 'newaction':
+    					atad.operation = "displayNewActionSelector";
+    					break;
+    			}		
     			$.ajax({
 	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
@@ -195,9 +184,14 @@
 	              error: function(xhr,status,error) {
 	              	console.log(xhr);
 	              },
-	              success:  function (response) {
-	              	console.log(response);
-	              	$('td.subtable').html(response);
+	              success:  function (response) {	              	
+	              	$('tr[type=' + perform + '][step=' + stepid + '][param=' + cpos + ']').html(response);
+	              	switch (perform)
+	              	{
+	              		case 'stepaction': case 'newaction': var runme = 'runActionSelector'; break;
+	              		case 'stepcondition': case 'newcondition': var runme = 'runConditionSelector'; break;
+	              	}
+	              	eval(document.getElementById(runme).innerHTML);	                    	
 	              }
 	          	});
     			

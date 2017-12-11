@@ -47,14 +47,15 @@
 
         $r = Recipe::load($post['recipeid']);
         $massivoKey = Configuration::get('massivo_key');                
-        $s = $r->getStepById($post['step']);     
+        $s = $r->getStepById($post['step']);             
         //ddd($s->deleteModels());           
         $this->context->smarty->assign(array(
           //Object recipe
           'recipe' => $r,
           //Step itself, not id
           'step' => $s,
-          //'stepcondition' => $post['condition'],
+          //Condition id, to know which row we are editing
+          'condition' =>  (int) $post['param'] ,
           'massivo_key' => $massivoKey
         ));
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionSelector.tpl');                                        
