@@ -4,14 +4,14 @@
   	/* Conditions for Steps, see StepCondition for base class */
   	/* Important, they must be registered on step constructor */
   	include_once(__DIR__ .'/../includes/scription.php');
-	include_once(__DIR__ .'/conditions/StepCondition.php');
+	include_once(__DIR__ .'/StepCondition.php');
 	include_once(__DIR__ .'/conditions/StepConditionProduct.php');
 	include_once(__DIR__ .'/conditions/StepConditionProductAttribute.php');
 	include_once(__DIR__ .'/conditions/StepConditionProductAttributeGroup.php');	
 	include_once(__DIR__ .'/conditions/StepConditionProductCategory.php');
 	include_once(__DIR__ .'/conditions/StepConditionProductName.php');
 	include_once(__DIR__ .'/conditions/StepConditionProductTag.php');	
-	include_once(__DIR__ .'/actions/StepAction.php');
+	include_once(__DIR__ .'/StepAction.php');
 	include_once(__DIR__ .'/actions/StepActionCombination.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendProductDetail.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceDelete.php');
@@ -72,12 +72,30 @@
 		{
 			$t = get_declared_classes();
 			foreach ($t as $class)
-			{
-				if (strpos($class,'Condition') )
+			{		
+				if (strpos($class,'Condition')  )
 					$this->declaredConditions[] = $class;
-				if (strpos($class,'Action') )
+				if (strpos($class,'Action'))
 					$this->declaredActions[] = $class;
 			}
+			$this->deleteModels();
+		}
+		public function deleteModels()
+		{				
+			if ( array_search('StepCondition',$this->declaredConditions) >= 0)
+				unset($this->declaredConditions[array_search('StepCondition',$this->declaredConditions)]);
+			if ( array_search('StepAction',$this->declaredActions) >= 0)
+				unset($this->declaredActions[array_search('StepAction',$this->declaredActions)]);
+
+			return $k;
+		}
+		public function getDeclaredConditions()
+		{
+			return $this->declaredConditions;
+		}
+		public function getDeclaredActions()
+		{
+			return $this->declaredActions;
 		}
 		/* Input for combos */
 		public function getConditionText($i)
@@ -89,6 +107,17 @@
 			}
 			return false;			 
 		}
+		public function getAllConditionsText()
+		{
+			$r = Array();
+			foreach ($this->declaredConditions as $declared)
+			{
+				$c = new $declared();
+				if ( $c->getText() ) 
+					$r[$declared] = $c->getText();
+			}
+			return $r;
+		}
 		public function getActionText($i)
 		{
 			if ($this->declaredActions[$i])
@@ -97,6 +126,16 @@
 				return $c->getText();
 			}
 			return false;			 
+		}
+		public function getAllActionsText()
+		{
+			$r = Array();
+			foreach ($this->declaredActions as $declared)
+			{
+				$c = new $declared();
+				$r[] = $c->getText();
+			}
+			return $r;
 		}
 		/**
 		 * [addCondition adds a Condition to this step]

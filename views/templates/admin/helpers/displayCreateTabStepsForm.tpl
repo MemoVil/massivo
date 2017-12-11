@@ -69,12 +69,12 @@
 			  			 		{foreach name=conditionbucle from=$step->conditions key=cpos item=stepcondition}
 			  			 			<tr>
 						  			 	<td>
-						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" conditionstep="{$cpos}">
+						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" stepcondition="{$cpos}">
 												{$stepcondition->getFullDescription()}										
 						  			 		</p>
 						  			 	</td>
 						  			 	<td>		  			 		        
-									        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" conditionstep="{$cpos}">
+									        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" stepcondition="{$cpos}">
 									            {l s="Delete" mod="massivo"}
 									        </button>
 				    					</td>
@@ -82,8 +82,8 @@
 			  			 		{/foreach}
 		  			 		{else}
 		  			 			<tr >
-			  			 			<td class="text-center">
-			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" conditionstep="{$cpos}">
+			  			 			<td class="text-center subtablenewcondition">
+			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" newcondition="1" >
 			  			 					<em>
 			  			 						{l s="There are no conditions for this step at this time, press here to create a new one" mod="massivo"}
 			  			 					</em>
@@ -108,12 +108,12 @@
 			  			 		{foreach name=actionsbucle from=$step->actions key=cpos item=stepaction}
 			  			 			<tr>
 						  			 	<td>
-						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" actionstep="{$cpos}">
+						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" stepaction="{$cpos}">
 												{$stepaction->getFullDescription()}
 						  			 		</p>
 						  			 	</td>
 						  			 	<td>		  			 		        
-									        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" actionstep="{$cpos}">
+									        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" stepaction="{$cpos}">
 									            {l s="Delete" mod="massivo"}
 									        </button>
 				    					</td>
@@ -121,8 +121,8 @@
 			  			 		{/foreach}
 		  			 		{else}
 		  			 			<tr>
-			  			 			<td class="text-center">
-			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" actionstep="{$cpos}">
+			  			 			<td class="text-center subtablenewaction">
+			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" newaction="1">
 			  			 					<em>
 			  			 						{l s="There are no actions for this step at this time, press here to create a new one" mod="massivo"}
 			  			 					</em>
@@ -164,23 +164,43 @@
 		}
 		function attachEditableFunctionToStepList(el)
 		{
-				var recipeid = el.attr('recipe');
-    			var stepid = el.attr('step');
+				var id = el.attr('recipe');
+    			var stepid = el.attr('step'); 
+    			var massivokey = {/literal}"{$massivo_key}"{literal};
+    			var atad = { recipeid: id, step:stepid, massivo_key: massivokey};    			
     			if (el.attr('stepaction'))
     			{
-    				var stepaction = el.attr('stepaction');
-    				var a = {operation: "displayActionSelector", recipe: recipeid, step:stepid, action: stepaction};
-    			}
+    				var action = el.attr('stepaction');
+    				atad.operation = "displayActionSelector";
+    				atad.stepaction = action;    				
+    			}    			
     			if (el.attr('stepcondition'))
-    			{
-    				var stepcondition = el.attr('stepcondition');
-    				var a = {operation: "displayConditionSelector", recipe: recipeid, step:stepid, condition: stepcondition};
+    			{    				
+    				var condition = el.attr('stepcondition');
+    				atad.operation = "displayConditionSelector";
+    				atad.stepcondition = condition;    				
     			}
+    			if (el.attr('newcondition')){
+    				atad.operation = "displayNewConditionSelector";    				
+    			}
+    			if (el.attr('newaction')){
+    				atad.operation = "displayNewActionSelector";
+    			}
+    			$.ajax({
+	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+	              method: "POST",
+	              data: atad ,
+	              dataType: "html",
+	              context: document.body,
+	              error: function(xhr,status,error) {
+	              	console.log(xhr);
+	              },
+	              success:  function (response) {
+	              	console.log(response);
+	              	$('td.subtable').html(response);
+	              }
+	          	});
     			
-    			el.load(
-    				{/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
-    				a
-    			);	
 		}
 		function doAjaxForMe(vStep)		
 		{	

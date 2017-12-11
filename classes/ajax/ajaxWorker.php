@@ -214,6 +214,27 @@ class AjaxWorker extends ModuleAdminController {
 				$ok = $r->deleteSteps(trim($this->post['param']));
 				$this->success($ok . ' Steps  deleted.');				
 			break;
+			case 'displayNewActionSelector':
+				$h = new HelperMassivo();
+				$r = $h->displayNewActionSelector($this->post);
+				echo $r;
+			break;
+			case 'displayActionSelector':
+				$h = new HelperMassivo();
+				$r = $h->displayActionSelector($this->post);
+				echo $r;
+			break;
+			case 'displayNewConditionSelector':
+				$h = new HelperMassivo();		
+										
+				$r = $h->displayNewConditionSelector($this->post);
+				echo $r;
+			break;
+			case 'displayConditionSelector':
+				$h = new HelperMassivo();
+				$r = $h->displayConditionSelector($this->post);
+				echo $r;
+			break;
 		}
 	}
 	public function displayCreateTabStepsForm($recipe)

@@ -124,7 +124,34 @@
 				return $this->steps[$position];
 			else return false;
 		}
-
+		/**
+		 * [getStepById  Returns a step based on its id]
+		 * @param  [type] $id [description]
+		 * @return [Step or Boolean]     
+		 */
+		public function getStepById($id)
+		{
+			foreach ($this->steps as $i => $step)
+			{
+				if ($step->id == $id)
+					return $step;
+			}
+			return false;
+		}
+		/**
+		 * [getStepPositionById Return position of step on recipe list]
+		 * @param  [type] $id [description]
+		 * @return [int or bool]
+		 */
+		public function getStepPositionById($id)
+		{
+			foreach ($this->steps as $step)
+			{
+				if ($step->id == $id)
+					return array_search($step,$this->steps);
+			}
+			return false;
+		}
 		public function getAllSteps()
 		{
 			return $this->steps;
