@@ -3,10 +3,10 @@
 	<name>massivo</name>
 	<displayName><![CDATA[Massivo]]></displayName>
 	<version><![CDATA[0.3]]></version>
-	<description><![CDATA[Canonic linking of your products, allowing you at the same time to make referencing them faster and easier]]></description>
+	<description><![CDATA[Tool for massive actions on your store]]></description>
 	<author><![CDATA[Juan Parente]]></author>
 	<tab><![CDATA[front_office_features]]></tab>
-	<confirmUninstall><![CDATA[¿Realmente quieres desinstalar este módulo?]]></confirmUninstall>
+	<confirmUninstall><![CDATA[¿Quiere desinstalar este módulo?]]></confirmUninstall>
 	<is_configurable>1</is_configurable>
 	<need_instance>0</need_instance>
 	<limited_countries></limited_countries>

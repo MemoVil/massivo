@@ -2,13 +2,8 @@
 	if (!defined('_PS_VERSION_'))
   		exit;
   	/* Conditions for Steps, see StepCondition for base class */
-<<<<<<< .mine
   	/* Important, they must be registered on step constructor */
   	include_once(__DIR__ .'/../includes/scription.php');
-||||||| .r30
-=======
-  	/* Important, they must be registered on step constructor */
->>>>>>> .r33
 	include_once(__DIR__ .'/conditions/StepCondition.php');
 	include_once(__DIR__ .'/conditions/StepConditionProduct.php');
 	include_once(__DIR__ .'/conditions/StepConditionProductAttribute.php');

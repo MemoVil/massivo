@@ -153,12 +153,12 @@
 	<script type="text/javascript" id="runCreateTabStepsForm">
 		var recipeId = {/literal}{$recipe->id}{literal};
 		function showError(error) {
-			var divError = '<div class="ajaxError alert alert-warning ">' + error + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
+			var divError = '<div class="ajaxError alert alert-warning ">' + error + '<button type="button" class="close" data-dismiss="alert">Ã—</button></div>';			
 			$('.toppanel').before(divError);
 			$('.ajaxError').delay(5000).fadeOut();
 		}
 		function showSuccess(message) {
-			var divSuccess = '<div class="ajaxSuccess alert alert-success ">' + message + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
+			var divSuccess = '<div class="ajaxSuccess alert alert-success ">' + message + '<button type="button" class="close" data-dismiss="alert">Ã—</button></div>';			
 			$('.toppanel').before(divSuccess);
 			$('.ajaxSuccess').delay(5000).fadeOut();
 		}
