@@ -41,11 +41,11 @@
 	</table>
 </td>
 {literal}
-	<script type="text/javascript" id="runConditionSelector">
-		var recipeid = "{/literal}{$recipe->id}{literal}";
-		var stepid = "{/literal}{$step->id}{literal}";
+	<script type="text/javascript" class="runConditionSelector " {/literal}recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}"{literal}>
+		var recipeO = "{/literal}{$recipe}{literal}";
+		var stepO = "{/literal}{$step}{literal}";
 		var conditionid = "{/literal}{$condition}{literal}";
-		$('.inputSelectCondition[recipe=' + recipeid + '][step=' + stepid + '][condition=' + conditionid + ']').on('change',
+		$('.inputSelectCondition[recipe=' + recipeO + '][step=' + stepO + '][condition=' + conditionid + ']').on('change',
 			function() {
 				var selected = $(this).find("option:selected").val();
 				var value = $(this).find("option:selected").attr('value');				
@@ -60,9 +60,8 @@
 		              },
 		              success:  function (response) {	              	
 		              
-	              }
+	            	 }
 	          	});
-			}
-		);
+		});
 	</script>
 {/literal}

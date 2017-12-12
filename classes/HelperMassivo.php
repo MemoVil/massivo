@@ -41,7 +41,11 @@
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayCreateTabStepsForm.tpl');                                
         return $tpl;
       }
-
+      /**
+       * [displayNewConditionSelector Displays combo box for condition table within step row on Recipe Editor]
+       * @param  [type] $post [description]
+       * @return [tpl]
+       */
       public function displayNewConditionSelector($post)      
       {
 
@@ -56,9 +60,26 @@
           'step' => $s,
           //Condition id, to know which row we are editing
           'condition' =>  (int) $post['param'] ,
-          'massivo_key' => $massivoKey
+          'massivo_key' => $massivoKey,
+          'module_dir' => _MODULE_DIR_
         ));
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionSelector.tpl');                                        
+        return $tpl;
+      }
+
+      public function displayConditionInputs($class,$post)
+      {
+        $massivoKey = Configuration::get('massivo_key');                
+        $this->context->smarty->assign(
+          array(
+            'recipe' => $post['recipe'],
+            'step' => $post['step'],
+            'condition' => $condition,
+            'module_dir' => _MODULE_DIR_,
+            'massivo_key' => $massivoKey
+          )
+        );
+        $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionInputs.tpl');                                        
         return $tpl;
       }
   	}

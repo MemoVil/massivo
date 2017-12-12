@@ -148,6 +148,10 @@
 			$('.toppanel').before(divSuccess);
 			$('.ajaxSuccess').delay(5000).fadeOut();
 		}
+		function runRemoteScript(remote)
+		{
+			eval(remote.text());
+		}
 		function attachEditableFunctionToStepList(el)
 		{
 				var id = el.attr('recipe');
@@ -191,7 +195,6 @@
 	              		case 'stepaction': case 'newaction': var runme = 'runActionSelector'; break;
 	              		case 'stepcondition': case 'newcondition': var runme = 'runConditionSelector'; break;
 	              	}
-	              	eval(document.getElementById(runme).innerHTML);	                    	
 	              }
 	          	});
     			

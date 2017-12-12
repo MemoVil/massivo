@@ -202,9 +202,9 @@ $(document).ready(function() {
 		              	$("#ajaxCreateTab").removeClass("hidden");
 		              	$("#ajaxCreateTab").html(response);  
 		              	$('[data-toggle="tooltip"]').tooltip(); 	
-		              	$("#ajaxCreateTab").find("script").each(function(i) {		              			
+		              	/*$("#ajaxCreateTab").find("script").each(function(i) {		              			
                     			eval($(this).text());
-                		});
+                		});*/
               		  }		          
 		        }); 	
 		}

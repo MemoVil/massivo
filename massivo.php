@@ -25,7 +25,7 @@ Class massivo extends Module
 	use installMaster;
 	public function __construct()
 	{
-		
+		// Also used on StepCondition and Action l fake method;	
 		$this->name = 'massivo';
 	    $this->tab = 'front_office_features';
         $this->version = '0.3';
@@ -52,6 +52,7 @@ Class massivo extends Module
 	{
 	    if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 	    {
+	    	return;
 	    	$controller = $this->getHookControlleR('displayAdminProductsExtra');
 	    	return $controller->run($product,$params);
 	    }
