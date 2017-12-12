@@ -5,9 +5,9 @@
 	{
 		public $combination;	
 		
-		public function __construct($init,$step)
+		public function __construct($step, $init = null)
 		{
-			parent::__construct($init,$step);
+			parent::__construct($step, $init);
 			$this->workOn = 'ProductCombination';
 			$this->conditionDescription = array(
 				"long_description_left" => $this->l("If selected product(s) combination"),

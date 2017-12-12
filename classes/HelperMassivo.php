@@ -67,19 +67,19 @@
         return $tpl;
       }
 
-      public function displayConditionInputs($class,$post)
+      public function displayConditionInput($class,$post)
       {
         $massivoKey = Configuration::get('massivo_key');                
         $this->context->smarty->assign(
           array(
             'recipe' => $post['recipe'],
             'step' => $post['step'],
-            'condition' => $condition,
+            'condition' => $post['condition'],
             'module_dir' => _MODULE_DIR_,
             'massivo_key' => $massivoKey
           )
-        );
-        $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionInputs.tpl');                                        
+        );                
+        $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionInput.tpl');        
         return $tpl;
       }
   	}

@@ -42,8 +42,8 @@
 </td>
 {literal}
 	<script type="text/javascript" class="runConditionSelector " {/literal}recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}"{literal}>
-		var recipeO = "{/literal}{$recipe}{literal}";
-		var stepO = "{/literal}{$step}{literal}";
+		var recipeO = "{/literal}{$recipe->id}{literal}";
+		var stepO = "{/literal}{$step->id}{literal}";
 		var conditionid = "{/literal}{$condition}{literal}";
 		$('.inputSelectCondition[recipe=' + recipeO + '][step=' + stepO + '][condition=' + conditionid + ']').on('change',
 			function() {
@@ -52,7 +52,7 @@
     			$.ajax({
 		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
-		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, param: value, operation: 'getInputs', recipe: recipeid, step: stepid, condition: conditionid} ,
+		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, param: value, operation: 'getConditionInput', recipe: recipeO, step: stepO, condition: conditionid} ,
 		              dataType: "html",
 		              context: document.body,
 		              error: function(xhr,status,error) {

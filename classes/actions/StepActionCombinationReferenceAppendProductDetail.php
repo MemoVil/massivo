@@ -8,9 +8,9 @@
   	 */
 	class StepActionCombinationReferenceAppendProductDetail extends StepActionCombination
 	{		
-		public function __construct($init,$step)
+		public function __construct($step, $init = null)
 		{
-			parent::__construct($init,$step);
+			parent::__construct($step, $init);
 			$this->actionDescription = $this->l("Appends a product data to its reference");
 		}
 		public function run()		

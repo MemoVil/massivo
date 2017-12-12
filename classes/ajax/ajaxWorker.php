@@ -235,6 +235,28 @@ class AjaxWorker extends ModuleAdminController {
 				$r = $h->displayConditionSelector($this->post);
 				echo $r;
 			break;
+			case 'getConditionInput':
+					//Param is text on input selector
+					if ($this->post['param'])
+					{
+						$r = Recipe::load($this->post['recipe']);
+						$s = $r->getStepById($this->post['step']);   
+						//We compare Param with all short descriptions on all conditions   
+						$this->post['recipe'] = $r;
+						$this->post['step'] = $s;
+						foreach($s->getDeclaredConditions() as $class)
+						{
+							$c = new $class($s);
+							if (strcmp($c->conditionDescription['short_description'],$this->post['param']) == 0 )
+							{
+								$h = new HelperMassivo();
+								$ret = $h->displayConditionInput($c,$this->post);
+								echo $ret;
+							}
+						}				
+					}
+			break;
+
 		}
 	}
 	public function displayCreateTabStepsForm($recipe)

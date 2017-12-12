@@ -1,8 +1,7 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-  	include_once('../../../config/config.inc.php');
-	include_once('../../../init.php');
+  	
   	class StepAction 
   	{
   		public $id;
@@ -20,11 +19,16 @@
 		public $worksOn;
 		public $actionDescription;		
 
-		public function __construct($init,$step)
+		public function __construct($step, $init = null)
 		{
-			if (count($init) < 3)
-				return false;
-			$init = unserialize($init);
+			if ( !$init )
+				$init = array(
+					"id" => $this->getTime(),
+					"type" => get_class($this),
+					"condition" => '',
+					"param" => ''
+			);						
+			
 			$this->id = $init['id'];
 			$this->type = $init['type'];
 			$this->action = $init['action'];

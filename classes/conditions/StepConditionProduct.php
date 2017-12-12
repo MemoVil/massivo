@@ -6,9 +6,9 @@
 	 */
 	class StepConditionProduct extends StepCondition
 	{
-		public function __construct($init,$step)
+		public function __construct($step, $init = null)
 		{
-			parent::__construct($init,$step);
+			parent::__construct($step, $init);
 			$this->workOn ="Product";
 		}
 		public function run()

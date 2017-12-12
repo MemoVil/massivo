@@ -1,13 +1,13 @@
 <?php
 	if (!defined('_PS_VERSION_'))
   		exit;
-  	include_once('../../../config/config.inc.php');
-	include_once('../../../init.php');
-	/**
-	 * Skeleton for nested Condition types
+  	include_once(__DIR__ .'/../includes/scription.php');
+
+	 /* Skeleton for nested Condition types
 	 */
 	class StepCondition
 	{
+		use scription;
 		/** @var [id] [Unique id of this condition] */
 		private $id;
 		/** @var [type] [StepConditionType.php] */
@@ -34,15 +34,22 @@
 		*/
 		public $worksOn;
 
-		public function __construct($init,$step)
+		//Creates a random and void condition linked to this step
+		//This construct must be called knowing class of Condition
+		public function __construct($step, $init = null)
 		{
-			if (count($init) < 3)
-				return false;			
+			if ( $init == null )
+				$init = array(
+					"id" => $this->getTime(),
+					"type" => get_class($this),
+					"condition" => '',
+					"param" => ''
+				);				
 			$this->id = $init['id'];
 			$this->type = $init['type'];
 			$this->condition = $init['condition'];
 			$this->param = $init['param'];
-			$this->lang = $init['lang'] ? $init['lang'] : Context::getContext()->language->id;
+			$this->lang = isset($init['lang']) ? $init['lang'] : Context::getContext()->language->id;
 			$this->step = $step;
 		}
 

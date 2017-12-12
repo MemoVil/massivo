@@ -102,7 +102,7 @@
 		{
 			if ($this->declaredConditions[$i])
 			{
-				$c = new $this->declaredConditions[$i]();
+				$c = new $this->declaredConditions[$i]($this);
 				return $c->getText();
 			}
 			return false;			 
@@ -112,7 +112,7 @@
 			$r = Array();
 			foreach ($this->declaredConditions as $declared)
 			{
-				$c = new $declared();
+				$c = new $declared($this);
 				if ( $c->getText() ) 
 					$r[$declared] = $c->getText();
 			}
@@ -122,7 +122,7 @@
 		{
 			if ($this->declaredActions[$i])
 			{
-				$c = new $this->declaredActions[$i]();
+				$c = new $this->declaredActions[$i]($this);
 				return $c->getText();
 			}
 			return false;			 
@@ -132,7 +132,7 @@
 			$r = Array();
 			foreach ($this->declaredActions as $declared)
 			{
-				$c = new $declared();
+				$c = new $declared($this);
 				$r[] = $c->getText();
 			}
 			return $r;
@@ -153,7 +153,7 @@
 				'param' => $param,
 				'lang' => $lang
 			);
-			$condition = new $type($init,$this);
+			$condition = new $type($this,$init);
 			$this->conditions[] = $condition;
 			if ($this->save) $this->recipe->save();
 		}
@@ -190,7 +190,7 @@
 				'param' => $param,
 				'lang' => $lang
 			);
-			$action = new $type($init,$this);			
+			$action = new $type($this, $init);			
 			//count(array(0,1,2) = 3)
 			$this->actions[] = $action;
 			if ($this->save) $this->recipe->save();
