@@ -18,7 +18,7 @@
 				"has" => $this->l(" has "),
 				"hasNot" => $this->l(" hasn't ")
 			);
-			$this->selectable = $this->getAttributes();			
+			$this->selectable = $this->getAttributeData();			
 		}
 		public function checkDependencies()
 		{
@@ -65,7 +65,7 @@
 			}
 			return true;
 		}
-		public function getAttributes()
+		public function getAttributeData()
 		{		
 			$r = array();	
 			foreach ( Attribute::getAttributes($this->lang) as $attribute) 

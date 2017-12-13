@@ -64,6 +64,7 @@
 				"notRight12" => $this->l(" hasn't first twelve chars on right equal to "),
 				"wildcard" => $this->l(" wildcards with ")
 			);	
+			$this->selectable = array();
 		}
 		/**
 		 * [$width Passed as $this->condition, user can select length of match on left of right compares]

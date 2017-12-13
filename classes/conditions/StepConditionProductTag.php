@@ -15,6 +15,7 @@
 				"has" => $this->l(" has "),
 				"hasNot" => $this->l(" hasn't ")
 			);	
+			$this->selectable = $this->getTags();	
 		}
 		/**
 		 * [run Override]
@@ -44,6 +45,22 @@
 		private function hasNot($product)
 		{
 			return !$this->has($product);
+		}
+		public function getTags()
+		{
+			$r = array();
+			$sql = new DBQuery();
+			$sql->select('*')->from('tag')->where('id_lang=' . (int)$this->lang);					
+			$r = Db::getInstance()->executeS($sql);		
+			foreach ( $r as $tag) 
+			{				
+				$s = array(
+					'public' => $tag['name'],
+					'id' => $tag['id_tag']
+				);
+				$r[] = $s;
+			}			
+			return $r;		 
 		}
 	}
 ?>

@@ -45,5 +45,19 @@
 		{
 			return !$this->has($combination);
 		}
+		public function getAttributeData()
+		{		
+			$r = array();	
+			foreach ( AttributeGroup::getAttributesGroups($this->lang) as $attribute) 
+			{
+				$public = '[' . $attribute['public_name'] . ']';
+				$s = array(
+					'public' => $public,
+					'id' => $attribute['id_attribute_group']
+				);
+				$r[] = $s;
+			}			
+			return $r;
+		}
 	}
 ?>
