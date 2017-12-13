@@ -18,6 +18,7 @@
 				"has" => $this->l(" has "),
 				"hasNot" => $this->l(" hasn't ")
 			);
+			$this->selectable = $this->getAttributes();			
 		}
 		public function checkDependencies()
 		{
@@ -25,6 +26,7 @@
 				return true;
 			return false;
 		}
+
 		/**
 		 * [run Override]
 		 * 
@@ -62,6 +64,20 @@
 					return false;
 			}
 			return true;
+		}
+		public function getAttributes()
+		{		
+			$r = array();	
+			foreach ( Attribute::getAttributes($this->lang) as $attribute) 
+			{
+				$public = '[' . $attribute['public_name'] . '] ' . $attribute['name'];
+				$s = array(
+					'public' => $public,
+					'id' => $attribute['id_attribute']
+				);
+				$r[] = $s;
+			}			
+			return $r;
 		}
 	}
 ?>

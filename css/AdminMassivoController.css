@@ -102,6 +102,8 @@ table.fulltr th
 	table.fulltr tr, table.fulltr tr td {
 		display:inline-table;
 		width:100%;
+ 		white-space: nowrap;
+ 		word-wrap:normal;
 	}
 }
 div.unav1

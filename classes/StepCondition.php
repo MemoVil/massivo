@@ -15,8 +15,10 @@
 		/** @var [condition] [] */
 		private $condition;
 		private $param;
-		private $lang;
+		public $lang;
 		public $step;
+		/* Array of elements for inputs that get info from Store */
+		public $selectable = array();
 		//This is the way we will show user a description of how each Condition is showed. We must show two strings:
 		//	1. Long description, to use on editor, like (If product combination) + verbDescription + (this attributes:) + param
 		//	2. Short description, to use on popup/select		
@@ -49,7 +51,13 @@
 			$this->type = $init['type'];
 			$this->condition = $init['condition'];
 			$this->param = $init['param'];
-			$this->lang = isset($init['lang']) ? $init['lang'] : Context::getContext()->language->id;
+
+			if (array_key_exists('lang',$init))
+			{
+				$this->lang = $init['lang'];
+				
+			}
+			else $this->lang = Context::getContext()->language->id;								
 			$this->step = $step;
 		}
 
@@ -133,9 +141,14 @@
  				return $t;
  			else return false;
  		}
+ 		public function getSelectable()
+ 		{
+ 			return $this->selectable;
+ 		}
 		public function l($string, $specific = false){
  			return Translate::getModuleTranslation(Module::getInstanceByName('massivo'), $string, ($specific) ? $specific : 'massivo');
  		}
+ 	
  		
 	}
 ?>

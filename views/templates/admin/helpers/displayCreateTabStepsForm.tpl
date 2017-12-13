@@ -24,9 +24,9 @@
 			<table id="steplist" class="table table-striped table-highlight text-info table-responsive ">
 	  			<thead>  
 		  			<tr class="nodrag nodrop">					
-		  				<th class="fixed-width-xs center col-xs-1">
+		  				<th class="center">
 		  				</th>
-		  				<th class="fixed-width-xs center col-xs-1">
+		  				<th class="center">
 		  					<span class="title_box active">
 		  						{l s="Step" mod="massivo"}
 		  					</span>
@@ -36,7 +36,7 @@
 		  						{l s="Name" mod="massivo"}
 		  					</span>
 		  				</th>
-		  				<th class="center col-md-8 ">
+		  				<th class="center">
 		  					<span class="title_box active">
 		  						{l s="Conditions and Actions" mod="massivo"}
 		  					</span>

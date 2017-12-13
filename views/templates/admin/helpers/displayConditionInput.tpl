@@ -12,7 +12,15 @@
 	{$condition->getRightText()}
 </td>
 <td class="inputTextTd" recipe="{$recipe->id}" step="{$step->id}" condition="{$row}">
+	{if $condition->getSelectable()|@count}
+		<select class="inputSelectConditionParam" recipe="{$recipe->id}" step="{$step->id}" condition="{$row}">
+			{foreach name=selectablebucle from=$condition->getSelectable() key=csel item=select}					
+					<option value="{$select['id']}"> {$select['public']}</option>
+			{/foreach}
+		</select>
+	{else}
 	<input class="inputParam" type="text" recipe="{$recipe->id}" step="{$step->id}" condition="{$row}">
+	{/if}
 </td>
 <td class="conditionButton" recipe="{$recipe->id}" step="{$step->id}" condition="{$row}">
 	    <button type="button" class="btn btn-danger canceladdaction" recipe="{$recipe->id}" step="{$step->id}" condition="{$row}">
