@@ -25,7 +25,7 @@
 				$init = array(
 					"id" => $this->getTime(),
 					"type" => get_class($this),
-					"condition" => '',
+					"action" => '',
 					"param" => ''
 			);						
 			
@@ -76,8 +76,33 @@
 		{
 			return;
 		}
+		public function getText()
+ 		{
+ 			return $this->actionDescription['short_description'];
+ 		}
+ 		public function getDescription()
+ 		{
+ 			return $this->getText();	
+ 		}
+ 		public function getLeftText()
+ 		{
+ 			$this->actionDescription['long_description_left'];
+ 		}
+ 		public function getRightText()
+ 		{
+ 			return $this->actionDescription['long_description_right'];
+ 		}
+ 		public function getVerb($human = null)
+ 		{
+ 			if ($human == null)
+ 				return $this->verbActionDescription;
+ 			else if ($t = array_search($human,$this->getVerb()))
+ 				return $t;
+ 			else return false;
+ 		}
 		public function l($string, $specific = false){
  			return Translate::getModuleTranslation(Module::getInstanceByName('massivo'), $string, ($specific) ? $specific : 'massivo');
  		}
+ 		
   	}
  ?>

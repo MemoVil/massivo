@@ -117,8 +117,25 @@
  		{
  			return $this->getText();	
  		}
+ 		public function getLeftText()
+ 		{
+ 			return $this->conditionDescription['long_description_left'];
+ 		}
+ 		public function getRightText()
+ 		{
+ 			return $this->conditionDescription['long_description_right'];
+ 		}
+ 		public function getVerb($human = null)
+ 		{
+ 			if ($human == null)
+ 				return $this->verbConditionDescription;
+ 			else if ($t = array_search($human,$this->getVerb()))
+ 				return $t;
+ 			else return false;
+ 		}
 		public function l($string, $specific = false){
  			return Translate::getModuleTranslation(Module::getInstanceByName('massivo'), $string, ($specific) ? $specific : 'massivo');
  		}
+ 		
 	}
 ?>

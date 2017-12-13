@@ -1,5 +1,5 @@
 <td>
-	<table>
+	<table class="table-responsive fulltr table">
 		<thead class="hidden">
 			<tr class ="hidden">
 				<th>
@@ -15,6 +15,9 @@
 					{l s="right text long description" mod="massivo"}
 				</th>
 				<th>
+					{l s="input param" mod="massivo"}
+				</th>
+				<th>
 					{l s="Buttons" mod="massivo"}
 				</th>
 			</tr>
@@ -27,15 +30,17 @@
 							<option value="{$text}">{l s="$text" mod="massivo"}</option>
 						{/foreach}
 					</select>
-				</td>
+				</td>				
 				<td class="leftLongConditionDescription" recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}">
 				</td>
 				<td class="inputSelectConditionVerb" recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}">
 				</td>
 				<td class="rightLongConditionDescription" recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}">
 				</td>
-				<td class="conditionButton" recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}">
+				<td class="inputParam" recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}">
 				</td>
+				<td class="conditionButton" recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}">
+				</td>				
 			</tr>
 		</tbody>
 	</table>
@@ -45,21 +50,23 @@
 		var recipeO = "{/literal}{$recipe->id}{literal}";
 		var stepO = "{/literal}{$step->id}{literal}";
 		var conditionid = "{/literal}{$condition}{literal}";
-		$('.inputSelectCondition[recipe=' + recipeO + '][step=' + stepO + '][condition=' + conditionid + ']').on('change',
+		var combo = $('.inputSelectCondition[recipe=' + recipeO + '][step=' + stepO + '][condition=' + conditionid + ']');
+		combo.on('change',
 			function() {
 				var selected = $(this).find("option:selected").val();
 				var value = $(this).find("option:selected").attr('value');				
     			$.ajax({
-		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+		              url: '{/literal}{$module_dir}{literal}' + "massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
-		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, param: value, operation: 'getConditionInput', recipe: recipeO, step: stepO, condition: conditionid} ,
+		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, param: value, operation: 'getConditionInput', recipeid: recipeO, stepid: stepO, condition: conditionid} ,
 		              dataType: "html",
 		              context: document.body,
 		              error: function(xhr,status,error) {
 		              	console.log(xhr);
 		              },
 		              success:  function (response) {	              	
-		              
+		              	combo.parent().nextAll().remove();
+		              	combo.parent().after(response);
 	            	 }
 	          	});
 		});

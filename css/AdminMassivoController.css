@@ -65,8 +65,45 @@ span.massivo_signal
 table.fulltr th
 {
 	width: 100%;
+	padding: 10px;	
+}
+.bg-green
+{
+	background-color: #72C279;
+}
+.bg-white
+{
+	background-color: white;
+}
+.text-black
+{
+	color: black;
+}
+.white-border {
+	border-color:white;
+}
+.black-border {
+	border: 2px solid black;
 }
 
+@media only screen and (max-width: 720px) {
+	table#steplist, table#steplist tbody, table#steplist tr.bucle {
+		display:block;
+	}
+	table#steplist > thead > tr > th {
+		display:none;
+	}
+	table#steplist tr.bucle > td
+	{
+		display: block;
+		box-sizing:border-box;
+		clear:both;		
+	}
+	table.fulltr tr, table.fulltr tr td {
+		display:inline-table;
+		width:100%;
+	}
+}
 div.unav1
 {
     display:inline-block;

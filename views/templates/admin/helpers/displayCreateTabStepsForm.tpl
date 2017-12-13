@@ -20,23 +20,23 @@
 		</span>
 	</div>	 
 	<form class="form-horizontal stepsform">
-		<div class="table-responsive-row clearfix">
-			<table id="steplist" class="table table-striped table-highlight text-info table product">
+		<div class="clearfix">
+			<table id="steplist" class="table table-striped table-highlight text-info table-responsive ">
 	  			<thead>  
 		  			<tr class="nodrag nodrop">					
-		  				<th class="fixed-width-xs center">
+		  				<th class="fixed-width-xs center col-xs-1">
 		  				</th>
-		  				<th class="fixed-width-xs center">
+		  				<th class="fixed-width-xs center col-xs-1">
 		  					<span class="title_box active">
 		  						{l s="Step" mod="massivo"}
 		  					</span>
 		  				</th>
-		  				<th class="center">
+		  				<th class="center ">
 		  					<span class="title_box active">
 		  						{l s="Name" mod="massivo"}
 		  					</span>
 		  				</th>
-		  				<th class="center">
+		  				<th class="center col-md-8 ">
 		  					<span class="title_box active">
 		  						{l s="Conditions and Actions" mod="massivo"}
 		  					</span>
@@ -51,13 +51,14 @@
 		  			 <td class="text-center">
 						{$pos + 1}
 		  			 </td>
-		  			 <td class="text-center">
+		  			 <td class="text-center rescaleTd">
 		  			 	{$step->name}
 		  			 </td>		  
 		  			 <td>
-		  			 	<table class="fulltr table  table-condensed table-highlight table-hover text-info table product small">
+		  			 	{assign "tableproperties" "fulltr table table-highlight table-hover text-info  table-responsive"}
+		  			 	<table class="{$tableproperties}">
 		  			 		<thead>  
-		  			 			<tr class="success">
+		  			 			<tr class="bg-primary white-border">
 				  			 		<th class="text-center">
 				  			 			{l s="Conditions" mod="massivo"}
 				  			 		</th>				  			 		
@@ -72,7 +73,7 @@
 						  			 		</p>
 						  			 	</td>						  			 	  			 		        
 								        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" param="{$cpos}">
-								            {l s="Delete" mod="massivo"}
+								            <i class="icon-trash">  </i>
 								        </button>				    					
 			    					</tr>
 			  			 		{/foreach}
@@ -87,10 +88,10 @@
 			  			 			</td>			  			 
 		  			 			</tr>		  			 		
 		  			 	 </table>
-		  			 	 <table class="table table-condensed table-highlight table-hover text-info table product small">
+		  			 	 <table class="{$tableproperties}">
 		  			 		<thead>  
-		  			 			<tr class="warning">
-				  			 		<th class="text-center">
+		  			 			<tr class="bg-white black-border">
+				  			 		<th class="text-center text-black">
 				  			 			{l s="Actions" mod="massivo"}
 				  			 		</th>				  			 		
 			  			 		</tr>
@@ -104,7 +105,7 @@
 						  			 		</p>
 						  			 	</td>						  			 	
 									     <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" type="deletestepaction" param="{$cpos}">
-									            {l s="Delete" mod="massivo"}
+						            	    	<i class="icon-trash">  </i>
 									     </button>				    					
 			    					</tr>
 			  			 		{/foreach}
@@ -159,7 +160,7 @@
     			var massivokey = {/literal}"{$massivo_key}"{literal};
     			var perform = el.attr('type');
     			if (el.attr('param')) var cpos = el.attr('param');
-    			var atad = { recipeid: id, step:stepid, massivo_key: massivokey, action: perform};   
+    			var atad = { recipeid: id, stepid:stepid, massivo_key: massivokey, action: perform};   
     			if ( cpos )
     				atad.param = cpos; 	
     			switch (perform)

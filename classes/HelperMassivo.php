@@ -51,7 +51,7 @@
 
         $r = Recipe::load($post['recipeid']);
         $massivoKey = Configuration::get('massivo_key');                
-        $s = $r->getStepById($post['step']);             
+        $s = $r->getStepById($post['stepid']);             
         //ddd($s->deleteModels());           
         $this->context->smarty->assign(array(
           //Object recipe
@@ -70,13 +70,16 @@
       public function displayConditionInput($class,$post)
       {
         $massivoKey = Configuration::get('massivo_key');                
+        $r = Recipe::load($post['recipeid']);
+        $s = $r->getStepById($post['stepid']);             
         $this->context->smarty->assign(
           array(
-            'recipe' => $post['recipe'],
-            'step' => $post['step'],
-            'condition' => $post['condition'],
+            'recipe' => $r,
+            'step' => $s,
+            'row' => $post['condition'],
             'module_dir' => _MODULE_DIR_,
-            'massivo_key' => $massivoKey
+            'massivo_key' => $massivoKey,
+            'condition' => $class
           )
         );                
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionInput.tpl');        
