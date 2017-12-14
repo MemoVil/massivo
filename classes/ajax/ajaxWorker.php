@@ -236,7 +236,7 @@ class AjaxWorker extends ModuleAdminController {
 				echo $r;
 			break;
 			case 'getConditionInput':
-				if ($this->post['param'])
+				if ($this->arePost('param','recipeid','stepid'))
 				{					
 					$p = $this->post['param'];
 					$r = Recipe::load($this->post['recipeid']);
@@ -253,7 +253,41 @@ class AjaxWorker extends ModuleAdminController {
 					}
 				}
 			break;
+			case 'addCondition':								
+				if ($this->arePost('type', 'condition','recipeid','stepid','condition','verb','param'))
+				{
+					if ( !$this->addNewCondition($this->post) ) 
+					{
+						$this->error('Error adding new condition');
+					}
+					
+					$h = new HelperMassivo();
+					$r = $h->displayAddedCondition($this->post);
+					echo $r;
+				}
+			break;
 		}
+	}
+	/**
+	 * [addNewCondition Adds a new Condition]
+	 * @param [type] $post [description]
+	 */
+	public function addNewCondition($post)
+	{
+		$r = Recipe::load($post['recipeid']);
+		if (!$r )
+			return false;
+		if ($s = $r->getStepById($post['stepid']))
+		{
+			$s->addCondition(
+				$post['type'],
+				$post['verb'],
+				$post['param'],
+				$r->lang
+			);
+			return true;
+		}
+		return false;
 	}
 	public function displayCreateTabStepsForm($recipe)
 	{

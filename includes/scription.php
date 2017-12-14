@@ -54,5 +54,29 @@
 		{
 			echo 'Error$' . $message;
 		}
+		public function areSet()
+		{
+			  $args = func_get_args();
+			  foreach ($args as $arg)
+			  {
+			  	if ($arg == null)
+			  		return false;
+			  }
+			  return true;
+		}
+		public function arePost()
+		{					
+			if (isset($this->post))
+			{			
+				$args = func_get_args();				
+				foreach($args as $arg)
+				{					
+				 	if ( !array_key_exists($arg,$this->post) )
+				 		return false;
+				}
+				return true;
+			}
+			return false;
+		}
 	}
 ?>

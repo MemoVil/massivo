@@ -55,5 +55,33 @@
 			);
 		}
 	);
+	$('button.saveaction').click(
+		function(e) {
+			var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var cId = $(this).attr('condition');
+			if ( rId > 0 && sId > 0  && cId >= 0 )
+			{
+				var cType = $('select.inputSelectCondition option:selected').attr('value');
+				var cVerb = $('select.inputSelectConditionVerb option:selected').attr('value');
+				var cParam = $('select.inputSelectConditionParam').attr('value');
+				if ( cParam == null)
+				{
+					cParam = $('inputParam').val();
+				}
+				$.ajax({
+	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+	              method: "POST",
+	              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, operation: 'addCondition', recipeid: rId, stepid: sId, condition: cId,	type: cType, verb: cVerb, param: cParam} ,
+	              dataType: "html",
+	              context: document.body,
+	              error: function(xhr,status,error) {
+	              	console.log(xhr);
+	              },
+	              success:  function (response) {	              	
+	              
+	              }
+	          	});
+			}
+		}
+	);
 	</script>
 {/literal}

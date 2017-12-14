@@ -85,18 +85,47 @@
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionInput.tpl');        
         return $tpl;
       }
-
+      /**
+       * [displayAddBlankStep Adds a new step to Steplist]
+       * @param  [type] $recipe [description]
+       * @param  [type] $step   [description]
+       * @return [type]         [description]
+       */
       public function displayAddBlankStep($recipe, $step)
       {
-        $r = $recipe; $s = $step;        
+        $r = $recipe; $s = $step;   
+        $massivoKey = Configuration::get('massivo_key');                     
         $this->context->smarty->assign(
           array(
             'recipe' => $r,
             'step' => $s,
-            'pos' => $r->getStepPosition($s)
+            'massivo_key' => $massivoKey,
+            'pos' => $r->getStepPosition($s),
+            'module_dir' => _MODULE_DIR_
           )
         );
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayAddBlankStep.tpl');        
+        return $tpl;
+      }
+      /**
+       * [displayAddedCondition Show new condition and adds a blank new condition below it]
+       * @param  [type] $post [description]
+       * @return [type]       [description]
+       */
+      public function displayAddedCondition($post)
+      {
+        $r = Recipe::load($post['recipeid']);
+        $s = $r->getStepById($post['stepid']);    
+        $massivoKey = Configuration::get('massivo_key');                     
+        $this->context->smarty->assign(
+          array(
+            'recipe' => $r,
+            'step' => $s,
+            'massivo_key' => $massivoKey,
+            'condition' => $post['condition']           
+          )
+        );
+        $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayAddedCondition.tpl');        
         return $tpl;
       }
   	}
