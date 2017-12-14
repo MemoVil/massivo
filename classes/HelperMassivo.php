@@ -85,5 +85,19 @@
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionInput.tpl');        
         return $tpl;
       }
+
+      public function displayAddBlankStep($recipe, $step)
+      {
+        $r = $recipe; $s = $step;        
+        $this->context->smarty->assign(
+          array(
+            'recipe' => $r,
+            'step' => $s,
+            'pos' => $r->getStepPosition($s)
+          )
+        );
+        $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayAddBlankStep.tpl');        
+        return $tpl;
+      }
   	}
 ?>

@@ -25,10 +25,35 @@
 </td>
 <td class="conditionButton" recipe="{$recipe->id}" step="{$step->id}" condition="{$row}">
 	    <button type="button" class="btn btn-danger canceladdaction" recipe="{$recipe->id}" step="{$step->id}" condition="{$row}">
-	    	<i class="icon-trash">  </i>
+	    	<i class="icon-trash"></i>
         </button>
 	    <button type="button" class="btn btn-success saveaction" recipe="{$recipe->id}" step="{$step->id}" condition="{$row}">
-            {l s="Save" mod="massivo"}            
-        </button>
-        
+            <i class="icon-check"></i>
+        </button>     
+        <span class="hiddenmodel hidden">   
+        <p class="text-center editable hidden" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" param="{$step->conditions|@count}" >
+				<em>
+					{l s="Press here to add a new condition" mod="massivo"}
+				</em>
+		</p>
+		</span>
 </td>
+
+
+{literal}
+	<script type="text/javascript" class="triggerButtons " {/literal}recipe="{$recipe->id}" step="{$step->id}" condition="{$row}"{literal}>
+	$('button.canceladdaction').click(
+		function(e){			
+			$(this).parent().parent().html($('.hiddenmodel').clone().html());			
+			var el = $('tr p.editable[type="newcondition"]');			
+			clickControl = 1;
+			el.removeClass('hidden');
+			el.click(
+				function(){
+			 		attachEditableFunctionToStepList(el);					
+				}
+			);
+		}
+	);
+	</script>
+{/literal}

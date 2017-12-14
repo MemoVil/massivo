@@ -186,9 +186,9 @@ class AjaxWorker extends ModuleAdminController {
 			case "addBlankStep":								
 				$r = Recipe::load($this->post['recipeid']);		
 
-				if ( $s = $this->addBlankStep($r,$this->post['step']) )
+				if ( $h = $this->addBlankStep($r,$this->post['step']) )
 				{
-					$this->success('Step added$' . $this->post['step'] . '$' . $s->id);
+					$this->success('Step added$' . $this->post['step'] . '$' . $h);
 				}
 				else  $this->error('An error appeared during step addition');
 			break;
@@ -330,8 +330,10 @@ class AjaxWorker extends ModuleAdminController {
 		$s->name = $step;
 		$s->recipe = $recipe;
 		$recipe->addStep($s);
+		$h = new HelperMassivo();
+		$tpl = $h->displayAddBlankStep($recipe,$s);		
 		$recipe->save();		
-		return $s;	
+		return $tpl;	
 	}
 
 	/**

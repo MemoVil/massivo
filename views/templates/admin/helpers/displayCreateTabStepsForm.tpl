@@ -139,6 +139,7 @@
 {literal}
 	<script type="text/javascript" id="runCreateTabStepsForm">
 		var recipeId = {/literal}{$recipe->id}{literal};
+		var clickControl = 0;
 		function showError(error) {
 			var divError = '<div class="ajaxError alert alert-warning ">' + error + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
 			$('.toppanel').before(divError);
@@ -154,7 +155,7 @@
 			eval(remote.text());
 		}
 		function attachEditableFunctionToStepList(el)
-		{
+		{				
 				var id = el.attr('recipe');
     			var stepid = el.attr('step'); 
     			var massivokey = {/literal}"{$massivo_key}"{literal};
@@ -220,13 +221,14 @@
 	              	else {	              		
 	              		showSuccess(t[1]);	
 	              		var rows = $('tr.bucle').length;
-	              		rows = rows + 1;
+	              		$html = t[3];
+	              		/*rows = rows + 1;
 	              		$html = '<tr class="bucle" order="' + rows + '"><td order="' + rows + '"><input type="checkbox" class="checkStep" order="'+rows+'"></td>';
 	              		$html = $html + ' <td class="text-center">' + rows + '</td><td class="text-center">' + t[2] + '</td>';
 	              		$html = $html + '<td><table class="table table-condensed table-highlight table-hover text-info table product small"><thead> <tr class="success"><th class="text-center">{/literal}{l s="Conditions" mod="massivo"}{literal}</th><th></th></tr></thead>';
 	              		$html = $html + '<tbody><tr><td class="text-center">{/literal}<p class="editable" recipe="' + recipeId +'" step="' + t[3] +'" conditionstep="1"><em>{l s="There are no conditions for this step at this time, press here to create a new one" mod="massivo"}</em></p> {literal}</td></tr></tbody></table>';	              		
 	              		$html = $html + '<table class="table table-condensed table-highlight table-hover text-info table product small"><thead> <tr class="warning"><th class="text-center">{/literal}{l s="Actions" mod="massivo"}{literal}</th><th></th></tr></thead>';
-	              		$html = $html + '<tbody><tr><td class="text-center">{/literal}<p class="editable" recipe="' + recipeId +'" step="' + t[3] +'" actionstep="1"><em>{l s="There are no actions for this step at this time, press here to create a new one" mod="massivo"}</em></p> {literal}</td></tr></tbody></table></td></tr>';
+	              		$html = $html + '<tbody><tr><td class="text-center">{/literal}<p class="editable" recipe="' + recipeId +'" step="' + t[3] +'" actionstep="1"><em>{l s="There are no actions for this step at this time, press here to create a new one" mod="massivo"}</em></p> {literal}</td></tr></tbody></table></td></tr>';*/
 	              		
 	              		if ( $('tr.bucle').length ) {
 	              			$('tr.bucle').last().after($html);	              			
@@ -236,8 +238,8 @@
 	              		}
 	              		$("table p.editable").unbind("click");
 	              		$("table p.editable").click(
-	              			function()
-	              			{
+	              			function(event)
+	              			{              			   
 	              				attachEditableFunctionToStepList($(this));	              				
 	              			});
 	              	}

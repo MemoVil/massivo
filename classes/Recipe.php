@@ -125,6 +125,15 @@
 			else return false;
 		}
 		/**
+		 * [getStepPosition Finds step on step list and return its array position ]
+		 * @param  [Step] $step [description]
+		 * @return [Int]        [description]
+		 */
+		public function getStepPosition($step)
+		{
+				return (array_search($step,$this->steps));
+		}
+		/**
 		 * [getStepById  Returns a step based on its id]
 		 * @param  [type] $id [description]
 		 * @return [Step or Boolean]     

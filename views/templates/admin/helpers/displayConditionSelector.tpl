@@ -40,6 +40,16 @@
 				<td class="inputParam" recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}">
 				</td>
 				<td class="conditionButton" recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}">
+						<button type="button" class="btn btn-danger canceladdaction" recipe="{$recipe->id}" step="{$step->id}" condition="{$condition}">
+	    							<i class="icon-trash"></i>
+        				</button>
+        		        <span class="hiddenmodel hidden">   
+					        <p class="text-center editable hidden" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" param="{$step->conditions|@count}" >
+									<em>
+										{l s="Press here to add a new condition" mod="massivo"}
+									</em>
+							</p>
+						</span>
 				</td>				
 			</tr>
 		</tbody>
@@ -69,6 +79,18 @@
 		              	combo.parent().after(response);
 	            	 }
 	          	});
+		});
+		$('button.canceladdaction[recipe=' + recipeO + '][step=' + stepO + '][condition=' + conditionid + ']').click(
+		function(e){			
+			$(this).parent().parent().html($('.hiddenmodel').clone().html());			
+			var el = $('tr p.editable[type="newcondition"]');			
+			clickControl = 1;
+			el.removeClass('hidden');
+			el.click(
+				function(){
+			 		attachEditableFunctionToStepList(el);					
+				}
+			);
 		});
 	</script>
 {/literal}

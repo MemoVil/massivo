@@ -86,8 +86,7 @@
 				unset($this->declaredConditions[array_search('StepCondition',$this->declaredConditions)]);
 			if ( array_search('StepAction',$this->declaredActions) >= 0)
 				unset($this->declaredActions[array_search('StepAction',$this->declaredActions)]);
-
-			return $k;
+			return true;			
 		}
 		public function getDeclaredConditions()
 		{
