@@ -236,17 +236,18 @@
 		 */
 		public function save()
 		{
+			$o = serialize($this);			
 			$sql = Db::getInstance()->insert(
 				'massivo_recipes',
 				array(
 					'id' => $this->id,
 					'name' => pSQL($this->name),
-					'recipe' => serialize($this)
+					'recipe' => pSQL($o)
 				),
 				false,
 				true,
 				Db::REPLACE
-			);			
+			);						
 			return $this;
 		}
 		/** 

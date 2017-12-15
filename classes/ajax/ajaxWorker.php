@@ -255,12 +255,14 @@ class AjaxWorker extends ModuleAdminController {
 			break;
 			case 'addCondition':								
 				if ($this->arePost('type', 'condition','recipeid','stepid','condition','verb','param'))
-				{
-					if ( !$this->addNewCondition($this->post) ) 
+				{					
+					$c = $this->addNewCondition($this->post);
+					if ( !$c ) 
 					{
-						$this->error('Error adding new condition');
-					}
-					
+						$this->error('Error adding new condition');						
+						return;
+					}			
+					$this->post['conditionObject'] = $c;
 					$h = new HelperMassivo();
 					$r = $h->displayAddedCondition($this->post);
 					echo $r;
@@ -279,13 +281,14 @@ class AjaxWorker extends ModuleAdminController {
 			return false;
 		if ($s = $r->getStepById($post['stepid']))
 		{
-			$s->addCondition(
+			$c = $s->addCondition(
 				$post['type'],
 				$post['verb'],
 				$post['param'],
 				$r->lang
-			);
-			return true;
+			);			
+			$r->save();
+			return $c;
 		}
 		return false;
 	}

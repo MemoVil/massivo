@@ -122,7 +122,8 @@
             'recipe' => $r,
             'step' => $s,
             'massivo_key' => $massivoKey,
-            'condition' => $post['condition']           
+            'cpos' => $post['condition'],
+            'condition' => $post['conditionObject']
           )
         );
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayAddedCondition.tpl');        

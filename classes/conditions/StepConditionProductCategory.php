@@ -38,5 +38,13 @@
 		{
 			return !$this->isLocated($product);
 		}
+		public function paramInfo($id)
+		{
+			foreach ($this->getAttributeData() as $option)
+			{
+				if ($option['id'] == $id)
+					return $option['public'];
+			}
+		}
 	}
 ?>

@@ -11,7 +11,7 @@
 			$this->workOn = 'ProductCombination';
 			$this->conditionDescription = array(
 				"long_description_left" => $this->l("If selected product(s) combination"),
-				"long_description_right" => $this->l(" attribute "),
+				"long_description_right" => $this->l("attribute "),
 				"short_description" => $this->l("Attribute match")
 			);
 			$this->verbConditionDescription = array(
@@ -79,5 +79,6 @@
 			}			
 			return $r;
 		}
+
 	}
 ?>

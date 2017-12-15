@@ -59,7 +59,7 @@
 		  			 	<table class="{$tableproperties}">
 		  			 		<thead>  
 		  			 			<tr class="bg-primary white-border">
-				  			 		<th class="text-center">
+				  			 		<th colspan="6" class="text-center">
 				  			 			{l s="Conditions" mod="massivo"}
 				  			 		</th>				  			 		
 			  			 		</tr>
@@ -67,51 +67,61 @@
 		  			 		{if $step->conditions|is_array && $step->conditions|@count > 0}
 			  			 		{foreach name=conditionbucle from=$step->conditions key=cpos item=stepcondition}
 			  			 			<tr type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  param="{$cpos}">
-						  			 	<td>
+						  			 	<td colspan="5">
 						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" param="{$cpos}">
 												{$stepcondition->getFullDescription()}										
 						  			 		</p>
-						  			 	</td>						  			 	  			 		        
-								        <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" param="{$cpos}">
-								            <i class="icon-trash">  </i>
-								        </button>				    					
+						  			 	</td>	
+						  			 	<td>					  			 			 		        
+											<button type="button" class="btn btn-success editstepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" param="{$cpos}">
+											    <i class="icon-edit">  </i>
+											</button>				    					
+											<button type="button" class="btn btn-danger deletestepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" param="{$cpos}">
+											    <i class="icon-trash">  </i>
+											</button>	    					
+								    	</td>
 			    					</tr>
 			  			 		{/foreach}
 		  			 		{/if}
-		  			 			<tr type="newcondition" recipe="{$recipe->id}" step="{$step->id}"  param="{$step->conditions|@count}">
-			  			 			<td class="text-center subtablenewcondition">
-			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" param="{$step->conditions|@count}" >
-			  			 					<em>
-			  			 						{l s="Press here to add a new condition" mod="massivo"}
-			  			 					</em>
-			  			 				</p>
-			  			 			</td>			  			 
-		  			 			</tr>		  			 		
+			  			 			<tr type="newcondition" recipe="{$recipe->id}" step="{$step->id}"  param="{$step->conditions|@count}">
+				  			 			<td colspan="6" class="text-center subtablenewcondition">
+				  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" param="{$step->conditions|@count}" >
+				  			 					<em>
+				  			 						{l s="Press here to add a new condition" mod="massivo"}
+				  			 					</em>
+				  			 				</p>
+				  			 			</td>			  			 
+			  			 			</tr>		  			 		
 		  			 	 </table>
 		  			 	 <table class="{$tableproperties}">
 		  			 		<thead>  
 		  			 			<tr class="bg-white black-border">
-				  			 		<th class="text-center text-black">
+				  			 		<th colspan="6" class="text-center text-black">
 				  			 			{l s="Actions" mod="massivo"}
 				  			 		</th>				  			 		
 			  			 		</tr>
 		  			 		</thead>
 		  			 		{if $step->actions|is_array && $step->actions|@count > 0}
-			  			 		{foreach name=actionsbucle from=$step->actions key=cpos item=stepaction}
-			  			 			<tr type="stepaction"  recipe="{$recipe->id}" step="{$step->id}"  param="{$cpos}">
-						  			 	<td>
+			  			 		{foreach name=actionbucle from=$step->actions key=cpos item=stepaction}
+			  			 			<tr type="stepaction" recipe="{$recipe->id}" step="{$step->id}"  param="{$cpos}">
+						  			 	<td colspan="5">
 						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepaction" param="{$cpos}">
-												{$stepaction->getFullDescription()}
+												{$stepaction->getFullDescription()}										
 						  			 		</p>
-						  			 	</td>						  			 	
-									     <button type="button" class="btn btn-error deletestepaction" recipe="{$recipe->id}" step="{$step->id}" type="deletestepaction" param="{$cpos}">
-						            	    	<i class="icon-trash">  </i>
-									     </button>				    					
+						  			 	</td>	
+						  			 	<td>					  			 			 		        
+											<button type="button" class="btn btn-success editstepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" param="{$cpos}">
+											    <i class="icon-edit">  </i>
+											</button>				    					
+											<button type="button" class="btn btn-danger deletestepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" param="{$cpos}">
+											    <i class="icon-trash">  </i>
+											</button>	    					
+								    	</td>
 			    					</tr>
-			  			 		{/foreach}
-		  			 		{/if}
+			  			 		{/foreach}		  	
+			  			 	{/if}
 		  			 			<tr type="newaction" recipe="{$recipe->id}" step="{$step->id}"  param="{$step->actions|@count}">
-			  			 			<td class="text-center subtablenewaction">
+			  			 			<td colspan="6" class="text-center subtablenewaction">
 			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newaction" param="{$step->actions|@count}">
 			  			 					<em>
 			  			 						{l s="Press here to create a new action" mod="massivo"}
@@ -190,8 +200,9 @@
 	              error: function(xhr,status,error) {
 	              	console.log(xhr);
 	              },
-	              success:  function (response) {	              	
-	              	$('tr[type=' + perform + '][step=' + stepid + '][param=' + cpos + ']').html(response);
+	              success:  function (response) {	     
+	              	var tr = $('tr[type=' + perform + '][recipe=' + id + '][step=' + stepid + '][param=' + cpos + ']');
+	              	tr.html(response);
 	              	switch (perform)
 	              	{
 	              		case 'stepaction': case 'newaction': var runme = 'runActionSelector'; break;
@@ -318,6 +329,25 @@
     			attachEditableFunctionToStepList($(this));
     		}   		
     	);
+  	 	$('button.editstepcondition').click(
+			function()
+			{
+				var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var cId = $(this).attr('param');
+				$.ajax({
+		              url: '{/literal}{$module_dir}{literal}' + "massivo/classes/ajax/ajaxWorker.php",
+		              method: "POST",
+		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, condition: cId, recipe: rId, step: sId, operation: 'editCondition'} ,
+		              dataType: "html",
+		              context: document.body,
+		              error: function(xhr,status,error) {
+		              	console.log(xhr);
+		              },
+		              success:  function (response) {	              	
+		              	
+		        	 }
+		      	});
+			}
+		);
 	</script>
 
 {/literal}

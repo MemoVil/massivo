@@ -155,6 +155,7 @@
 			$condition = new $type($this,$init);
 			$this->conditions[] = $condition;
 			if ($this->save) $this->recipe->save();
+			return $condition;
 		}
 		
 		/**

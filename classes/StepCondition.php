@@ -112,15 +112,15 @@
 		public function getFullDescription()
 		{
 			$return[] = $this->conditionDescription['long_description_left'];
-			$return[] = $this->verbDescription[$this->condition];
+			$return[] = $this->verbConditionDescription[$this->condition];
 			$return[] = $this->conditionDescription['long_description_right'];
-			$return[] = $this->param;
+			$return[] = $this->paramInfo($this->param);
 			return implode($return);
  		}
  		public function getText()
  		{
  			return $this->conditionDescription['short_description'];
- 		}
+ 		} 		
  		public function getDescription()
  		{
  			return $this->getText();	
@@ -145,10 +145,20 @@
  		{
  			return $this->selectable;
  		}
+ 		public function paramInfo($id)
+		{
+			if (!count($this->getSelectable() > 0) )
+				return $id;
+			foreach ($this->getAttributeData() as $option)
+			{
+				if ($option['id'] == $id)
+					return $option['public'];
+			}
+		}
 		public function l($string, $specific = false){
  			return Translate::getModuleTranslation(Module::getInstanceByName('massivo'), $string, ($specific) ? $specific : 'massivo');
  		}
- 	
+ 		
  		
 	}
 ?>
