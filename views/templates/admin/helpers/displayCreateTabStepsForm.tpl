@@ -73,7 +73,7 @@
 						  			 		</p>
 						  			 	</td>	
 						  			 	<td>					  			 			 		        
-											<button type="button" class="btn btn-success editstepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" param="{$cpos}">
+											<button type="button" class="btn btn-success editstepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="editstepcondition" param="{$cpos}">
 											    <i class="icon-edit">  </i>
 											</button>				    					
 											<button type="button" class="btn btn-danger deletestepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" param="{$cpos}">
@@ -212,6 +212,10 @@
 	          	});
     			
 		}
+		function doEval(response)
+		{
+			
+		}
 		function doAjaxForMe(vStep)		
 		{	
 			var ajaxStep = vStep;
@@ -233,13 +237,6 @@
 	              		showSuccess(t[1]);	
 	              		var rows = $('tr.bucle').length;
 	              		$html = t[3];
-	              		/*rows = rows + 1;
-	              		$html = '<tr class="bucle" order="' + rows + '"><td order="' + rows + '"><input type="checkbox" class="checkStep" order="'+rows+'"></td>';
-	              		$html = $html + ' <td class="text-center">' + rows + '</td><td class="text-center">' + t[2] + '</td>';
-	              		$html = $html + '<td><table class="table table-condensed table-highlight table-hover text-info table product small"><thead> <tr class="success"><th class="text-center">{/literal}{l s="Conditions" mod="massivo"}{literal}</th><th></th></tr></thead>';
-	              		$html = $html + '<tbody><tr><td class="text-center">{/literal}<p class="editable" recipe="' + recipeId +'" step="' + t[3] +'" conditionstep="1"><em>{l s="There are no conditions for this step at this time, press here to create a new one" mod="massivo"}</em></p> {literal}</td></tr></tbody></table>';	              		
-	              		$html = $html + '<table class="table table-condensed table-highlight table-hover text-info table product small"><thead> <tr class="warning"><th class="text-center">{/literal}{l s="Actions" mod="massivo"}{literal}</th><th></th></tr></thead>';
-	              		$html = $html + '<tbody><tr><td class="text-center">{/literal}<p class="editable" recipe="' + recipeId +'" step="' + t[3] +'" actionstep="1"><em>{l s="There are no actions for this step at this time, press here to create a new one" mod="massivo"}</em></p> {literal}</td></tr></tbody></table></td></tr>';*/
 	              		
 	              		if ( $('tr.bucle').length ) {
 	              			$('tr.bucle').last().after($html);	              			
@@ -333,17 +330,19 @@
 			function()
 			{
 				var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var cId = $(this).attr('param');
+				var b = $(this);
 				$.ajax({
 		              url: '{/literal}{$module_dir}{literal}' + "massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
-		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, condition: cId, recipe: rId, step: sId, operation: 'editCondition'} ,
+		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: cId, recipe: rId, step: sId, operation: 'editStepCondition'} ,
 		              dataType: "html",
 		              context: document.body,
 		              error: function(xhr,status,error) {
 		              	console.log(xhr);
 		              },
 		              success:  function (response) {	              	
-		              	
+		              	var tr =b.parent().parent();
+		              	tr.replaceWith(response);
 		        	 }
 		      	});
 			}

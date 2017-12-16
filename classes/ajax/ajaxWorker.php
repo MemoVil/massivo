@@ -223,49 +223,106 @@ class AjaxWorker extends ModuleAdminController {
 				$h = new HelperMassivo();
 				$r = $h->displayActionSelector($this->post);
 				echo $r;
-			break;
-			case 'displayNewConditionSelector':
-				$h = new HelperMassivo();		
-										
-				$r = $h->displayNewConditionSelector($this->post);
-				echo $r;
-			break;
-			case 'displayConditionSelector':
-				$h = new HelperMassivo();
-				$r = $h->displayConditionSelector($this->post);
-				echo $r;
-			break;
-			case 'getConditionInput':
-				if ($this->arePost('param','recipeid','stepid'))
+			break;	
+			case 'displayConditionCreateMode': 
+				if ($this->arePost('row','step','recipe'))
 				{					
-					$p = $this->post['param'];
-					$r = Recipe::load($this->post['recipeid']);
-        			$s = $r->getStepById($this->post['stepid']);   
-					foreach ($s->getDeclaredConditions() as $class)
+					$h = new HelperMassivo();
+					if ($this->post['time'])
 					{
-						$c = new $class($s);
-						if (strcmp($c->conditionDescription['short_description'],$p) == 0 )
-						{
-							$h = new HelperMassivo();
-							$e = $h->displayConditionInput($c,$this->post);
-							echo $e;
+						switch ($this->post['time'])
+						{							
+							case 'verb':							
+							case 'param':
+							case 'buttons':
+							case 'type':
+							case 'left':
+							case 'right':
+								$p = $this->post['selected'];
+								$r = Recipe::load($this->post['recipe']);
+			        			$s = $r->getStepById($this->post['step']);   
+								foreach ($s->getDeclaredConditions() as $class)
+								{
+									$c = new $class($s);
+									if (strcmp($c->conditionDescription['short_description'],$p) == 0 )
+									{
+										$this->post['condition'] = $c;																				
+									}
+								}
+							break;
 						}
 					}
+					else $this->post['time'] = 'start';
+					//Time is the switcher on helper					
+					$r = $h->displayConditionCreateMode($this->post);
+					echo $r;
 				}
 			break;
-			case 'addCondition':								
-				if ($this->arePost('type', 'condition','recipeid','stepid','condition','verb','param'))
+			case 'displayConditionPressHereMode':
+				if ($this->arePost('row','step','recipe'))
+				{
+					$h = new HelperMassivo();
+					$r = $h->displayConditionPressHereMode();
+					echo $r;
+				}
+			break;
+			case 'addStepCondition':								
+				if ($this->arePost('type','recipe','step','row','verb','param'))
 				{					
 					$c = $this->addNewCondition($this->post);
+					$h = new HelperMassivo();
 					if ( !$c ) 
 					{
-						$this->error('Error adding new condition');						
-						return;
+						$o = $this->error('Error adding new condition');						
+						$o .= $h->displayConditionCreateMode($post);
+						return $o;
 					}			
-					$this->post['conditionObject'] = $c;
+					$this->post['condition'] = $c;					
+					$o = $h->displayConditionTextMode($this->post);
+					$o .= $h->displayConditionPressHereMode($this->post);
+					echo $o;
+				}
+			break;
+			case 'editStepCondition':
+				if ($this->arePost('row','step','recipe'))
+				{
+					$r = Recipe::load($this->post['recipe']);
+					$s = $r->getStepById($this->post['step']);
+					$c = $s->getCondition($this->post['row']);
+					$this->post['condition'] = $c;
 					$h = new HelperMassivo();
-					$r = $h->displayAddedCondition($this->post);
-					echo $r;
+					$this->post['time'] = 'type';
+					$o = $h->displayConditionCreateMode($this->post);
+					$this->post['time'] = 'left';
+					$o .= $h->displayConditionCreateMode($this->post);
+					$this->post['time'] = 'verb';
+					$o .= $h->displayConditionCreateMode($this->post);
+					$this->post['time'] = 'right';
+					$o .= $h->displayConditionCreateMode($this->post);
+					$this->post['time'] = 'param';
+					$o .= $h->displayConditionCreateMode($this->post);
+					$this->post['time'] = 'editbuttons';
+					$o .= $h->displayConditionCreateMode($this->post);
+					echo $o;
+				}
+			break;
+			case 'saveEditStepCondition':
+				if ($this->arePost('row','step','recipe'))
+				{
+					$r = Recipe::load($this->post['recipe']);
+					$s = $r->getStepById($this->post['step']);
+					$c = $s->getCondition($this->post['row']);	
+					if ($this->arePost('verb','type','param'))
+					{
+						$c = new $this->post['type']();
+						$c->condition = $this->post['verb'];
+						$c->param = $this->post['param'];
+						$s->conditions[$this->post['row']] = $c;
+						$r->save();
+						$h = new HelperMassivo();
+						$o = $h->displayConditionTextMode($this->post);
+						echo $o;
+					}
 				}
 			break;
 		}
@@ -288,6 +345,23 @@ class AjaxWorker extends ModuleAdminController {
 				$r->lang
 			);			
 			$r->save();
+			return $c;
+		}
+		return false;
+	}
+	/**
+	 * [editCondition Edits an existing condition]
+	 * @param  [type] $post [description]
+	 * @return [type]       [description]
+	 */
+	public function editCondition($post)
+	{
+		$r = Recipe::load($post['recipe']);
+		if (!$r )
+			return false;
+		if ($s = $r->getStepById($post['step']))
+		{
+			$c = $s->getCondition($post['condition']);
 			return $c;
 		}
 		return false;

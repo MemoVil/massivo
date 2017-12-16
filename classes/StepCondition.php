@@ -91,7 +91,14 @@
 		{
 			return $this->id;
 		}
-		
+		public function getCondition()
+		{
+			return $this->condition;
+		}
+		public function getParam()
+		{
+			return $this->param;
+		}
 		/* Saving using Step save method */
 		public function save()
 		{

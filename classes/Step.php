@@ -59,11 +59,28 @@
 		public $declaredConditions;
 		public $declaredActions;
 
-
-		public function __construct($type = null)
+		/**
+		 * [__construct variable constructor]
+		 * It will set variables for this step on the form key => object, eg:
+		 *  $s = new Step(
+		 *  		array(
+		 *  			'product' => $products,
+		 *  			'a' => $client)
+		 *  			), 
+		 *  		array(...) 
+		 *   On this way we can make a push of arrays for inputs on Steps (Future feature)
+		 */
+		public function __construct()
 		{
 			$this->id = $this->getTime();	
-			$this->registerConditionsAndActions();			
+			$this->registerConditionsAndActions();	
+			$args = func_get_args();				
+			foreach($args as $arg)	{
+				foreach ($arg as $key => $val)
+				{
+					$this->$key = $val;
+				}
+			}
 		}
 		/*
 			Important: We need to register them to bucle over it later *
@@ -117,6 +134,12 @@
 			}
 			return $r;
 		}
+		public function getCondition($condition)
+		{
+			if (count($this->conditions) >= $condition)
+				return $this->conditions[$condition];
+		}
+
 		public function getActionText($i)
 		{
 			if ($this->declaredActions[$i])
@@ -126,6 +149,7 @@
 			}
 			return false;			 
 		}
+		
 		public function getAllActionsText()
 		{
 			$r = Array();
