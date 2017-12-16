@@ -8,7 +8,7 @@
 </td>
 <script type="text/javascript" key="{$massivo_key}">
 	{literal}
-	var el = $('td[recipe="' +{/literal}{$recipe->id}{literal} + '"][step="' +{/literal}{$step->id}{literal} + '"][row="'+ {/literal}{$row}{literal} + '"]');
+	var el = $('td[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');
 	var recipeid = el.attr('recipe');
 	var stepid = el.attr('step'); 
 	var massivokey = {/literal}"{$massivo_key}"{literal};
@@ -17,12 +17,14 @@
 	$('button.canceleditcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').click(
 		function(event) {
 			atad.operation = 'displayConditionTextMode';
-			$('tr.stepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').load(
-  				{/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+			var tr = $('tr.stepcondition[recipe="' + recipeid + '"][step="' + stepid + '"][row="' + rowid + '"]');
+			tr.load(
+  				"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
       			atad,
       			function(response)
       			{
       				$(this).replaceWith(response);
+      				doEval(response);
       			}
 		    );
 		}		   	
@@ -39,11 +41,12 @@
 			atad.verb =cVerb;
 			atad.param =cParam;
 			$('tr.stepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').load(
-  				{/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+  				"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
       			atad,
       			function(response)
       			{
       				$(this).replaceWith(response);
+      				doEval(response);
       			}
 		    );
 		}		   	

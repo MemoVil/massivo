@@ -3,14 +3,20 @@
   		exit;
     class HelperMassivo 
   	{      
-      public $massivo
+      public $massivo;
   		public function __construct()
 		  {
 			  $this->bootstrap = true;
     		$this->colorOnBackground = true;
     		$this->row_hover = true;
         $this->context = Context::getContext();  
-        $this->massivo = Configuration::get('massivo_key');  
+        $this->massivo = Configuration::get('massivo_key'); 
+        $this->context->smarty->assign(
+          array(
+          'massivo_key' => $this->massivo,
+          'module_dir' =>  _MODULE_DIR_
+          )
+        ); 
 		  }		 
 
       /**
@@ -34,9 +40,7 @@
         $this->context->smarty->assign(
           array(
             'recipe' => $recipe,
-            'steps' => $steps,
-            'module_dir' => _MODULE_DIR_,
-            'massivo_key' => $this->massivo                  
+            'steps' => $steps              
           )
         );        
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayCreateTabStepsForm.tpl');                                
@@ -59,9 +63,7 @@
           //Step itself, not id
           'step' => $s,
           //Condition id, to know which row we are editing
-          'condition' =>  (int) $post['param'] ,
-          'massivo_key' => $this->massivo,
-          'module_dir' => _MODULE_DIR_
+          'condition' =>  (int) $post['param']        
         ));
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionSelector.tpl');                                        
         return $tpl;
@@ -76,8 +78,6 @@
             'recipe' => $r,
             'step' => $s,
             'row' => $post['condition'],
-            'module_dir' => _MODULE_DIR_,
-            'massivo_key' => $this->massivo,
             'condition' => $class
           )
         );                
@@ -96,10 +96,8 @@
         $this->context->smarty->assign(
           array(
             'recipe' => $r,
-            'step' => $s,
-            'massivo_key' => $this->massivo,
-            'pos' => $r->getStepPosition($s),
-            'module_dir' => _MODULE_DIR_
+            'step' => $s,            
+            'pos' => $r->getStepPosition($s)
           )
         );
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayAddBlankStep.tpl');        
@@ -117,8 +115,7 @@
         $this->context->smarty->assign(
           array(
             'recipe' => $r,
-            'step' => $s,
-            'massivo_key' => $this->massivo,
+            'step' => $s,            
             'cpos' => $post['condition'],
             'condition' => $post['conditionObject']
           )
@@ -139,10 +136,8 @@
           array(
             'recipe' => $r,
             'step' => $s,
-            'massivo_key' => $this->massivo,
             'cpos' => $post['condition'],
-            'condition' => $post['conditionObject'],
-             'module_dir' => _MODULE_DIR_
+            'condition' => $post['conditionObject']             
           )
         );
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayExistingCondition.tpl');        
@@ -157,10 +152,8 @@
           array(
             'recipe' => $r,
             'step' => $s,
-            'massivo_key' => $this->massivo,
             'cpos' => $post['condition'],
-            'condition' => $c,
-            'module_dir' => _MODULE_DIR_
+            'condition' => $c
           )
         );
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayRestoreCondition.tpl');       
@@ -178,12 +171,28 @@
             array(
               'recipe' => $r,
               'step' => $s,
-              'row' => $post['row'],
-              'massivo_key' => $this->massivo
+              'row' => $post['row']              
             )
           );
           $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionPressHereMode.tpl');
-          return tpl;
+          return $tpl;
+      }
+
+      public function displayConditionTextMode($post)
+      {
+          $r = Recipe::load($post['recipe']);
+          $s = $r->getStepById($post['step']);
+          $c = $s->getCondition($post['row']);                  
+          $this->context->smarty->assign(
+                  array(
+                    'recipe' => $r,
+                    'step' => $s,  
+                    'row' => $post['row'],
+                    'condition' => $c
+                  )
+          );   
+          $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayConditionTextMode.tpl');
+          return $tpl;
       }
       /**
        * [displayCreateMode Display row on first creation, which is showed via ajax $time  calls (one component one ajax)]
@@ -197,8 +206,7 @@
           $this->context->smarty->assign(
                   array(
                     'recipe' => $r,
-                    'step' => $s,
-                    'massivo_key' => $this->massivo,
+                    'step' => $s,  
                     'row' => $post['row']
                   )
           );  

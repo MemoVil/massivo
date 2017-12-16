@@ -262,7 +262,7 @@ class AjaxWorker extends ModuleAdminController {
 				if ($this->arePost('row','step','recipe'))
 				{
 					$h = new HelperMassivo();
-					$r = $h->displayConditionPressHereMode();
+					$r = $h->displayConditionPressHereMode($this->post);
 					echo $r;
 				}
 			break;
@@ -323,6 +323,14 @@ class AjaxWorker extends ModuleAdminController {
 						$o = $h->displayConditionTextMode($this->post);
 						echo $o;
 					}
+				}
+			break;
+			case 'displayConditionTextMode':
+				if ($this->arePost('row','step','recipe'))
+				{					
+					$h = new HelperMassivo();
+					$o = $h->displayConditionTextMode($this->post);
+					echo $o;
 				}
 			break;
 		}

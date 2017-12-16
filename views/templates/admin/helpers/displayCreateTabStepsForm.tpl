@@ -66,7 +66,7 @@
 		  			 		</thead>
 		  			 		{if $step->conditions|is_array && $step->conditions|@count > 0}
 			  			 		{foreach name=conditionbucle from=$step->conditions key=cpos item=stepcondition}
-			  			 			<tr type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  param="{$cpos}">
+			  			 			<tr class="stepcondition" type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$cpos}">
 						  			 	<td colspan="5">
 						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" param="{$cpos}">
 												{$stepcondition->getFullDescription()}										
@@ -83,7 +83,7 @@
 			    					</tr>
 			  			 		{/foreach}
 		  			 		{/if}
-			  			 			<tr type="newcondition" recipe="{$recipe->id}" step="{$step->id}"  param="{$step->conditions|@count}">
+			  			 			<tr class="newcondition" type="newcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$step->conditions|@count}">
 				  			 			<td colspan="6" class="text-center subtablenewcondition">
 				  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" param="{$step->conditions|@count}" >
 				  			 					<em>
@@ -103,7 +103,7 @@
 		  			 		</thead>
 		  			 		{if $step->actions|is_array && $step->actions|@count > 0}
 			  			 		{foreach name=actionbucle from=$step->actions key=cpos item=stepaction}
-			  			 			<tr type="stepaction" recipe="{$recipe->id}" step="{$step->id}"  param="{$cpos}">
+			  			 			<tr class="stepaction" type="stepaction" recipe="{$recipe->id}" step="{$step->id}" row="{$cpos}">
 						  			 	<td colspan="5">
 						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepaction" param="{$cpos}">
 												{$stepaction->getFullDescription()}										
@@ -120,7 +120,7 @@
 			    					</tr>
 			  			 		{/foreach}		  	
 			  			 	{/if}
-		  			 			<tr type="newaction" recipe="{$recipe->id}" step="{$step->id}"  param="{$step->actions|@count}">
+		  			 			<tr class="newaction" type="newaction" recipe="{$recipe->id}" step="{$step->id}"  row="{$step->actions|@count}">
 			  			 			<td colspan="6" class="text-center subtablenewaction">
 			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newaction" param="{$step->actions|@count}">
 			  			 					<em>
@@ -146,10 +146,13 @@
       </span>
     </div>
 </div>
+<span id="#ajaxtrash" class="hidden">
+</span>
 {literal}
 	<script type="text/javascript" id="runCreateTabStepsForm">
 		var recipeId = {/literal}{$recipe->id}{literal};
 		var clickControl = 0;
+		var massivo = "{/literal}{$massivo_key}{literal}";
 		function showError(error) {
 			var divError = '<div class="ajaxError alert alert-warning ">' + error + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
 			$('.toppanel').before(divError);
@@ -171,9 +174,9 @@
     			var massivokey = {/literal}"{$massivo_key}"{literal};
     			var perform = el.attr('type');
     			if (el.attr('param')) var cpos = el.attr('param');
-    			var atad = { recipeid: id, stepid:stepid, massivo_key: massivokey, action: perform};   
+    			var atad = { recipe: id, step:stepid, massivo_key: massivokey, action: perform};   
     			if ( cpos )
-    				atad.param = cpos; 	
+    				atad.row= cpos; 	
     			switch (perform)
     			{
     				case 'stepaction': 
@@ -185,14 +188,15 @@
     					atad.stepcondition = perform;
     					break;				
     				case 'newcondition':
-    					atad.operation = "displayNewConditionSelector";
+    					atad.operation = "displayConditionCreateMode";
+    					atad.time = 'start';
     					break;
     				case 'newaction':
     					atad.operation = "displayNewActionSelector";
     					break;
     			}		
     			$.ajax({
-	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
 	              data: atad ,
 	              dataType: "html",
@@ -201,27 +205,29 @@
 	              	console.log(xhr);
 	              },
 	              success:  function (response) {	     
-	              	var tr = $('tr[type=' + perform + '][recipe=' + id + '][step=' + stepid + '][param=' + cpos + ']');
-	              	tr.html(response);
-	              	switch (perform)
-	              	{
-	              		case 'stepaction': case 'newaction': var runme = 'runActionSelector'; break;
-	              		case 'stepcondition': case 'newcondition': var runme = 'runConditionSelector'; break;
-	              	}
+	              	var tr = $('tr[type=' + perform + '][recipe=' + id + '][step=' + stepid + '][row=' + cpos + ']');
+	              	tr.replaceWith(response);	
+	              	doEval(response);	              	       
 	              }
 	          	});
     			
 		}
 		function doEval(response)
 		{
-			
+			$('#ajaxtrash').html(response);
+			//Little trick to avoid injection: massivo key hidden key
+			$('#ajaxtrash').find('script[key="{/literal}{$massivo_key}{literal}"]').each(
+				function() {
+					eval($(this).text());
+				}
+			);
 		}
 		function doAjaxForMe(vStep)		
 		{	
 			var ajaxStep = vStep;
 			
 			var t = $.ajax({
-	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
 	              data: { ajax: "true", operation: "addBlankStep", step: ajaxStep, massivo_key:{/literal}"{$massivo_key}",{literal} recipeid: {/literal}"{$recipe->id}"{literal}  } ,
 	              dataType: "html",
@@ -271,7 +277,7 @@
 		    					$(".fancybox-opened").ready(function(){		    						
 			    					$(".addfancystep").click(	
 						    			function() {			
-						    			 	event.preventDefault();								    				 
+						    			 	event.preventDefault();							    				 
 							    			if ( $('.fancybox-opened input').attr('value').length > 0 ) {
 							    				doAjaxForMe($('.fancybox-opened input').attr('value'));
 							    				$.fancybox.close();							    			 	
@@ -293,7 +299,7 @@
     				}
     			);
     			$.ajax({
-		              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+		              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
 		              data: { ajax: "true", operation: "deleteSteps", massivo_key:{/literal}"{$massivo_key}"{literal},param: i.join(' '), recipeid: recipeId} ,
 		              dataType: "html",
@@ -332,7 +338,7 @@
 				var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var cId = $(this).attr('param');
 				var b = $(this);
 				$.ajax({
-		              url: '{/literal}{$module_dir}{literal}' + "massivo/classes/ajax/ajaxWorker.php",
+		              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
 		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: cId, recipe: rId, step: sId, operation: 'editStepCondition'} ,
 		              dataType: "html",
@@ -342,7 +348,7 @@
 		              },
 		              success:  function (response) {	              	
 		              	var tr =b.parent().parent();
-		              	tr.replaceWith(response);
+		              	tr.html(response);
 		        	 }
 		      	});
 			}

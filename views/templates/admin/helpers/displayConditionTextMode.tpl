@@ -1,6 +1,6 @@
-<tr type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$row}">
+<tr class="stepcondition" type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$row}">
 	 	<td recipe="{$recipe->id}" step="{$step->id}"  row="{$row}" colspan="5">
-	 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" row="{$row}">
+	 		<p class="editable text-center" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" row="{$row}">
 				{$condition->getFullDescription()}										
 	 		</p>
 	 	</td>	
@@ -15,6 +15,7 @@
 </tr>
 <script type="text/javascript" key="{$massivo_key}">
 	{literal}
+	var el = $('tr[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');	
 	var recipeid = el.attr('recipe');
 	var stepid = el.attr('step'); 
 	var massivokey = {/literal}"{$massivo_key}"{literal};
@@ -24,7 +25,7 @@
 		function(){
 			atad.operation = 'editStepCondition';			
 			$.ajax({
-	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
+	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
 	              data: atad ,
 	              dataType: "html",
