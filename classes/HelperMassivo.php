@@ -255,5 +255,28 @@
           }        
        return $tpl;
       }
+      /**
+       * [getScript returns a script tag tpl for inclussion from $.getScript]
+       * @param  [type] $this->post [description]
+       * @return [type]             [description]
+       */
+      public function getScript($post)
+      {
+          $r = Recipe::load($post['recipe']);
+          $s = $r->getStepById($post['step']);                            
+          if ($post['condition'])            
+            $this->context->smarty->assign('condition',$post['condition']);
+          if ($post['action'])
+            $this->context->smarty->assign('action',$post['action']);
+          $this->context->smarty->assign(
+                  array(
+                    'recipe' => $r,
+                    'step' => $s,  
+                    'row' => $post['row']
+                  )
+          );  
+          $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/' . $post['script'] . '.js.tpl');       
+          return $tpl;
+      }
   	}
 ?>

@@ -54,6 +54,7 @@ class AjaxWorker extends ModuleAdminController {
 
 	public function validatePost($post)
 	{		
+
 		$massivoKey = Configuration::get('massivo_key');
 		if (array_key_exists('massivo_key', $post))
 		{			
@@ -62,8 +63,7 @@ class AjaxWorker extends ModuleAdminController {
 				$this->safe = true;
 				$this->intEcho += 10;				
 			}
-		}
-
+		}		
 		foreach($post as $key => $value)
 		{		
 			if ($this->isLegal($value))
@@ -72,7 +72,7 @@ class AjaxWorker extends ModuleAdminController {
 			}
 			else
 			{
-				ddd($value);				
+				ddd($key . ' ' .$value);				
 				$this->safe = false;
 				$this->intEcho = -1;
 			}
@@ -306,6 +306,17 @@ class AjaxWorker extends ModuleAdminController {
 					echo $o;
 				}
 			break;
+			case 'getScript':				
+				if ($this->arePost('row','step','script','recipe'))
+				{
+					if (file_exists(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/' . $this->post['script'] . '.js.tpl'))
+					{
+						$h = new HelperMassivo();
+						$o = $h->getScript($this->post);
+						echo $o;
+					}
+				}
+			break;
 			case 'saveEditStepCondition':
 				if ($this->arePost('row','step','recipe'))
 				{
@@ -511,7 +522,17 @@ class AjaxWorker extends ModuleAdminController {
 }
 $ajax = new AjaxWorker();
 
-if ( !$ajax->validatePost($_POST) ) 
+if ($_SERVER['REQUEST_METHOD'] === 'GET')
+{	
+	if (!$ajax->validatePost($_GET)) {					
+		$ajax->displayError();		
+	}
+	else {		
+		$ajax->load($_GET);
+		$ajax->run($debug);		
+	}
+}
+elseif ( !$ajax->validatePost($_POST)  ) 
 {
 	$ajax->displayError();	
 }

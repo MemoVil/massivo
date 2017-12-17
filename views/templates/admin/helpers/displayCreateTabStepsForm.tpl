@@ -146,8 +146,8 @@
       </span>
     </div>
 </div>
-<span id="#ajaxtrash" class="hidden">
-</span>
+<table id="#ajaxtrash" class="hidden">
+</table>
 {literal}
 	<script type="text/javascript" id="runCreateTabStepsForm">
 		var recipeId = {/literal}{$recipe->id}{literal};
@@ -174,27 +174,23 @@
     			var massivokey = {/literal}"{$massivo_key}"{literal};
     			var perform = el.attr('type');
     			if (el.attr('param')) var cpos = el.attr('param');
-    			var atad = { recipe: id, step:stepid, massivo_key: massivokey, action: perform};   
+    			var atad = { recipe: id, step:stepid, massivo_key: massivokey, action: perform};       			
     			if ( cpos )
     				atad.row= cpos; 	
+    			var jatad = { recipe: id, step:stepid, massivo_key: massivokey};   
     			switch (perform)
     			{
-    				case 'stepaction': 
-    					atad.operation = "displayActionSelector";
-    					atad.stepaction = perform;
-    					break;
-    				case 'stepcondition':
-    				    atad.operation = "displayConditionSelector";
-    					atad.stepcondition = perform;
-    					break;				
     				case 'newcondition':
     					atad.operation = "displayConditionCreateMode";
     					atad.time = 'start';
     					break;
     				case 'newaction':
-    					atad.operation = "displayNewActionSelector";
-    					break;
-    			}		
+    					atad.operation = "displayActionCreateMode";
+    					break;    					
+    			}
+    			jatad.operation = 'getScript';
+    			jatad.script = atad.operation;
+    			jatad.row = atad.row;
     			$.ajax({
 	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
@@ -207,7 +203,17 @@
 	              success:  function (response) {	     
 	              	var tr = $('tr[type=' + perform + '][recipe=' + id + '][step=' + stepid + '][row=' + cpos + ']');
 	              	tr.replaceWith(response);	
-	              	doEval(response);	              	       
+           			var r = $.get(
+              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+              			jatad,
+              			null,
+              			'script'
+          			);	    
+          			r.fail(
+          				function(o,text,error) {
+          					console.log(error);
+          				}
+          			);          	       
 	              }
 	          	});
     			

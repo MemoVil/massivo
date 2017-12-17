@@ -20,6 +20,8 @@
 		 */
 		public function isLegal($pattern)
 	    {
+	    	if (strlen($pattern) == 0 )
+	    		return true;
 	        if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
 	            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9 \,\;\"\(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
 	        }
@@ -77,6 +79,6 @@
 				return true;
 			}
 			return false;
-		}
+		}		
 	}
 ?>
