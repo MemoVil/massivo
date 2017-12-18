@@ -15,7 +15,7 @@
 	<td class="inputParam" recipe="{$recipe->id}" step="{$step->id}" row="{$row}">
 	</td>
 	<td class="conditionButton" recipe="{$recipe->id}" step="{$step->id}" row="{$row}">
-		<button type="button" class="btn btn-danger canceladdaction" recipe="{$recipe->id}" step="{$step->id}" row="{$row}">
+		<button type="button" class="btn btn-danger canceladdcondition" recipe="{$recipe->id}" step="{$step->id}" row="{$row}">
 			<i class="icon-trash"></i>
 		</button>
 	</td>		

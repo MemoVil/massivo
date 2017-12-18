@@ -15,6 +15,11 @@
       			atad,
       			function(response)
       			{
+      				var t = response.split('$');
+      				if (t[0] == 'Error')
+      				{
+      					showError(t[1]);
+      				}
       				$(this).replaceWith(response);
       				  //We load related script for such tr
 				    jatad.operation = 'getScript';		    
@@ -37,44 +42,53 @@
 			var cVerb = $('select.inputSelectConditionVerb[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + '] option:selected').attr('value');
 			var cParam = $('select.inputSelectConditionParam[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').attr('value');
 			if (cParam == null)
-				var cParam = ('input.inputParam[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').val();
-			atad.operation = 'addStepCondition';
-			atad.type = cType; atad.verb = cVerb;
-			atad.param = cParam;
-			$('tr.stepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').load(
-  				"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+				var cParam = $('input.inputParam[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').val();
+			atad.operation ='addStepCondition';
+			atad.type =cType;
+			atad.verb =cVerb;
+			atad.param =cParam;
+			var r = $.get(
+				"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
       			atad,
-      			function(response)
-      			{
-      				$(this).replaceWith(response);      				
-      				jatad.operation = 'getScript';
-				    jatad.script = atad.operation;
-		   			var r = $.get(
-	          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-	          			jatad,
-	          			null,
-	          			'script'
-		  			);		  
-      			}
-		    );
-		   	atad.operation = 'displayConditionPressHereMode';
-		  	atad.row = atad.row + 1;
-		  	jatad.row = jatad.row + 1;
-		  	jatad.script = atad.operation;
-		  	var newRow = $.get(
-	          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-	          			atad,
-	          			function(response){
-							$('tr.stepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').parent().append(response);
-						  	var r = $.get(
-			          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-			          			jatad,
-			          			null,
-			          			'script'
-				  			);
-						},
-	          			'html'
-		  			);	
+      			function(response) {
+	      				var t = response.split('$');
+	      				if (t[0] == 'Error')
+	      				{
+	      					showError(t[1]);
+	      					return;
+	      				}
+	      				$('tr.stepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').replaceWith(response);
+      				    jatad.operation = 'getScript';
+					    jatad.script = atad.operation;
+	    	   			var r = $.get(
+		          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+		          			jatad,
+		          			null,
+		          			'script'
+			  			);
+ 					  	atad.operation = 'displayConditionPressHereMode';
+					  	atad.row = atad.row + 1;
+					  	jatad.row = jatad.row + 1;
+					  	jatad.script = atad.operation;
+					  	var newRow = $.get(
+		          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+		          			atad,
+		          			function(response) {
+								  	$('tr.stepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').parent().append(response);
+								  	var r = $.get(
+				          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+				          			jatad,
+				          			null,
+				          			'script'
+					  			);
+		          			},
+		          			'html'
+			  			);
+ 
+      			},
+      			'html'
+			);
+			return;	  	
 		}		   	
 	);
 	{/literal}

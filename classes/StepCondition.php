@@ -152,6 +152,10 @@
  		{
  			return $this->selectable;
  		}
+ 		public function getAttributeData()
+ 		{
+ 			return;
+ 		}
  		public function paramInfo($id)
 		{
 			if (!count($this->getSelectable() > 0) )

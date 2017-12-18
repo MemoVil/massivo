@@ -282,6 +282,16 @@ class AjaxWorker extends ModuleAdminController {
 					$o .= $h->displayConditionPressHereMode($this->post);
 					echo $o;
 				}
+				/* TO DO */
+				else if ( 2 < 1) {
+					if (!$this->post['param']) 
+						$error[] = 'Error, we need a param for this condition';
+					if (!$this->post['row']) 
+						$error[] = 'Error while attaching condition to this step';
+					if (!$this->post['type'])
+						$error[] = 'Condition type not specified or not found';
+					$this->error(explode(PHP_EOL,$error));
+				}
 			break;
 			case 'editStepCondition':
 				if ($this->arePost('row','step','recipe'))

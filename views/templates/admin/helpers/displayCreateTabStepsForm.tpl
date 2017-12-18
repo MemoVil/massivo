@@ -73,10 +73,10 @@
 						  			 		</p>
 						  			 	</td>	
 						  			 	<td>					  			 			 		        
-											<button type="button" class="btn btn-success editstepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="editstepcondition" param="{$cpos}">
+											<button type="button" class="btn btn-success editstepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="editstepcondition" row="{$cpos}">
 											    <i class="icon-edit">  </i>
 											</button>				    					
-											<button type="button" class="btn btn-danger deletestepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" param="{$cpos}">
+											<button type="button" class="btn btn-danger deletestepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" row="{$cpos}">
 											    <i class="icon-trash">  </i>
 											</button>	    					
 								    	</td>
@@ -85,7 +85,7 @@
 		  			 		{/if}
 			  			 			<tr class="newcondition" type="newcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$step->conditions|@count}">
 				  			 			<td colspan="6" class="text-center subtablenewcondition">
-				  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" param="{$step->conditions|@count}" >
+				  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" row="{$step->conditions|@count}" >
 				  			 					<em>
 				  			 						{l s="Press here to add a new condition" mod="massivo"}
 				  			 					</em>
@@ -105,15 +105,15 @@
 			  			 		{foreach name=actionbucle from=$step->actions key=cpos item=stepaction}
 			  			 			<tr class="stepaction" type="stepaction" recipe="{$recipe->id}" step="{$step->id}" row="{$cpos}">
 						  			 	<td colspan="5">
-						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepaction" param="{$cpos}">
+						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepaction" row="{$cpos}">
 												{$stepaction->getFullDescription()}										
 						  			 		</p>
 						  			 	</td>	
 						  			 	<td>					  			 			 		        
-											<button type="button" class="btn btn-success editstepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" param="{$cpos}">
+											<button type="button" class="btn btn-success editstepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" row="{$cpos}">
 											    <i class="icon-edit">  </i>
 											</button>				    					
-											<button type="button" class="btn btn-danger deletestepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" param="{$cpos}">
+											<button type="button" class="btn btn-danger deletestepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" row="{$cpos}">
 											    <i class="icon-trash">  </i>
 											</button>	    					
 								    	</td>
@@ -122,7 +122,7 @@
 			  			 	{/if}
 		  			 			<tr class="newaction" type="newaction" recipe="{$recipe->id}" step="{$step->id}"  row="{$step->actions|@count}">
 			  			 			<td colspan="6" class="text-center subtablenewaction">
-			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newaction" param="{$step->actions|@count}">
+			  			 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newaction" row="{$step->actions|@count}">
 			  			 					<em>
 			  			 						{l s="Press here to create a new action" mod="massivo"}
 			  			 					</em>
@@ -173,7 +173,7 @@
     			var stepid = el.attr('step'); 
     			var massivokey = {/literal}"{$massivo_key}"{literal};
     			var perform = el.attr('type');
-    			if (el.attr('param')) var cpos = el.attr('param');
+    			var cpos = el.attr('row');
     			var atad = { recipe: id, step:stepid, massivo_key: massivokey, action: perform};       			
     			if ( cpos )
     				atad.row= cpos; 	

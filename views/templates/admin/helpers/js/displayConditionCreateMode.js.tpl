@@ -48,6 +48,7 @@
               			);
               		atad.time = 'buttons';
               		jatad.script = 'displayConditionButtons';
+              		jatad.operation = 'getScript';
               		$('td.conditionButton[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').load(
               			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
               			atad,
@@ -64,8 +65,7 @@
 	              	              	
 	              }
           	});
-		}
-	);
+		});
 	$('button.canceladdcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').click(
 		function(event) {
 			atad.operation = 'displayConditionPressHereMode';
