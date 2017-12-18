@@ -6,6 +6,7 @@
 	var massivokey = {/literal}"{$massivo_key}"{literal};
 	var rowid = el.attr('row');	
 	var atad = { recipe: recipeid, step: stepid, massivo_key: massivokey, row: rowid};
+	var jatad = { recipe: recipeid, step: stepid, massivo_key: massivokey, row: rowid};
 	$('button.canceleditcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').click(
 		function(event) {
 			atad.operation = 'displayConditionTextMode';
@@ -16,9 +17,19 @@
       			function(response)
       			{
       				$(this).replaceWith(response);
-      				doEval(response);
+				    //We load related script for such tr
+				    jatad.operation = 'getScript';
+				    jatad.script = atad.operation;
+		   			var r = $.get(
+			          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+			          			jatad,
+			          			null,
+			          			'script'
+				  			);	
+		      			
       			}
 		    );
+
 		}		   	
 	);
 	$('button.saveeditcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').click(
@@ -38,9 +49,36 @@
       			function(response)
       			{
       				$(this).replaceWith(response);
-      				doEval(response);
+      				    jatad.operation = 'getScript';
+					    jatad.script = atad.operation;
+			   			var r = $.get(
+				          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+				          			jatad,
+				          			null,
+				          			'script'
+			  			);
       			}
 		    );
+		  	atad.operation = 'displayConditionPressHereMode';
+		  	atad.row = atad.row + 1;
+		  	jatad.row = jatad.row + 1;
+		  	jatad.script = atad.operation;
+		  	var newRow = $.get(
+	          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+	          			atad,
+	          			function(response) {
+  						  	$('tr.stepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').parent().append(response);
+  						  	var r = $.get(
+			          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+			          			jatad,
+			          			null,
+			          			'script'
+				  			);
+	          			},
+	          			'html'
+		  			);
+
+		  	
 		}		   	
 	);
 	{/literal}

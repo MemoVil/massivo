@@ -51,7 +51,7 @@
               		$('td.conditionButton[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').load(
               			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
               			atad,
-              			function() {
+              			function(response) {
 		           			$.get(
 		              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 		              			jatad,
@@ -69,20 +69,25 @@
 	$('button.canceladdcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').click(
 		function(event) {
 			atad.operation = 'displayConditionPressHereMode';
-			$('tr.stepcondition[recipe="' + recipeid + '"][step="' + stepid + '""][row="' + rowid + '"]').load(
-  				{/literal}"{$module_dir}"{literal} + "massivo/classes/ajax/ajaxWorker.php",
+			$('tr.stepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').load(
+  				"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
       			atad,
-      			function(response) {
+      			function(response)
+      			{
       				$(this).replaceWith(response);
-      				jatad.script = 'displayConditionPressHereMode';
-           			$.get(
-              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-              			jatad,
-              			null,
-              			'script'
-          			);	      				
-	  			}
+      				  //We load related script for such tr
+				    jatad.operation = 'getScript';		    
+				    jatad.script = atad.operation;
+				    console.log(jatad);
+		   			var r = $.get(
+			          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+			          			jatad,
+			          			null,
+			          			'script'
+				  			);	
+		      			}
 		    );
+
 		}		   	
 	);
 	{/literal}

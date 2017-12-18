@@ -6,6 +6,7 @@
 	var massivokey = {/literal}"{$massivo_key}"{literal};
 	var rowid = el.attr('row');	
 	var atad = { recipe: recipeid, step: stepid, massivo_key: massivokey, row: rowid};
+	var jatad = { recipe: recipeid, step: stepid, massivo_key: massivokey, row: rowid};
 	$('button.editstepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').click(
 		function(){
 			atad.operation = 'editStepCondition';			
