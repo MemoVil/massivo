@@ -74,11 +74,47 @@
 				foreach($args as $arg)
 				{					
 				 	if ( !array_key_exists($arg,$this->post) )
-				 		return false;
+				 		return false;				 	
 				}
 				return true;
 			}
 			return false;
-		}		
+		}	
+		/**
+		 * [postLength hack overload to allow postLength to be used as: * ]
+		 * $this->postLength('2') ==> Check all $_POST 
+		 * $this->postLength('param','row','2') => Check param and row on $_POST
+		 * @return [type] [description]
+		 */
+		public function postLength()
+		{
+			$args = func_get_args();			
+			if (count($args) == 1) $length = (int)$args[0];
+			else {
+				$length = array_pop($args);				
+				foreach ($args as $arg)
+				{
+					if ($arg == 'controller')
+						continue;
+					if (strlen($this->post[$arg]) < $length)
+						return false;
+				}
+				return true;
+			}
+			if (isset($this->post))
+			{	
+				foreach($this->post as $key => $arg)
+				{	
+					if ($key == 'controller')
+					{						
+						continue;
+					}
+			 		if ( strlen($arg) < $length)			 	
+			 			return false;
+				}
+				return true;
+			}
+			return false;
+		}	
 	}
 ?>

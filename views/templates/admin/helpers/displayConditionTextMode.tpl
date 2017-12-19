@@ -1,6 +1,6 @@
 <tr class="stepcondition" type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$row}">
 	 	<td recipe="{$recipe->id}" step="{$step->id}"  row="{$row}" colspan="5">
-	 		<p class="editable text-center" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" row="{$row}">
+	 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" row="{$row}">
 				{$condition->getFullDescription()}										
 	 		</p>
 	 	</td>	

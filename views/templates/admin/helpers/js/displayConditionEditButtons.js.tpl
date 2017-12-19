@@ -69,8 +69,8 @@
 		          			'script'
 			  			);
  					  	atad.operation = 'displayConditionPressHereMode';
-					  	atad.row = atad.row + 1;
-					  	jatad.row = jatad.row + 1;
+					  	atad.row = parseInt(atad.row) + 1;
+					  	jatad.row = parseInt(jatad.row) + 1;
 					  	jatad.script = atad.operation;
 					  	var newRow = $.get(
 		          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",

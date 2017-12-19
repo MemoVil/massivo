@@ -154,12 +154,12 @@
 		var clickControl = 0;
 		var massivo = "{/literal}{$massivo_key}{literal}";
 		function showError(error) {
-			var divError = '<div class="ajaxError alert alert-warning ">' + error + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
+			var divError = '<div class="ajaxError alert alert-warning "><button type="button" class="close" data-dismiss="alert">×</button>'+error+'</div>';			
 			$('.toppanel').before(divError);
 			$('.ajaxError').delay(5000).fadeOut();
 		}
 		function showSuccess(message) {
-			var divSuccess = '<div class="ajaxSuccess alert alert-success ">' + message + '<button type="button" class="close" data-dismiss="alert">×</button></div>';			
+			var divSuccess = '<div class="ajaxSuccess alert alert-success "><button type="button" class="close" data-dismiss="alert">×</button>' + message + '</div>';			
 			$('.toppanel').before(divSuccess);
 			$('.ajaxSuccess').delay(5000).fadeOut();
 		}
@@ -235,7 +235,7 @@
 			var t = $.ajax({
 	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
-	              data: { ajax: "true", operation: "addBlankStep", step: ajaxStep, massivo_key:{/literal}"{$massivo_key}",{literal} recipeid: {/literal}"{$recipe->id}"{literal}  } ,
+	              data: { ajax: "true", operation: "addBlankStep", step: ajaxStep, massivo_key:{/literal}"{$massivo_key}",{literal} recipe: {/literal}"{$recipe->id}"{literal}  } ,
 	              dataType: "html",
 	              context: document.body,
 	              error: function(xhr,status,error) {

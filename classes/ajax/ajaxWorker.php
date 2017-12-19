@@ -174,8 +174,12 @@ class AjaxWorker extends ModuleAdminController {
 			break;
 			case "tab":
 				return $this->runTab($this->post['tab']);
-			case "addRecipe":				
-				return $this->triggerNewRecipe($this->post['param']);						
+			case "addRecipe":		
+				if ($this->postLength('param','1'))		
+				 {
+				 	return $this->triggerNewRecipe($this->post['param']);						
+				 }
+				 else $this->error('Error: Recipe name is too short');
 			break;
 			case "refreshRecipes":
 				return $this->displayAllRecipes();
@@ -184,13 +188,13 @@ class AjaxWorker extends ModuleAdminController {
 				return $this->displayCreateTabStepsForm($this->post['param']);
 			break;
 			case "addBlankStep":								
-				$r = Recipe::load($this->post['recipeid']);		
+				$r = Recipe::load($this->post['recipe']);		
 
 				if ( $h = $this->addBlankStep($r,$this->post['step']) )
 				{
 					$this->success('Step added$' . $this->post['step'] . '$' . $h);
 				}
-				else  $this->error('An error appeared during step addition');
+				else  $this->error('Error: An error appeared during step addition');
 			break;
 			case 'renameRecipe':
 				$r = Recipe::load($this->post['recipeid']);
@@ -200,14 +204,14 @@ class AjaxWorker extends ModuleAdminController {
 					$r->save();
 					$this->success('Recipe name changed');
 				}
-				else $this->error('Similar or ilegal newname');
+				else $this->error('Error: Same name or ilegal newname');
 			break;
 			case 'deleteRecipe':
 					$r = Recipe::deleteById($this->post['recipeid']);		
 					if ($r)
 						$this->success('Recipe ' . $this->post['recipeid'] . ' deleted');
 					else
-						$this->error('There was an error while removing recipe');
+						$this->error('Error: There was an error while removing recipe');
 			break;
 			case 'deleteSteps':
 				$r = Recipe::load($this->post['recipeid']);	
@@ -267,30 +271,29 @@ class AjaxWorker extends ModuleAdminController {
 				}
 			break;
 			case 'addStepCondition':								
-				if ($this->arePost('type','recipe','step','row','verb','param'))
-				{					
+				if ($this->arePost('type','recipe','step','row','verb','param') && $this->postLength('1'))
+				{						
 					$c = $this->addNewCondition($this->post);
 					$h = new HelperMassivo();
 					if ( !$c ) 
 					{
-						$o = $this->error('Error adding new condition');						
+						$o = $this->error('Error: Error adding new condition');						
 						$o .= $h->displayConditionCreateMode($post);
 						return $o;
 					}			
 					$this->post['condition'] = $c;					
 					$o = $h->displayConditionTextMode($this->post);
-					$o .= $h->displayConditionPressHereMode($this->post);
+					//$o .= $h->displayConditionPressHereMode($this->post);
 					echo $o;
-				}
-				/* TO DO */
-				else if ( 2 < 1) {
-					if (!$this->post['param']) 
-						$error[] = 'Error, we need a param for this condition';
-					if (!$this->post['row']) 
-						$error[] = 'Error while attaching condition to this step';
+				}				
+				else  {					
+					if (!$this->postLength('param','1'))
+						$error[] = '<p>Error: We need a param for this condition</p>';
+					if (!$this->postLength('row','1'))
+						$error[] = '<p>Error: Error while attaching condition to this step</p>';
 					if (!$this->post['type'])
-						$error[] = 'Condition type not specified or not found';
-					$this->error(explode(PHP_EOL,$error));
+						$error[] = '<p>Error: Condition type not specified or not found</p>';
+					$this->error(implode(PHP_EOL,$error));
 				}
 			break;
 			case 'editStepCondition':
@@ -362,10 +365,10 @@ class AjaxWorker extends ModuleAdminController {
 	 */
 	public function addNewCondition($post)
 	{
-		$r = Recipe::load($post['recipeid']);
+		$r = Recipe::load($post['recipe']);
 		if (!$r )
 			return false;
-		if ($s = $r->getStepById($post['stepid']))
+		if ($s = $r->getStepById($post['step']))
 		{
 			$c = $s->addCondition(
 				$post['type'],
@@ -433,9 +436,8 @@ class AjaxWorker extends ModuleAdminController {
 			echo $display;	
 			return true;
 		}
-		else;
-			//Echo Warning
-		return;
+		else $this->error('Error while adding new recipe');		
+		return true;
 	}
 	/**
 	 * [addRecipe adds a new Recipe called $name to database, without steps]
