@@ -152,15 +152,11 @@
  		{
  			return $this->selectable;
  		}
- 		public function getAttributeData()
- 		{
- 			return;
- 		}
  		public function paramInfo($id)
 		{
 			if (!count($this->getSelectable() > 0) )
 				return $id;
-			foreach ($this->getAttributeData() as $option)
+			foreach ($this->getSelectable() as $option)
 			{
 				if ($option['id'] == $id)
 					return $option['public'];

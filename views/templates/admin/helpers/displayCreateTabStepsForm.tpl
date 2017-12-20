@@ -167,6 +167,14 @@
 		{
 			eval(remote.text());
 		}
+		function setObjectData(recipe,step,row)
+		{
+			atad = {}; jatad = {};
+			atad.recipe = recipe; atad.step = step; atad.row = row;
+			jatad.recipe = recipe; jatad.step = step; jatad.row = row;
+			atad.massivo_key = "{/literal}{$massivo_key}{literal}";
+			jatad.massivo_key = "{/literal}{$massivo_key}{literal}";
+		}
 		function attachEditableFunctionToStepList(el)
 		{				
 				var id = el.attr('recipe');

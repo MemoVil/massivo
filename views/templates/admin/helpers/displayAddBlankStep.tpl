@@ -18,9 +18,9 @@
 			 		</th>				  			 		
 		 		</tr>
 	 		</thead>	 		
- 			<tr type="newcondition" recipe="{$recipe->id}" step="{$step->id}"  param="{$step->conditions|@count}">
+ 			<tr type="newcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$step->conditions|@count}">
 	 			<td colspan="6" class="text-center subtablenewcondition">
-	 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" param="{$step->conditions|@count}" >
+	 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newcondition" row="{$step->conditions|@count}" >
 	 					<em>
 	 						{l s="Press here to add a new condition" mod="massivo"}
 	 					</em>
@@ -36,9 +36,9 @@
 			 		</th>				  			 		
 		 		</tr>
 	 		</thead>	 		
- 			<tr type="newaction" recipe="{$recipe->id}" step="{$step->id}"  param="{$step->actions|@count}">
+ 			<tr type="newaction" recipe="{$recipe->id}" step="{$step->id}"  row="{$step->actions|@count}">
 	 			<td colspan="6" class="text-center subtablenewaction">
-	 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newaction" param="{$step->actions|@count}">
+	 				<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="newaction" row="{$step->actions|@count}">
 	 					<em>
 	 						{l s="Press here to create a new action" mod="massivo"}
 	 					</em>

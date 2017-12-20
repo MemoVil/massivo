@@ -1,14 +1,8 @@
-
+{*<script>*}
 	{literal}
-	var el = $('tr[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');	
-	var recipeid = el.attr('recipe');
-	var stepid = el.attr('step'); 
-	var massivokey = {/literal}"{$massivo_key}"{literal};
-	var rowid = el.attr('row');	
-	var atad = { recipe: recipeid, step: stepid, massivo_key: massivokey, row: rowid};
-	var jatad = { recipe: recipeid, step: stepid, massivo_key: massivokey, row: rowid};
-	$('button.editstepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').click(
+	$('button.editstepcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').click(
 		function(){
+		  	setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});
 			atad.operation = 'editStepCondition';			
 			$.ajax({
 	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
@@ -19,13 +13,14 @@
 	              error: function(xhr,status,error) {
 	              	console.log(xhr);
 	              },
-	              success:  function (response) {		              	
-              		$('tr.stepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').html(response);
+	              success:  function (response) {
+              		$('tr.stepcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').html(response);
 	              }
           	});
 		}		
 	);
-	$('button.deletestepcondition[recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']').click(
+	$('button.deletestepcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').click(
 		
 	);
 	{/literal}
+{*</script>*}

@@ -1,15 +1,10 @@
+{*<script>*}
 {literal}
-	$('table p.editable[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').unbind("click");
 	$('table p.editable[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').click(
 		function(event)
 		{              
-			var el = $('tr[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');			   
-			var recipeid = el.attr('recipe');
-			var stepid = el.attr('step'); 
-			var massivokey = {/literal}"{$massivo_key}"{literal};
-			var rowid = el.attr('row');
-			var atad = { recipe: recipeid, step: stepid, massivo_key: massivokey, operation: 'displayConditionCreateMode', row: rowid};   
-			var jatad = { recipe: recipeid, step: stepid, massivo_key: massivokey, operation: 'getScript', script: 'displayConditionCreateMode', row: rowid};   
+			setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});
+			atad.operation = 'displayConditionCreateMode';   			
    			$.ajax({
 	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
@@ -20,8 +15,11 @@
 	              	console.log(xhr);
 	              },
 	              success:  function (response) {	     
-	              	var tr = $('tr.newcondition[type="newcondition"][recipe=' + recipeid + '][step=' + stepid + '][row=' + rowid + ']');
-	              	tr.replaceWith(response);	      
+	              	var tr = $('tr.newcondition[type="newcondition"][recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');	              	
+	              	setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});		
+	              	tr.replaceWith(response);	
+	              	jatad.operation = 'getScript';
+					jatad.script = 'displayConditionCreateMode';         
            			$.get(
               			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
               			jatad,
@@ -32,3 +30,4 @@
           	});
 		});
 {/literal}
+{*</script>*}

@@ -283,7 +283,8 @@ class AjaxWorker extends ModuleAdminController {
 					}			
 					$this->post['condition'] = $c;					
 					$o = $h->displayConditionTextMode($this->post);
-					//$o .= $h->displayConditionPressHereMode($this->post);
+					$this->post['row']++;
+					$o .= $h->displayConditionPressHereMode($this->post);
 					echo $o;
 				}				
 				else  {					
