@@ -136,10 +136,19 @@
 		}
 		public function getCondition($condition)
 		{
-			if (count($this->conditions) >= $condition)
+			if (count($this->conditions) > $condition)
 				return $this->conditions[$condition];
 		}
-
+		public function getConditionById($id)
+		{	
+			foreach ( $this->conditions as $condition ) {
+				if ( strcmp($condition->getId(),$id) == 0)
+				{					
+					return $condition;				
+				}
+			}
+			return false;
+		}
 		public function getActionText($i)
 		{
 			if ($this->declaredActions[$i])
@@ -193,10 +202,32 @@
 			{
 				if ($condition->getId() == $microtime)
 				{
-					unset($this->conditions[$key]);
-					if ($this->save) $this->recipe->save();
+					$toDelete = $key;
 				}
 			}
+			if (isset($toDelete))
+			{
+				if ($toDelete == (count($this->conditions) - 1) )
+				{				
+					unset($this->conditions[$toDelete]);
+					if ($this->save) $this->recipe->save();
+					return true;
+				}
+				else
+				{									
+					foreach ($this->conditions as $i => $sc)
+					{
+						if ($i > $toDelete)
+						{
+							$this->conditions[$i-1] = $this->conditions[$i];
+						}
+					}					
+					unset($this->conditions[count($this->conditions) - 1]);
+					if ($this->save) $this->recipe->save();
+					return true;
+				}
+			}
+			return false;
 		}
 		/**
 		 * [addAction adds an action to this step]

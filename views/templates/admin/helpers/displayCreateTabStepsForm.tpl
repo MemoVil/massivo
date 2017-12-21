@@ -66,17 +66,17 @@
 		  			 		</thead>
 		  			 		{if $step->conditions|is_array && $step->conditions|@count > 0}
 			  			 		{foreach name=conditionbucle from=$step->conditions key=cpos item=stepcondition}
-			  			 			<tr class="stepcondition" type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$cpos}">
+			  			 			<tr class="stepcondition" type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$cpos}" cid="{$stepcondition->getId()}">
 						  			 	<td colspan="5">
-						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" param="{$cpos}">
+						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" row="{$cpos}" cid="{$stepcondition->getId()}">
 												{$stepcondition->getFullDescription()}										
 						  			 		</p>
 						  			 	</td>	
 						  			 	<td>					  			 			 		        
-											<button type="button" class="btn btn-success editstepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="editstepcondition" row="{$cpos}">
+											<button type="button" class="btn btn-success editstepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="editstepcondition" row="{$cpos}" cid="{$stepcondition->getId()}">
 											    <i class="icon-edit">  </i>
 											</button>				    					
-											<button type="button" class="btn btn-danger deletestepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" row="{$cpos}">
+											<button type="button" class="btn btn-danger deletestepcondition" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepcondition" row="{$cpos}" cid="{$stepcondition->getId()}">
 											    <i class="icon-trash">  </i>
 											</button>	    					
 								    	</td>
@@ -103,17 +103,17 @@
 		  			 		</thead>
 		  			 		{if $step->actions|is_array && $step->actions|@count > 0}
 			  			 		{foreach name=actionbucle from=$step->actions key=cpos item=stepaction}
-			  			 			<tr class="stepaction" type="stepaction" recipe="{$recipe->id}" step="{$step->id}" row="{$cpos}">
+			  			 			<tr class="stepaction" type="stepaction" recipe="{$recipe->id}" step="{$step->id}" row="{$cpos}" cid="{$stepaction->getId()}">
 						  			 	<td colspan="5">
-						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepaction" row="{$cpos}">
+						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepaction" row="{$cpos}" cid="{$stepaction->getId()}">
 												{$stepaction->getFullDescription()}										
 						  			 		</p>
 						  			 	</td>	
 						  			 	<td>					  			 			 		        
-											<button type="button" class="btn btn-success editstepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" row="{$cpos}">
+											<button type="button" class="btn btn-success editstepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" row="{$cpos}" cid="{$stepaction->getId()}">
 											    <i class="icon-edit">  </i>
 											</button>				    					
-											<button type="button" class="btn btn-danger deletestepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" row="{$cpos}">
+											<button type="button" class="btn btn-danger deletestepaction" recipe="{$recipe->id}" step="{$step->id}"  type="deletestepaction" row="{$cpos}" cid="{$stepaction->getId()}">
 											    <i class="icon-trash">  </i>
 											</button>	    					
 								    	</td>
@@ -174,6 +174,7 @@
 			jatad.recipe = recipe; jatad.step = step; jatad.row = row;
 			atad.massivo_key = "{/literal}{$massivo_key}{literal}";
 			jatad.massivo_key = "{/literal}{$massivo_key}{literal}";
+			jatad.operation = 'getScript';
 		}
 		function attachEditableFunctionToStepList(el)
 		{				
@@ -182,6 +183,7 @@
     			var massivokey = {/literal}"{$massivo_key}"{literal};
     			var perform = el.attr('type');
     			var cpos = el.attr('row');
+    			var cid = el.attr('cid');
     			var atad = { recipe: id, step:stepid, massivo_key: massivokey, action: perform};       			
     			if ( cpos )
     				atad.row= cpos; 	
@@ -349,12 +351,12 @@
   	 	$('button.editstepcondition').click(
 			function()
 			{
-				var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var cId = $(this).attr('param');
+				var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var rowId = $(this).attr('row'); var cId = $(this).attr('cid');
 				var b = $(this);
 				$.ajax({
 		              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
-		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: cId, recipe: rId, step: sId, operation: 'editStepCondition'} ,
+		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, operation: 'editStepCondition'} ,
 		              dataType: "html",
 		              context: document.body,
 		              error: function(xhr,status,error) {
@@ -363,10 +365,41 @@
 		              success:  function (response) {	              	
 		              	var tr =b.parent().parent();
 		              	tr.html(response);
+		              	var r = $.get(
+		              		"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+		              		{massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, script: 'displayConditionEditButtons', operation: 'getScript'} ,
+		              		null,
+		              		'script'
+		              	);
 		        	 }
 		      	});
 			}
 		);
+		$('button.deletestepcondition').click(
+		function() {
+			var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var rowId = $(this).attr('row'); var cId = $(this).attr('cid');
+			var b = $(this);			
+			$.ajax({
+	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+	              method: "POST",
+	           	  data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, operation: 'deleteStepCondition'} ,
+	              dataType: "html",
+	              context: document.body,
+	              error: function(xhr,status,error) {
+	              	console.log(xhr);
+	              },
+	              success:  function (response) {
+		            	var t = response.split("$");
+		             	if (t[0] == "Error")
+	              			showError(t[1]);
+		              	else {	          
+		            		$('tr.stepcondition[recipe="'+rId+'"][step="'+sId+'"][row="'+ rowId+'"][cid="' + cId + '"').remove();  		
+		              	}              		
+	              }
+          	});
+
+		}
+	);
 	</script>
 
 {/literal}

@@ -81,6 +81,41 @@
 			return false;
 		}	
 		/**
+		 * [raid Removes $element from $matrix and resorts all other elements on $matrix]
+		 * @param  [type] $post   [description]
+		 * @param  [type] $matrix [description]
+		 * @return [type]         [description]
+		 */
+		public function raid($element,$matrix)
+		{
+			foreach ($matrix as $index => $value)
+			{				
+				if 	($value == $element)
+				{						
+					$key = $index;
+				}					
+			}
+			if (isset($key))
+			{
+				if ($key == (count($matrix) - 1) )
+				{
+					unset($matrix[$key]);
+				}
+				else {
+					foreach ($matrix as $index => $value)	
+					{	
+						if ($index >= $key)
+						{
+							$matrix[$index] = $matrix[$index+1];		
+						}
+					}
+					unset($matrix[count($matrix) - 1]);
+				}								
+				return $matrix;
+			}
+			else return false;
+		}
+		/**
 		 * [postLength hack overload to allow postLength to be used as: * ]
 		 * $this->postLength('2') ==> Check all $_POST 
 		 * $this->postLength('param','row','2') => Check param and row on $_POST

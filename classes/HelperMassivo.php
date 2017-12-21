@@ -210,6 +210,8 @@
                     'row' => $post['row']
                   )
           );  
+          if (array_key_exists('condition',$post))          
+              $this->context->smarty->assign('condition',$post['condition']);            
           switch ($post['time'])
           {
             case 'start':
@@ -218,38 +220,31 @@
             break;
             //Both verb and param are triggered via jquery.load function
             case 'verb':
-              $this->context->smarty->assign('time','verb');
-              $this->context->smarty->assign('condition',$post['condition']);
+              $this->context->smarty->assign('time','verb');              
               $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayConditionVerb.tpl');       
             break;
             case 'param':                 
               $this->context->smarty->assign('time','param');
-              $this->context->smarty->assign('condition',$post['condition']);
               $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayConditionParam.tpl');       
             break;
             case 'buttons':
-              $this->context->smarty->assign('time','buttons');
-              $this->context->smarty->assign('condition',$post['condition']);
+              $this->context->smarty->assign('time','buttons');              
               $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayConditionButtons.tpl');       
             break;
             case 'type':
-              $this->context->smarty->assign('time','type');
-              $this->context->smarty->assign('condition',$post['condition']);
+              $this->context->smarty->assign('time','type');              
                $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayConditionType.tpl');       
             break;
             case 'left':
-              $this->context->smarty->assign('time','left');
-              $this->context->smarty->assign('condition',$post['condition']);
+              $this->context->smarty->assign('time','left');              
               $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayConditionLeft.tpl');       
             break;
             case 'right':
-              $this->context->smarty->assign('time','right');
-              $this->context->smarty->assign('condition',$post['condition']);
+              $this->context->smarty->assign('time','right');              
               $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayConditionRight.tpl');       
             break;   
             case 'editbuttons':
               $this->context->smarty->assign('time','buttons');
-              $this->context->smarty->assign('condition',$post['condition']);
               $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayConditionEditButtons.tpl');       
             break;         
           }        
@@ -266,6 +261,10 @@
           $s = $r->getStepById($post['step']);                            
           if ($post['condition'])            
             $this->context->smarty->assign('condition',$post['condition']);
+          else if ($post['cid']){
+            $c = $s->getConditionById($post['cid']);
+            $this->context->smarty->assign('condition',$c);
+          }
           if ($post['action'])
             $this->context->smarty->assign('action',$post['action']);
           $this->context->smarty->assign(

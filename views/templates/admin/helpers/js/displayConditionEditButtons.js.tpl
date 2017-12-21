@@ -1,10 +1,11 @@
 {*<script> *}
 	{literal}
-	$('button.canceleditcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').click(
+	$('button.canceleditcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"][cid="{/literal}{$condition->getId()}{literal}"]').click(
 		function(event) {
 			setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});		
 			atad.operation = 'displayConditionTextMode';
-			var tr = $('tr.stepcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');
+			atad.cid = "{/literal}{$condition->getId()}{literal}";
+			var tr = $('tr.stepcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"][cid="{/literal}{$condition->getId()}{literal}"]');
 			tr.load(
   				"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
       			atad,
@@ -21,6 +22,7 @@
 				    //We load related script for such tr
 				    jatad.operation = 'getScript';
 				    jatad.script = 'displayConditionTextMode';
+				    jatad.cid = "{/literal}{$condition->getId()}{literal}";
 		   			var r = $.get(
 			          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 			          			jatad,
@@ -32,7 +34,7 @@
 
 		}		   	
 	);
-	$('button.saveeditcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').click(
+	$('button.saveeditcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"][cid="{/literal}{$condition->getId()}{literal}"]').click(
 		function(event) {
 			var cType = $('select.inputSelectCondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"] option:selected').attr('value');
 			var cVerb = $('select.inputSelectConditionVerb[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"] option:selected').attr('value');
@@ -44,6 +46,7 @@
 			atad.type =cType;
 			atad.verb =cVerb;
 			atad.param =cParam;
+			atad.cid = "{/literal}{$condition->getId()}{literal}";
 			var r = $.get(
 				"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
       			atad,
@@ -58,6 +61,7 @@
 	      				setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});		
       				    jatad.operation = 'getScript';
 					    jatad.script = 'displayConditionTextMode';
+					    jatad.cid = "{/literal}{$condition->getId()}{literal}";
 	    	   			var r = $.get(
 		          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 		          			jatad,
