@@ -276,12 +276,14 @@ class AjaxWorker extends ModuleAdminController {
 					$c = $this->addNewCondition($this->post);
 					$h = new HelperMassivo();
 					if ( !$c ) 
-					{
+					{						
 						$o = $this->error('Error: Error adding new condition');						
-						$o .= $h->displayConditionCreateMode($post);
+						$o .= $h->displayConditionCreateMode($this->post);
 						return $o;
 					}			
 					$this->post['condition'] = $c;					
+					$this->post['cid'] = $c->id;
+					ppp($this->post);
 					$o = $h->displayConditionTextMode($this->post);
 					$this->post['row']++;
 					$o .= $h->displayConditionPressHereMode($this->post);
@@ -336,13 +338,13 @@ class AjaxWorker extends ModuleAdminController {
 				{
 					$r = Recipe::load($this->post['recipe']);
 					$s = $r->getStepById($this->post['step']);
-					$c = $s->getCondition($this->post['row']);	
+					$c = $s->getConditionById($this->post['cid']);	
 					if ($this->arePost('verb','type','param'))
-					{
-						$c = new $this->post['type']();
+					{						
+						$c->type  = $this->post['type'];
 						$c->condition = $this->post['verb'];
 						$c->param = $this->post['param'];
-						$s->conditions[$this->post['row']] = $c;
+						 
 						$r->save();
 						$h = new HelperMassivo();
 						$o = $h->displayConditionTextMode($this->post);

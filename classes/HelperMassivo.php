@@ -42,7 +42,7 @@
             'recipe' => $recipe,
             'steps' => $steps              
           )
-        );        
+        );                
         $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayCreateTabStepsForm.tpl');                                
         return $tpl;
       }
@@ -182,7 +182,7 @@
       {
           $r = Recipe::load($post['recipe']);
           $s = $r->getStepById($post['step']);
-          $c = $s->getCondition($post['row']);                  
+          $c = $s->getConditionById($post['cid']);                  
           $this->context->smarty->assign(
                   array(
                     'recipe' => $r,
@@ -211,7 +211,9 @@
                   )
           );  
           if (array_key_exists('condition',$post))          
-              $this->context->smarty->assign('condition',$post['condition']);            
+              $this->context->smarty->assign('condition',$post['condition']);     
+          if (array_key_exists('cid',$post))          
+              $this->context->smarty->assign('cid',$post['cid']);         
           switch ($post['time'])
           {
             case 'start':

@@ -69,7 +69,7 @@
 			  			 			<tr class="stepcondition" type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$cpos}" cid="{$stepcondition->getId()}">
 						  			 	<td colspan="5">
 						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" row="{$cpos}" cid="{$stepcondition->getId()}">
-												{$stepcondition->getFullDescription()}										
+												{$stepcondition->getFullDescription()}								
 						  			 		</p>
 						  			 	</td>	
 						  			 	<td>					  			 			 		        

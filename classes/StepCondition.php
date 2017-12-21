@@ -9,12 +9,12 @@
 	{
 		use scription;
 		/** @var [id] [Unique id of this condition] */
-		private $id;
+		public $id;
 		/** @var [type] [StepConditionType.php] */
-		private $type;
+		public $type;
 		/** @var [condition] [] */
-		private $condition;
-		private $param;
+		public $condition;
+		public $param;
 		public $lang;
 		public $step;
 		/* Array of elements for inputs that get info from Store */
@@ -122,6 +122,7 @@
 			$return[] = $this->verbConditionDescription[$this->condition];
 			$return[] = $this->conditionDescription['long_description_right'];
 			$return[] = $this->paramInfo($this->param);
+			
 			return implode($return);
  		}
  		public function getText()
