@@ -300,11 +300,12 @@ class AjaxWorker extends ModuleAdminController {
 				}
 			break;
 			case 'editStepCondition':
-				if ($this->arePost('row','step','recipe'))
-				{
+								
+				if ($this->arePost('row','step','recipe','cid'))
+				{					
 					$r = Recipe::load($this->post['recipe']);
 					$s = $r->getStepById($this->post['step']);
-					$c = $s->getCondition($this->post['row']);					
+					$c = $s->getConditionById($this->post['cid']);	
 					$this->post['condition'] = $c;					
 					$h = new HelperMassivo();
 					$this->post['time'] = 'type';
@@ -334,23 +335,35 @@ class AjaxWorker extends ModuleAdminController {
 				}
 			break;
 			case 'saveEditStepCondition':
-				if ($this->arePost('row','step','recipe'))
+				if ($this->arePost('row','step','recipe','cid') && $this->postLength('1'))
 				{
 					$r = Recipe::load($this->post['recipe']);
 					$s = $r->getStepById($this->post['step']);
 					$c = $s->getConditionById($this->post['cid']);	
 					if ($this->arePost('verb','type','param'))
-					{						
-						$c->type  = $this->post['type'];
-						$c->condition = $this->post['verb'];
-						$c->param = $this->post['param'];
-						 
+					{					
+						$nc = new $this->post['type']($s);
+						$nc->type  = $this->post['type'];
+						$nc->condition = $this->post['verb'];
+						$nc->param = $this->post['param'];
+						$nc->id = $c->id;						
+						$s->conditions[$s->findCondition($c)] = $nc;										 
 						$r->save();
 						$h = new HelperMassivo();
 						$o = $h->displayConditionTextMode($this->post);
 						echo $o;
 					}
 				}
+				else  {					
+					if (!$this->postLength('param','1'))
+						$error[] = '<p>Error: We need a param for this condition</p>';
+					if (!$this->postLength('row','1'))
+						$error[] = '<p>Error: Error while attaching condition to this step</p>';
+					if (!$this->post['type'])
+						$error[] = '<p>Error: Condition type not specified or not found</p>';
+					$this->error(implode(PHP_EOL,$error));
+				}
+
 			break;
 			case 'displayConditionTextMode':
 				if ($this->arePost('row','step','recipe'))

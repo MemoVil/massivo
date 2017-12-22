@@ -149,6 +149,15 @@
 			}
 			return false;
 		}
+		public function findCondition($c)
+		{
+			foreach ($this->conditions as $order => $condition)
+			{
+				if ($condition->getId() == $c->getId() )
+					return $order;
+			}
+			return false;
+		}
 		public function getActionText($i)
 		{
 			if ($this->declaredActions[$i])

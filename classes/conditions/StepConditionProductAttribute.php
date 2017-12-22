@@ -8,7 +8,7 @@
 		public function __construct($step, $init = null)
 		{
 			parent::__construct($step, $init);
-			$this->workOn = 'ProductCombination';
+			$this->worksOn = 'ProductCombination';
 			$this->conditionDescription = array(
 				"long_description_left" => $this->l("If selected product(s) combination"),
 				"long_description_right" => $this->l("attribute "),

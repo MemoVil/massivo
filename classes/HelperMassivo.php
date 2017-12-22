@@ -266,6 +266,7 @@
           else if ($post['cid']){
             $c = $s->getConditionById($post['cid']);
             $this->context->smarty->assign('condition',$c);
+            $this->context->smarty->assign('cid',$post['cid']);
           }
           if ($post['action'])
             $this->context->smarty->assign('action',$post['action']);

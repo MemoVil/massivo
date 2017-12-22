@@ -196,7 +196,10 @@
     					break;
     				case 'newaction':
     					atad.operation = "displayActionCreateMode";
-    					break;    					
+    					break;    
+    				default:
+    					return;					
+    				break;
     			}
     			jatad.operation = 'getScript';
     			jatad.script = atad.operation;
