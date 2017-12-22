@@ -282,8 +282,7 @@ class AjaxWorker extends ModuleAdminController {
 						return $o;
 					}			
 					$this->post['condition'] = $c;					
-					$this->post['cid'] = $c->id;
-					ppp($this->post);
+					$this->post['cid'] = $c->id;					
 					$o = $h->displayConditionTextMode($this->post);
 					$this->post['row']++;
 					$o .= $h->displayConditionPressHereMode($this->post);
@@ -375,11 +374,11 @@ class AjaxWorker extends ModuleAdminController {
 			break;
 			case 'deleteStepCondition':
 			{
-				if ($this->arePost('row','step','recipe'))
+				if ($this->arePost('row','step','recipe','cid'))
 				{
 					$r = Recipe::load($this->post['recipe']);
 					$s = $r->getStepById($this->post['step']);
-					$c = $s->getCondition($this->post['row']);						
+					$c = $s->getConditionById($this->post['cid']);						
 					if ( !$s->removeCondition($c->getId()) )
 						$this->error('Error: Condition was not deleted');
 					else

@@ -55,8 +55,12 @@
 	      					return;
 	      				}
 	      				$('tr.stepcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').replaceWith(response);
-	      				setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});		
+	      				var cid = $('tr.stepcondition[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').attr('cid');
+
+	      				setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});	
+
       				    jatad.operation = 'getScript';
+      				    jatad.cid = cid;
 					    jatad.script ='displayConditionTextMode' ;
 	    	   			var r = $.get(
 		          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",

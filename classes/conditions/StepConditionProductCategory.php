@@ -15,6 +15,9 @@
 				"isLocated" => $this->l(" is located "),
 				"isNotLocated" => $this->l(" isn't located ")
 			);	
+			$this->selectable = $this->getCategories();
+
+			$this->multi = true;
 		}
 		/**
 		 * [run Override]
@@ -30,9 +33,15 @@
 		/** True if this product is in the category passed as param */
 		private function isLocated($product)
 		{
-			if (Product::idIsOnCategoryId($product,$this->param))
-				return true;
-			else return false;
+			$s = explode(';',$this->param);
+			if (!count($s))	
+				return false;
+			foreach ($s as $category)
+			{			
+				if (Product::idIsOnCategoryId($product,$category))
+					return true;
+			}
+			return false;
 		}
 		private function isNotLocated($product)
 		{
@@ -40,11 +49,27 @@
 		}
 		public function paramInfo($id)
 		{
-			foreach ($this->getAttributeData() as $option)
+			foreach ($this->selectable as $option)
 			{
 				if ($option['id'] == $id)
 					return $option['public'];
 			}
+		}
+
+		private function getCategories()
+		{
+			$r = array();	
+			$tree = Category::getSimpleCategories($this->lang);			
+			foreach ($tree as $category)
+			{
+				$public = '[' . $category['name'] . ']';
+				$s = array(
+					'public' => $public,
+					'id' => $category['id_category']
+				);
+				$r[] = $s;
+			}
+			return $r;
 		}
 	}
 ?>

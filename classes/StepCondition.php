@@ -19,6 +19,8 @@
 		public $step;
 		/* Array of elements for inputs that get info from Store */
 		public $selectable = array();
+		// Multiple selection allowed (Inputs will be triggered as ; formated)
+		public $multi = false;
 		//This is the way we will show user a description of how each Condition is showed. We must show two strings:
 		//	1. Long description, to use on editor, like (If product combination) + verbDescription + (this attributes:) + param
 		//	2. Short description, to use on popup/select		
@@ -155,7 +157,7 @@
  		}
  		public function paramInfo($id)
 		{
-			if (!count($this->getSelectable() > 0) )
+			if (!(count($this->getSelectable()) > 0 ) )
 				return $id;
 			foreach ($this->getSelectable() as $option)
 			{

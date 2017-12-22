@@ -30,6 +30,11 @@ div#createTab .col-xs-4
 {
   	width: 33.3%;
 }
+td.rescaleTd {
+	width:1px;
+    word-wrap: break-word;
+    font-family: monospace
+}
 div#createTab ul.createTabSelector.nav.nav-pills
 {
 	margin-bottom: 8px;
