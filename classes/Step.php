@@ -134,6 +134,7 @@
 			}
 			return $r;
 		}
+		
 		public function getCondition($condition)
 		{
 			if (count($this->conditions) > $condition)
@@ -168,13 +169,21 @@
 			return false;			 
 		}
 		
+		//Actions must NOT be returned if dependencies are not met
 		public function getAllActionsText()
 		{
 			$r = Array();
 			foreach ($this->declaredActions as $declared)
 			{
-				$c = new $declared($this);
-				$r[] = $c->getText();
+				$valid = false;
+				$a = new $declared($this);
+				foreach ($this->conditions as $condition)
+				{
+					if (array_intersect($a->lock, $condition->key))
+						$valid = true;
+				}
+				if ( $valid && $a->getText() ) 
+					$r[$declared] = $a->getText();
 			}
 			return $r;
 		}

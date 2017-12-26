@@ -11,7 +11,10 @@
 		public function __construct($step, $init = null)
 		{
 			parent::__construct($step, $init);
-			$this->actionDescription = $this->l("Appends a product data to its reference");
+			$this->actionDescription = array(
+				'short_description' => $this->l("Appends a product data to its reference"),
+				'long_description' => $this->l("Appends a product data to its reference")
+			);
 		}
 		public function run()		
 		{

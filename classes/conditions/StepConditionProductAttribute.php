@@ -4,6 +4,7 @@
 	class StepConditionProductAttribute extends StepCondition
 	{
 		public $combination;	
+		public $key = array('product','product_combination');
 		
 		public function __construct($step, $init = null)
 		{

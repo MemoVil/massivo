@@ -6,6 +6,7 @@
 	 */
 	class StepConditionProduct extends StepCondition
 	{
+		public $key = array('product');
 		public function __construct($step, $init = null)
 		{
 			parent::__construct($step, $init);

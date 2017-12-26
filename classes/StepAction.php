@@ -4,6 +4,7 @@
   	
   	class StepAction 
   	{
+  		use scription;
   		public $id;
 		/** @var [type] [StepActionType.php] */
 		private $type;
@@ -16,8 +17,10 @@
 		 */		
 		private $param;
 		public $step;
-		public $worksOn;
-		public $actionDescription;		
+		// Actions must be unlocked by conditions, so actions that handle products can only be performed if there is a matching condition to unlock it
+		public $lock = array();
+		public $actionDescription = array();		
+		public $verbActionDescription = array();
 
 		public function __construct($step, $init = null)
 		{
@@ -62,10 +65,9 @@
 		 * @param  [type] $blob [description]
 		 * @return [type]       [description]
 		 */
-		public function getType($blob)
-		{
-			$d = unserialize($blob);
-			return $d['type'];
+		public static function getType($action)
+		{			
+			return $action['type'];
 		}
 
 		public function getId()
@@ -84,14 +86,6 @@
  		{
  			return $this->getText();	
  		}
- 		public function getLeftText()
- 		{
- 			$this->actionDescription['long_description_left'];
- 		}
- 		public function getRightText()
- 		{
- 			return $this->actionDescription['long_description_right'];
- 		}
  		public function getVerb($human = null)
  		{
  			if ($human == null)
@@ -99,6 +93,16 @@
  			else if ($t = array_search($human,$this->getVerb()))
  				return $t;
  			else return false;
+ 		}
+ 		public function getLongText()
+ 		{
+ 			$this->actionDescription['long_description'];
+ 		} 		
+ 		
+ 		// For advanced handling of templates for some specific actions
+ 		public function getActionCreateModeTemplate($post)
+ 		{
+ 			return false;
  		}
 		public function l($string, $specific = false){
  			return Translate::getModuleTranslation(Module::getInstanceByName('massivo'), $string, ($specific) ? $specific : 'massivo');

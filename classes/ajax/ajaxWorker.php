@@ -389,6 +389,41 @@ class AjaxWorker extends ModuleAdminController {
 				}
 			}
 			break;
+			case 'displayActionCreateMode': 
+				if ($this->arePost('row','step','recipe'))
+				{					
+					$h = new HelperMassivo();
+					if ($this->post['time'])
+					{
+						switch ($this->post['time'])
+						{							
+							case 'verb':							
+							case 'param':
+							case 'buttons':
+							case 'type':
+							case 'left':
+							case 'right':
+								$p = $this->post['selected'];
+								$r = Recipe::load($this->post['recipe']);
+			        			$s = $r->getStepById($this->post['step']);   
+								foreach ($s->getDeclaredActions() as $class)
+								{
+									$c = new $class($s);
+									if (strcmp($c->actionDescription['short_description'],$p) == 0 )
+									{
+										$this->post['action'] = $c;																				
+									}
+								}
+							break;
+						}
+					}
+					else $this->post['time'] = 'start';
+					//Time is the switcher on helper					
+					$r = $h->displayActionCreateMode($this->post);
+					echo $r;
+				}
+			break;
+
 		}
 	}
 	/**

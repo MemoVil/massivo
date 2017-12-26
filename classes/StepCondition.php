@@ -17,6 +17,8 @@
 		public $param;
 		public $lang;
 		public $step;
+		//Key for actions based on
+		public $key = array(); 
 		/* Array of elements for inputs that get info from Store */
 		public $selectable = array();
 		// Multiple selection allowed (Inputs will be triggered as ; formated)

@@ -8,7 +8,8 @@
   	 */
 	class StepActionCombination extends StepAction
 	{
-		public $combination;		
+		public $combination;	
+		public $lock = array('product','product_combination');	
 		public static function iterator($step,$action)
 		{
 			foreach($step->getProductCombinations() as $combination => $comb)

@@ -3,6 +3,7 @@
   		exit;
 	class StepConditionProductCategory extends StepConditionProduct
 	{			
+		public $key = array('product','product_category');
 		public function __construct($step, $init = null)
 		{
 			parent::__construct($step, $init);

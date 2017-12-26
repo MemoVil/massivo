@@ -253,7 +253,72 @@
        return $tpl;
       }
       /**
-       * [getScript returns a script tag tpl for inclussion from $.getScript]
+       * [displayCreateMode Display row on first creation, which is showed via ajax $time  calls (one component one ajax)]
+       * @param  [type] $post [description]
+       * @return [type]       [description]
+       */
+      public function displayActionCreateMode($post)
+      {
+          $r = Recipe::load($post['recipe']);
+          $s = $r->getStepById($post['step']);                  
+          $this->context->smarty->assign(
+                  array(
+                    'recipe' => $r,
+                    'step' => $s,  
+                    'row' => $post['row']
+                  )
+          );  
+          if (array_key_exists('action',$post))          
+              $this->context->smarty->assign('action',$post['action']);     
+          if (array_key_exists('cid',$post))          
+              $this->context->smarty->assign('cid',$post['cid']);         
+          //Some actions will have their own controls, as text editors, and they should handle display functions by its own
+          if (array_key_exists('action',$post) and $post['time'] !== 'start')
+          {
+            $a = $post['action'];            
+            if ($tpl = $a->getActionCreateModeTemplate($post))
+              return $tpl;
+          }
+          switch ($post['time'])
+          {
+            case 'start':
+                $this->context->smarty->assign('time','start');
+                $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayActionCreateMode.tpl');       
+            break;
+            //Both verb and param are triggered via jquery.load function
+            case 'verb':
+              $this->context->smarty->assign('time','verb');              
+              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionVerb.tpl');       
+            break;
+            case 'param':                 
+              $this->context->smarty->assign('time','param');
+              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionParam.tpl');       
+            break;
+            case 'buttons':
+              $this->context->smarty->assign('time','buttons');              
+              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionButtons.tpl');       
+            break;
+            case 'type':
+              $this->context->smarty->assign('time','type');              
+               $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionType.tpl');       
+            break;
+            case 'left':
+              $this->context->smarty->assign('time','left');              
+              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionLeft.tpl');       
+            break;
+            case 'right':
+              $this->context->smarty->assign('time','right');              
+              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionRight.tpl');       
+            break;   
+            case 'editbuttons':
+              $this->context->smarty->assign('time','buttons');
+              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionEditButtons.tpl');       
+            break;         
+          }        
+       return $tpl;
+      }
+      /**
+       * [getScript returns a script tag tpl for inclussion from $.get]
        * @param  [type] $this->post [description]
        * @return [type]             [description]
        */

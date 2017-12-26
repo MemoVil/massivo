@@ -45,10 +45,10 @@
 	  			</thead>
 	  			 {foreach name=buclecard from=$steps key=pos item=step}
 	  			 <tr class='bucle' order="{$pos+1}">
-	  			 	<td>
+	  			 	<td class="rescaleTd">
 	  			 		<input type="checkbox" class="checkStep" order="{$pos+1}"></input>
 	  			 	</td>
-		  			 <td class="text-center">
+		  			 <td class="text-center rescaleTd">
 						{$pos + 1}
 		  			 </td>
 		  			 <td class="text-center rescaleTd">
@@ -60,13 +60,13 @@
 		  			 		<thead>  
 		  			 			<tr class="bg-primary white-border">
 				  			 		<th colspan="6" class="text-center">
-				  			 			{l s="Conditions" mod="massivo"}
+				  			 			{l s="Conditions" mod="massivo"}				  			 			
 				  			 		</th>				  			 		
 			  			 		</tr>
 		  			 		</thead>
 		  			 		{if $step->conditions|is_array && $step->conditions|@count > 0}
 			  			 		{foreach name=conditionbucle from=$step->conditions key=cpos item=stepcondition}
-			  			 			<tr class="stepcondition" type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$cpos}" cid="{$stepcondition->getId()}">
+			  			 			<tr class="stepcondition stepcondition-{$recipe->id}-{$step->id}" type="stepcondition" recipe="{$recipe->id}" step="{$step->id}"  row="{$cpos}" cid="{$stepcondition->getId()}">
 						  			 	<td colspan="5">
 						  			 		<p class="editable" recipe="{$recipe->id}" step="{$step->id}" type="stepcondition" row="{$cpos}" cid="{$stepcondition->getId()}">
 												{$stepcondition->getFullDescription()}								
@@ -374,6 +374,14 @@
 		              		null,
 		              		'script'
 		              	);
+		              	jatad.operation = 'getScript';
+						jatad.script = 'displayConditionCreateMode';         					
+           				$.get(
+              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+              			{massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, script: 'displayConditionCreateMode', operation: 'getScript'} ,
+              			null,
+              			'script'
+          			);	
 		        	 }
 		      	});
 			}
@@ -397,6 +405,66 @@
 	              			showError(t[1]);
 		              	else {	          
 		            		$('tr.stepcondition[recipe="'+rId+'"][step="'+sId+'"][row="'+ rowId+'"][cid="' + cId + '"').remove();  		
+		              	}              		
+	              }
+          	});
+
+		}
+	);
+ 	 	$('button.editstepaction').click(
+			function()
+			{
+				var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var rowId = $(this).attr('row'); var cId = $(this).attr('cid');
+				var b = $(this);
+				$.ajax({
+		              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+		              method: "POST",
+		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, operation: 'editStepAction'} ,
+		              dataType: "html",
+		              context: document.body,
+		              error: function(xhr,status,error) {
+		              	console.log(xhr);
+		              },
+		              success:  function (response) {	              	
+		              	var tr =b.parent().parent();
+		              	tr.html(response);
+		              	var r = $.get(
+		              		"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+		              		{massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, script: 'displayActionEditButtons', operation: 'getScript'} ,
+		              		null,
+		              		'script'
+		              	);
+		              	jatad.operation = 'getScript';
+						jatad.script = 'displayActionCreateMode';         					
+           				$.get(
+              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+              			{massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, script: 'displayActionCreateMode', operation: 'getScript'} ,
+              			null,
+              			'script'
+          			);	
+		        	 }
+		      	});
+			}
+		);
+		$('button.deletestepaction').click(
+		function() {
+			var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var rowId = $(this).attr('row'); var cId = $(this).attr('cid');
+			var b = $(this);			
+			$.ajax({
+	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+	              method: "POST",
+	           	  data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, operation: 'deleteStepAction'} ,
+	              dataType: "html",
+	              context: document.body,
+	              error: function(xhr,status,error) {
+	              	console.log(xhr);
+	              },
+	              success:  function (response) {
+		            	var t = response.split("$");
+		             	if (t[0] == "Error")
+	              			showError(t[1]);
+		              	else {	          
+		            		$('tr.stepaction[recipe="'+rId+'"][step="'+sId+'"][row="'+ rowId+'"][cid="' + cId + '"').remove();  		
 		              	}              		
 	              }
           	});
