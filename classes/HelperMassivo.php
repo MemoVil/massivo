@@ -268,18 +268,20 @@
                     'row' => $post['row']
                   )
           );  
-          if (array_key_exists('action',$post))          
-              $this->context->smarty->assign('action',$post['action']);     
-          if (array_key_exists('aid',$post))          
-              $this->context->smarty->assign('aid',$post['aid']);         
-          
           //Some actions will have their own controls, as text editors, and they should handle display functions by its own
-          if (array_key_exists('action',$post) and $post['time'] !== 'start')
-          {
-            $a = new $post['action']($s);            
-            if ($tpl = $a->getActionCreateModeTemplate($post))
+          if (array_key_exists('action',$post))
+          {            
+            $a = $post['action'];            
+            $this->context->smarty->assign('action',$post['action']);     
+            $t = call_user_func(array($a,$post['operation']),$post);
+            if ($tpl = $a->displayActionCreateModeOverride($post))
               return $tpl;
-          }
+          }          
+              
+          if (array_key_exists('aid',$post))          
+              $this->context->smarty->assign('aid',$post['aid']);       
+          if (array_key_exists('value',$post))          
+            $this->context->smarty->assign('value',$post['value']);       
           switch ($post['time'])
           {
             case 'start':
@@ -303,21 +305,38 @@
       public function getScript($post)
       {
           $r = Recipe::load($post['recipe']);
-          $s = $r->getStepById($post['step']);                            
-          if ($post['condition'])            
-            $this->context->smarty->assign('condition',$post['condition']);
-          else if ($post['cid']){
+          $s = $r->getStepById($post['step']);    
+          $sm = array();
+          foreach ($post as $key => $value)
+          {
+            switch ($key)
+            {
+              case 'cid': 
+                  $sm[] = array('cid' => $value);
+                  $sm[] = array('condition' => $s->getConditionById($value));
+              break; 
+              case 'condition':
+                  $sm[] = array('condition' => $value);
+            }
+          }
+          if ($post['cid'])                        
             $c = $s->getConditionById($post['cid']);
-            $this->context->smarty->assign('condition',$c);
-            $this->context->smarty->assign('cid',$post['cid']);
+          if ($post['condition'])            
+            $c = $post['condition'];
+              $this->context->smarty->assign('condition',$post['condition']);
+          if ($post['cid']){
+              
+              $this->context->smarty->assign('condition',$c);
+              $this->context->smarty->assign('cid',$post['cid']);
           }
           if ($post['action'])
-            $this->context->smarty->assign('action',$post['action']);
-          else if ($post['aid']){
-            $c = $s->getActionById($post['aid']);
-            $this->context->smarty->assign('action',$c);
-            $this->context->smarty->assign('aid',$post['aid']);
+              $this->context->smarty->assign('action',$post['action']);
+          if ($post['aid']){
+               $a = $s->getActionById($post['aid']);
+               $this->context->smarty->assign('action',$a);
+               $this->context->smarty->assign('aid',$post['aid']);
           }
+          $t = call_user_func(array($this,$post['operation']),$post);
           $this->context->smarty->assign(
                   array(
                     'recipe' => $r,

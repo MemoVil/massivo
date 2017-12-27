@@ -6,6 +6,7 @@
 				<option value="{$cpos}">{l s="$text" mod="massivo"}</option>
 			{/foreach}
 		</select>
+		<input class="aidValue hidden" value="{$aid}">
 	</td>		
 	<td class="actionDescription" recipe="{$recipe->id}" step="{$step->id}" row="{$row}" aid="{$aid}">
 	</td>

@@ -31,18 +31,36 @@
 			}
 			$this->step->getProductCombinations($this->combination)->reference .=  $param;
 		}	
-		public function getActionCreateModeJavascript($post)
+		/* Fake Override */
+		public function getScript($post)
 		{
-			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/actions/stepActionCombinationReferenceAppendProductDetail.js.tpl');   
+			$this->context->smarty->assign(
+				array(
+					'post' => $post,
+					'time' => $post['time'],
+					'features' => Feature::getFeatures($this->lang),
+					'aid' => $this->id,
+					'action' => $this
+				)
+			);			
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/classes/js/stepActionCombinationReferenceAppendProductDetail.js.tpl');   
+			return $tpl;
 		}
-		public function getActionCreationModeTemplate($post)
-		{
-			$this->context->smarty->assign('post',$post);
-			$this->context->smarty->assign('time',$post['time']);
-			$this->context->smarty->assign('features',Feature::getFeatures($this->lang));
-			$this->context->smarty->assign('aid',$this->id);
-			$this->context->smarty->assign('action',$this);
-			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/actions/stepActionCombinationReferenceAppendProductDetail.tpl');   
+		/* Fake Override */
+		public function displayActionCreateMode($post)
+		{			
+			$this->context->smarty->assign(
+				array(
+					'post' => $post,
+					'time' => $post['time'],
+					'features' => Feature::getFeatures($this->lang),
+					'aid' => $this->id,
+					'action' => $this
+				)
+			);			
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/classes/actions/templates/stepActionCombinationReferenceAppendProductDetail.tpl');   
+			ddd($tpl);
+			return $tpl;
 		}
 	}
 ?>

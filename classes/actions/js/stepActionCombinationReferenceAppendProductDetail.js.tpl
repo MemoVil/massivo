@@ -1,6 +1,6 @@
-{* <script type="text/javascript" key="{$massivo_key}"> *}
 	// Time 0 -> Only first combo data (First load)
 	// Time 1 -> Data loaded (Combo select)	
+	// Here we have ActionID  
 	{literal}
 	var combo = $('.inputSelectAction[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"][aid="{/literal}{$aid}{literal}"]');
 	combo.on('change',
@@ -11,7 +11,7 @@
 			atad.selected = selector;
 			atad.operation = 'displayActionCreateMode';	
 			atad.aid = "{/literal}{$aid}{literal}";
-			atad.time = "{/literal}{$time}{literal}";
+			atad.time = "start";
   			$.ajax({
 	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",

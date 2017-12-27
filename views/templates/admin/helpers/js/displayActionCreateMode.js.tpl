@@ -2,16 +2,16 @@
 	// Time 0 -> Only first combo data (First load)
 	// Time 1 -> Data loaded (Combo select)	
 	{literal}
-	var combo = $('.inputSelectAction[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"][aid="{/literal}{$aid}{literal}"]');
+	var combo = $('.inputSelectAction[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');
 	combo.on('change',
 		function() {
 			var selector = $(this).find("option:selected").text();
 			var value = $(this).find("option:selected").attr('value');	
 			setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});
 			atad.selected = selector;
-			atad.operation = 'displayActionCreateMode';	
-			atad.aid = "{/literal}{$aid}{literal}";
-			atad.time = "{/literal}{$time}{literal}";
+			atad.operation = 'displayActionCreateMode';				
+			atad.value = value;
+			atad.time = "start";
   			$.ajax({
 	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
@@ -24,16 +24,21 @@
 	              success:  function (response) {		
 	              	setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});		
 	              	atad.selected = selector;
-	              	atad.aid = "{/literal}{$aid}{literal}";
+	              	combo.parent().parent().replaceWith(response);
+	              	combo = $('.inputSelectAction[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');
+	              	atad.aid = combo.attr('aid');
+	              	atad.value = combo.find("option:selected").attr('value');	              	
 					atad.operation = 'displayActionCreateMode';						
 	              	atad.time = 'actionDescription';              	
-          			$('td.actionDescription[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"][aid="{/literal}{$aid}{literal}"]').load(
+          			$('td.actionDescription[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').load(
           				"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php", 
           				 atad
           			);          			
               		jatad.script = 'displayActionCreateMode';
+              		var inp = $('.aidValue[value="' + atad.aid + '"]');
+              		jatad.type = inp.attr('type');              		
               		jatad.operation = 'getScript';              		
-              		$('td.actionEditButtons[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"][aid="{/literal}{$aid}{literal}"]').load(
+              		$('td.actionEditButtons[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').load(
               			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
               			atad,
               			function(response) {

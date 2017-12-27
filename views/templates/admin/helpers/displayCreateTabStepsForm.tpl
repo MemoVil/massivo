@@ -202,6 +202,7 @@
     					break;
     				case 'newaction':
     					atad.operation = "displayActionCreateMode";
+    					atad.time = 'start';
     					break;    
     				default:
     					return;					

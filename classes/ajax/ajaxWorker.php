@@ -322,21 +322,12 @@ class AjaxWorker extends ModuleAdminController {
 					echo $o;
 				}
 			break;
-			case 'getScript':				
+			case 'getScript':		
 				if ($this->arePost('row','step','script','recipe'))
 				{
-					if (file_exists(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/' . $this->post['script'] . '.js.tpl'))
-					{
-						$h = new HelperMassivo();
-						$o = $h->getScript($this->post);
-						echo $o;
-					}
-					else if (file_exists(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/actions/' . $this->post['script'] . '.js.tpl'))
-					{
-						$h = new HelperMassivo();
-						$o = $h->getScript($this->post);
-						echo $o;
-					}
+					$h = new HelperMassivo();
+					$o = $h->getScript($this->post);
+					echo $o;					
 				}
 			break;
 			case 'saveEditStepCondition':
@@ -402,25 +393,29 @@ class AjaxWorker extends ModuleAdminController {
 					if ($this->post['time'])
 					{
 						switch ($this->post['time'])
-						{							
-							case 'verb':							
-							case 'param':
-							case 'buttons':
-							case 'type':
-							case 'left':
-							case 'right':
+						{		
+							case 'start':							
 								$p = $this->post['selected'];
 								$r = Recipe::load($this->post['recipe']);
-			        			$s = $r->getStepById($this->post['step']);   
+			        			$s = $r->getStepById($this->post['step']);   			        			
 								foreach ($s->getDeclaredActions() as $class)
 								{
-									$c = new $class($s);
-									if (strcmp($c->actionDescription['short_description'],$p) == 0 )
-									{
-										$this->post['action'] = $c;																				
+									$a = new $class($s);
+									if (strcmp($a->actionDescription['short_description'],$p) == 0 )
+									{										
+
+										$this->post['action'] = $a;											
+										$this->post['aid'] = $a->getId();											
 									}
 								}
 							break;
+							case 'actionDescription':	
+								$r = Recipe::load($this->post['recipe']);
+			        			$s = $r->getStepById($this->post['step']);   			        					
+			        			$a = new $this->post['value']($s);
+								$a->id = $this->post['aid'];
+								$this->post['action'] = $a;
+			        		break;
 						}
 					}
 					else $this->post['time'] = 'start';
@@ -429,7 +424,6 @@ class AjaxWorker extends ModuleAdminController {
 					echo $r;
 				}
 			break;
-
 		}
 	}
 	/**

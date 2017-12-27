@@ -3,6 +3,7 @@
   		exit;
   	/* Conditions for Steps, see StepCondition for base class */
   	/* Important, they must be registered on step constructor */
+  	/* Hardcoded includes, must be loaded first */
   	include_once(__DIR__ .'/../includes/scription.php');
 	include_once(__DIR__ .'/StepCondition.php');
 	include_once(__DIR__ .'/conditions/StepConditionProduct.php');
@@ -16,6 +17,15 @@
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendProductDetail.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceDelete.php');
 	include_once(__DIR__ .'/actions/StepActionCombinationReferenceAppendText.php');
+	/* include_once, ONCE ... */
+	foreach (glob(__DIR__ . '/conditions/*.php') as $filename)
+	{
+    	include_once $filename;
+	}
+	foreach (glob(__DIR__. '/actions/*.php') as $filename)
+	{
+    	include_once $filename;
+	}
 
 	/**
 	 *  Structure of a Step:
