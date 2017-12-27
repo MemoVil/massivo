@@ -184,10 +184,16 @@
     			var perform = el.attr('type');
     			var cpos = el.attr('row');
     			var cid = el.attr('cid');
+    			var aid = el.attr('aid');
     			var atad = { recipe: id, step:stepid, massivo_key: massivokey, action: perform};       			
     			if ( cpos )
     				atad.row= cpos; 	
+    			
     			var jatad = { recipe: id, step:stepid, massivo_key: massivokey};   
+    			if (aid){
+    				atad.aid = aid;
+    				jatad.aid = aid;
+    			}
     			switch (perform)
     			{
     				case 'newcondition':
@@ -414,12 +420,12 @@
  	 	$('button.editstepaction').click(
 			function()
 			{
-				var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var rowId = $(this).attr('row'); var cId = $(this).attr('cid');
+				var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var rowId = $(this).attr('row'); var aId = $(this).attr('aid');
 				var b = $(this);
 				$.ajax({
 		              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 		              method: "POST",
-		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, operation: 'editStepAction'} ,
+		              data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, aid: aId, operation: 'editStepAction'} ,
 		              dataType: "html",
 		              context: document.body,
 		              error: function(xhr,status,error) {
@@ -430,7 +436,7 @@
 		              	tr.html(response);
 		              	var r = $.get(
 		              		"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-		              		{massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, script: 'displayActionEditButtons', operation: 'getScript'} ,
+		              		{massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, aid: aId, script: 'displayActionEditButtons', operation: 'getScript'} ,
 		              		null,
 		              		'script'
 		              	);
@@ -438,7 +444,7 @@
 						jatad.script = 'displayActionCreateMode';         					
            				$.get(
               			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-              			{massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, script: 'displayActionCreateMode', operation: 'getScript'} ,
+              			{massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, aid: aId, script: 'displayActionCreateMode', operation: 'getScript'} ,
               			null,
               			'script'
           			);	
@@ -448,12 +454,12 @@
 		);
 		$('button.deletestepaction').click(
 		function() {
-			var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var rowId = $(this).attr('row'); var cId = $(this).attr('cid');
+			var rId = $(this).attr('recipe'); var sId = $(this).attr('step'); var rowId = $(this).attr('row'); var aId = $(this).attr('aid');
 			var b = $(this);			
 			$.ajax({
 	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
-	           	  data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, cid: cId, operation: 'deleteStepAction'} ,
+	           	  data: {massivo_key: {/literal}"{$massivo_key}"{literal}, row: rowId, recipe: rId, step: sId, aid: aId, operation: 'deleteStepAction'} ,
 	              dataType: "html",
 	              context: document.body,
 	              error: function(xhr,status,error) {
@@ -464,7 +470,7 @@
 		             	if (t[0] == "Error")
 	              			showError(t[1]);
 		              	else {	          
-		            		$('tr.stepaction[recipe="'+rId+'"][step="'+sId+'"][row="'+ rowId+'"][cid="' + cId + '"').remove();  		
+		            		$('tr.stepaction[recipe="'+rId+'"][step="'+sId+'"][row="'+ rowId+'"][aid="' + aId + '"').remove();  		
 		              	}              		
 	              }
           	});

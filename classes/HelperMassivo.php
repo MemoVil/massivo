@@ -270,12 +270,13 @@
           );  
           if (array_key_exists('action',$post))          
               $this->context->smarty->assign('action',$post['action']);     
-          if (array_key_exists('cid',$post))          
-              $this->context->smarty->assign('cid',$post['cid']);         
+          if (array_key_exists('aid',$post))          
+              $this->context->smarty->assign('aid',$post['aid']);         
+          
           //Some actions will have their own controls, as text editors, and they should handle display functions by its own
           if (array_key_exists('action',$post) and $post['time'] !== 'start')
           {
-            $a = $post['action'];            
+            $a = new $post['action']($s);            
             if ($tpl = $a->getActionCreateModeTemplate($post))
               return $tpl;
           }
@@ -286,34 +287,11 @@
                 $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayActionCreateMode.tpl');       
             break;
             //Both verb and param are triggered via jquery.load function
-            case 'verb':
-              $this->context->smarty->assign('time','verb');              
-              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionVerb.tpl');       
-            break;
             case 'param':                 
               $this->context->smarty->assign('time','param');
               $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionParam.tpl');       
             break;
-            case 'buttons':
-              $this->context->smarty->assign('time','buttons');              
-              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionButtons.tpl');       
-            break;
-            case 'type':
-              $this->context->smarty->assign('time','type');              
-               $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionType.tpl');       
-            break;
-            case 'left':
-              $this->context->smarty->assign('time','left');              
-              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionLeft.tpl');       
-            break;
-            case 'right':
-              $this->context->smarty->assign('time','right');              
-              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionRight.tpl');       
-            break;   
-            case 'editbuttons':
-              $this->context->smarty->assign('time','buttons');
-              $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/params/displayActionEditButtons.tpl');       
-            break;         
+ 
           }        
        return $tpl;
       }
@@ -335,6 +313,11 @@
           }
           if ($post['action'])
             $this->context->smarty->assign('action',$post['action']);
+          else if ($post['aid']){
+            $c = $s->getActionById($post['aid']);
+            $this->context->smarty->assign('action',$c);
+            $this->context->smarty->assign('aid',$post['aid']);
+          }
           $this->context->smarty->assign(
                   array(
                     'recipe' => $r,
@@ -342,7 +325,10 @@
                     'row' => $post['row']
                   )
           );  
-          $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/' . $post['script'] . '.js.tpl');       
+          if (file_exists(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/actions/' . $post['script'] . '.js.tpl'))
+              $tpl =$this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/actions/' . $post['script'] . '.js.tpl');       
+          else
+            $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/' . $post['script'] . '.js.tpl');       
           return $tpl;
       }
   	}

@@ -331,6 +331,12 @@ class AjaxWorker extends ModuleAdminController {
 						$o = $h->getScript($this->post);
 						echo $o;
 					}
+					else if (file_exists(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/js/actions/' . $this->post['script'] . '.js.tpl'))
+					{
+						$h = new HelperMassivo();
+						$o = $h->getScript($this->post);
+						echo $o;
+					}
 				}
 			break;
 			case 'saveEditStepCondition':

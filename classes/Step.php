@@ -168,7 +168,16 @@
 			}
 			return false;			 
 		}
-		
+		public function getActionById($id)
+		{	
+			foreach ( $this->actions as $action ) {
+				if ( strcmp($action->getId(),$id) == 0)
+				{					
+					return $action;				
+				}
+			}
+			return false;
+		}
 		//Actions must NOT be returned if dependencies are not met
 		public function getAllActionsText()
 		{
