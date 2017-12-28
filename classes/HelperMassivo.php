@@ -272,10 +272,7 @@
           if (array_key_exists('action',$post))
           {            
             $a = $post['action'];            
-            $this->context->smarty->assign('action',$post['action']);     
-            $t = call_user_func(array($a,$post['operation']),$post);
-            if ($tpl = $a->displayActionCreateModeOverride($post))
-              return $tpl;
+            $this->context->smarty->assign('action',$post['action']);                
           }          
               
           if (array_key_exists('aid',$post))          
@@ -284,9 +281,13 @@
             $this->context->smarty->assign('value',$post['value']);       
           switch ($post['time'])
           {
-            case 'start':
+            case 'start':            
                 $this->context->smarty->assign('time','start');
                 $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayActionCreateMode.tpl');       
+            break;
+            case 'actionDescription':
+                  $this->context->smarty->assign('time','actionDescription');
+                  $tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/views/templates/admin/helpers/displayActionCreateMode.tpl');       
             break;
             //Both verb and param are triggered via jquery.load function
             case 'param':                 
@@ -312,31 +313,36 @@
             switch ($key)
             {
               case 'cid': 
-                  $sm[] = array('cid' => $value);
+                  $sm[] = array('cid' => $value);      
                   $sm[] = array('condition' => $s->getConditionById($value));
               break; 
               case 'condition':
                   $sm[] = array('condition' => $value);
+              break;
+              case 'recipe':                  
+                  $sm[] = array('recipe' => $r);
+                  $sm[] = array('step' => $s);                      
+              break;
+              case 'aid': 
+                  $sm[] = array('aid' => $value);                                    
+              break; 
+              case 'action':
+                  $sm[] = array('action' => $value);
+              break;
+              case 'row':
+                  $sm[] = array('row' => $value);
+              break;
             }
           }
-          if ($post['cid'])                        
-            $c = $s->getConditionById($post['cid']);
-          if ($post['condition'])            
-            $c = $post['condition'];
-              $this->context->smarty->assign('condition',$post['condition']);
-          if ($post['cid']){
-              
-              $this->context->smarty->assign('condition',$c);
-              $this->context->smarty->assign('cid',$post['cid']);
+          foreach ($sm as $tplVar)
+          {
+            $this->context->smarty->assign($tplVar);
           }
-          if ($post['action'])
-              $this->context->smarty->assign('action',$post['action']);
-          if ($post['aid']){
-               $a = $s->getActionById($post['aid']);
-               $this->context->smarty->assign('action',$a);
-               $this->context->smarty->assign('aid',$post['aid']);
+          if (array_key_exists('action', $post)) {
+              if (method_exists($post['action'],$post['operation']))
+               $t = call_user_func(array($post['action'],$post['operation']),$post);
           }
-          $t = call_user_func(array($this,$post['operation']),$post);
+          
           $this->context->smarty->assign(
                   array(
                     'recipe' => $r,

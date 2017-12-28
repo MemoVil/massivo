@@ -66,6 +66,7 @@
 			  }
 			  return true;
 		}
+		
 		public function arePost()
 		{					
 			if (isset($this->post))

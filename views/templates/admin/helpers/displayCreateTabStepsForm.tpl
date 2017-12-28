@@ -232,6 +232,7 @@
           			r.fail(
           				function(o,text,error) {
           					console.log(error);
+          					console.log(text);
           				}
           			);          	       
 	              }

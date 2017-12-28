@@ -42,6 +42,7 @@
 			setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});		
 			atad.operation ='addStepCondition';
 			atad.type =cType;
+			atad.value = cType;
 			atad.verb =cVerb;
 			atad.param =cParam;
 			var r = $.get(

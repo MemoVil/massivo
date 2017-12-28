@@ -81,6 +81,7 @@
 			var value = $(this).find("option:selected").attr('value');	
 			setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});
 			atad.selected = selector;
+			atad.value = value;
 			atad.operation = 'displayConditionCreateMode';						
   			$.ajax({
 	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",

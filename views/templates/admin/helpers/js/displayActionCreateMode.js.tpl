@@ -30,29 +30,32 @@
 	              	atad.value = combo.find("option:selected").attr('value');	              	
 					atad.operation = 'displayActionCreateMode';						
 	              	atad.time = 'actionDescription';              	
-          			$('td.actionDescription[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').load(
-          				"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php", 
-          				 atad
-          			);          			
+          			//$('td.actionDescription[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').load(
+          			//	"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php", 
+          			//	 atad
+          			//);          			
               		jatad.script = 'displayActionCreateMode';
               		var inp = $('.aidValue[value="' + atad.aid + '"]');
-              		jatad.type = inp.attr('type');              		
-              		jatad.operation = 'getScript';              		
-              		$('td.actionEditButtons[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').load(
-              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-              			atad,
-              			function(response) {
-		           			$.get(
-		              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-		              			jatad,
-								null,
-		              			'script'
-	              			);	
-    	           		}
-              		);	              	              	              	
-	              }
+              		jatad.type = inp.attr('type');   
+              		jatad.selected = selector;                       		  		
+              		jatad.aid = atad.aid;
+              		jatad.operation = 'getScript';    
+		   			var r = $.get(
+		          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+		          			jatad,
+		          			null,
+		          			'script'
+			  			).fail(
+			  				function(s,r,o)	{
+			  					console.log(o);
+			  				}
+			  			);	
+		      		}
+		      	});
+          		
+       
           	});
-		});
+		
 	$('button.canceladdaction[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"][aid="{/literal}{$aid}{literal}"]').click(
 		function(event) {
 			setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});

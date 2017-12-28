@@ -1,5 +1,5 @@
 <tr class="stepaction" type="stepaction" recipe="{$recipe->id}" step="{$step->id}"  row="{$row}" aid="{$aid}">
-	<td>
+	<td class="actionInputSelectAction">
 		<select class="inputSelectAction" recipe="{$recipe->id}" step="{$step->id}" row="{$row}" aid="{$aid}">
 			{foreach name=cbucle from=$step->getAllActionsText() key=cpos item=text}
 				<option value="{$cpos}" {if $cpos == $value} selected{/if}>{l s="$text" mod="massivo"}</option>

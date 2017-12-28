@@ -11,7 +11,10 @@
 		public function __construct($step, $init = null)
 		{
 			parent::__construct($step, $init);
-			$this->actionDescription = $this->l("Reset it's reference to null");
+			$this->actionDescription = array(
+			 'short_description' => $this->l("Clear combination(s) reference"),
+			 'long_description' => $this->l("Reset combination(s) reference to null")
+			);
 		}
 		public function run()
 		{
