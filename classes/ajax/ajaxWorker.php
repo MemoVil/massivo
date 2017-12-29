@@ -349,14 +349,16 @@ class AjaxWorker extends ModuleAdminController {
 					$h = new HelperMassivo();
 					$r = Recipe::load($this->post['recipe']);
 					$s = $r->getStepById($this->post['step']);
-					if ($this->arePost('aid','value'))
+					
+					if ($this->arePost('aid','type'))
 					{
-						$a = new $this->post['value']($s);
+						$a = new $this->post['type']($s);
 						$a->id = $this->post['aid'];
+						
 						//Extended tpl control for actions
 						if (method_exists($a,$this->post['operation']))
-						{
-							$tpl = call_user_func(array($a,$this->post['operation']),$this->post);
+						{							
+							$tpl = $a->{$this->post['operation']}($this->post);						
 							if ($tpl) 
 							{
 								echo $tpl;
@@ -454,7 +456,7 @@ class AjaxWorker extends ModuleAdminController {
 						switch ($this->post['time'])
 						{		
 							case 'start':							
-								if ($this->post['action'] !== 'newaction')
+								if ($this->arePost('action') && $this->post['action'] !== 'newaction')
 								{
 									$p = $this->post['selected'];
 									$r = Recipe::load($this->post['recipe']);
@@ -463,24 +465,31 @@ class AjaxWorker extends ModuleAdminController {
 									{
 										$a = new $class($s);
 										if (strcmp($a->actionDescription['short_description'],$p) == 0 )
-										{										
-
+										{		
 											$this->post['action'] = $a;											
 											$this->post['aid'] = $a->getId();																
 											//Don't need fake override on start, just show it in the combo
 										}
 									}
 								}
+								else if ($this->arePost('type')) 
+								{
+									$r = Recipe::load($this->post['recipe']);
+				        			$s = $r->getStepById($this->post['step']);   			        					
+				        			$a = new $this->post['type']($s);
+									$this->post['aid'] = $a->getId();
+									$this->post['action'] = $a;
+								}
 							break;
 							case 'actionDescription':	
 								$r = Recipe::load($this->post['recipe']);
 			        			$s = $r->getStepById($this->post['step']);   			        					
-			        			$a = new $this->post['value']($s);
+			        			$a = new $this->post['type']($s);
 								$a->id = $this->post['aid'];
 								$this->post['action'] = $a;
 								if (method_exists($a,$this->post['operation']))
 								{
-									$tpl = call_user_func(array($a,$this->post['operation']),$this->post);
+									$tpl = $a->{$this->post['operation']}($this->post);
 									if ($tpl) 
 									{
 										echo $tpl;
@@ -491,7 +500,9 @@ class AjaxWorker extends ModuleAdminController {
 						}
 					}
 					else $this->post['time'] = 'start';
-					//Time is the switcher on helper					
+					//Time is the switcher on helper	
+					if (!$this->arePost('aid'))	
+						$this->post['aid'] = '';
 					$r = $h->displayActionCreateMode($this->post);
 					echo $r;
 				}

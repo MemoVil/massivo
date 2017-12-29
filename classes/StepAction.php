@@ -21,7 +21,7 @@
 		public $selectable = array();
 		// Actions must be unlocked by conditions, so actions that handle products can only be performed if there is a matching condition to unlock it
 		public $lock = array();
-		public $actionDescription = array();		
+		public $actionDescription = array('short_description' => '', 'long_description' => '');		
 		public $verbActionDescription = array();
 
 		public function __construct($step, $init = null)
@@ -46,6 +46,8 @@
 				
 			}
 			else $this->lang = Context::getContext()->language->id;		
+			if (class_exists('Context'))
+    			$this->context = Context::getContext();
 		}
 		public function checkDependencies()
 		{

@@ -277,8 +277,8 @@
               
           if (array_key_exists('aid',$post))          
               $this->context->smarty->assign('aid',$post['aid']);       
-          if (array_key_exists('value',$post))          
-            $this->context->smarty->assign('value',$post['value']);       
+          if (array_key_exists('type',$post))          
+            $this->context->smarty->assign('type',$post['type']);       
           switch ($post['time'])
           {
             case 'start':            
@@ -331,6 +331,9 @@
               break;
               case 'row':
                   $sm[] = array('row' => $value);
+              break;
+              case 'type':
+                $sm[] = array('type' => $value);
               break;
             }
           }

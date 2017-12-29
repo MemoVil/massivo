@@ -33,33 +33,44 @@
 		}	
 		/* Fake Override */
 		public function getScript($post)
-		{
+		{			
+			$r = Recipe::load($post['recipe']);
+			$s = $r->getStepById($post['step']);
 			$this->context->smarty->assign(
 				array(
 					'post' => $post,
 					'time' => $post['time'],
 					'features' => Feature::getFeatures($this->lang),
 					'aid' => $this->id,
-					'action' => $this
+					'action' => $this,
+					'type' => $post['type'],
+					'recipe' => $r,
+					'step' => $s,
+					'row' => $post['row']
 				)
 			);			
-			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/classes/js/stepActionCombinationReferenceAppendProductDetail.js.tpl');   
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/classes/actions/js/stepActionCombinationReferenceAppendProductDetail.js.tpl');   
 			return $tpl;
 		}
 		/* Fake Override */
 		public function displayActionCreateMode($post)
 		{			
+			$r = Recipe::load($post['recipe']);
+			$s = $r->getStepById($post['step']);
 			$this->context->smarty->assign(
 				array(
 					'post' => $post,
 					'time' => $post['time'],
 					'features' => Feature::getFeatures($this->lang),
 					'aid' => $this->id,
-					'action' => $this
+					'action' => $this,
+					'type' => $post['type'],
+					'recipe' => $r,
+					'step' => $s,
+					'row' => $post['row']
 				)
 			);			
-			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/classes/actions/templates/stepActionCombinationReferenceAppendProductDetail.tpl');   
-			ddd($tpl);
+			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/classes/actions/templates/stepActionCombinationReferenceAppendProductDetail.tpl');   			
 			return $tpl;
 		}
 	}

@@ -1,6 +1,6 @@
 {if $time == 'start'}
 <tr class="stepaction" type="stepaction" recipe="{$recipe->id}" step="{$step->id}"  row="{$row}" aid="{$aid}">
-	<td>
+	<td class="start">
 		<select class="inputSelectAction" recipe="{$recipe->id}" step="{$step->id}" row="{$row}" aid="{$aid}">
 			{foreach name=cbucle from=$step->getAllActionsText() key=cpos item=text}
 				<option value="{$cpos}">{l s="$text" mod="massivo"}</option>

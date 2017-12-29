@@ -1,6 +1,7 @@
 {* <script type="text/javascript" key="{$massivo_key}"> *}
 	// Time 0 -> Only first combo data (First load)
 	// Time 1 -> Data loaded (Combo select)	
+	{if $time == 'start' || $time == null}
 	{literal}
 	var combo = $('.inputSelectAction[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');
 	combo.on('change',
@@ -10,8 +11,8 @@
 			setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});
 			atad.selected = selector;
 			atad.operation = 'displayActionCreateMode';				
-			atad.value = value;
-			atad.time = "start";
+			atad.type = value;
+			atad.time = "actionDescription";
   			$.ajax({
 	              url: {/literal}{$module_dir}{literal} + "massivo/classes/ajax/ajaxWorker.php",
 	              method: "POST",
@@ -22,12 +23,12 @@
 	              	console.log(xhr);
 	              },
 	              success:  function (response) {		
+	              	$('.' + atad.time).replaceWith(response);
 	              	setObjectData({/literal}{$recipe->id}{literal},{/literal}{$step->id}{literal},{/literal}{$row}{literal});		
-	              	atad.selected = selector;
-	              	combo.parent().parent().replaceWith(response);
+	              	atad.selected = selector;	              	
 	              	combo = $('.inputSelectAction[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');
 	              	atad.aid = combo.attr('aid');
-	              	atad.value = combo.find("option:selected").attr('value');	              	
+	              	atad.type = combo.find("option:selected").attr('value');	              	
 					atad.operation = 'displayActionCreateMode';						
 	              	atad.time = 'actionDescription';              	
           			//$('td.actionDescription[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]').load(
@@ -36,10 +37,11 @@
           			//);          			
               		jatad.script = 'displayActionCreateMode';
               		var inp = $('.aidValue[value="' + atad.aid + '"]');
-              		jatad.type = inp.attr('type');   
+              		jatad.type = combo.find("option:selected").attr('value');	
               		jatad.selected = selector;                       		  		
               		jatad.aid = atad.aid;
               		jatad.operation = 'getScript';    
+              		jatad.time = 'actionDescription';
 		   			var r = $.get(
 		          			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
 		          			jatad,
@@ -87,4 +89,5 @@
 		}		   	
 	);
 	{/literal}
+	{/if}
 {*</script>*}
