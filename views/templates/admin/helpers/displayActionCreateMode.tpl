@@ -21,12 +21,7 @@
 {/if}
 {if $time == 'actionDescription'}
 <td class="actionDescription" recipe="{$recipe->id}" step="{$step->id}" row="{$row}" aid="{$aid}">
-		<select class="inputSelectProductDetail" recipe="{$recipe->id}" step="{$step->id}" row="{$row}" aid="{$aid}">
-			<option value="%product%" selected>{l s="Product ID" mod="massivo"}</option>
-			<option value="%combination%">{l s="Product combination ID" mod="massivo"}</option>
-			<option value="%productname%">{l s="Product name" mod="massivo"}</option>
-			<option value="%feature%">{l s="Product feature value" mod="massivo"}</option>			
-		</select>
+	
 </td>
 {/if}
 {if $time == 'actionParam'}

@@ -490,10 +490,10 @@ class AjaxWorker extends ModuleAdminController {
 								if (method_exists($a,$this->post['operation']))
 								{
 									$tpl = $a->{$this->post['operation']}($this->post);
-									if ($tpl) 
+									if ($tpl && strlen($tpl) > 0) 
 									{
 										echo $tpl;
-										continue;
+										break(2);
 									}
 								}
 			        		break;

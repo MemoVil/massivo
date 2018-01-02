@@ -44,7 +44,7 @@
 </td>
 {/if}
 {if $time == 'actionEditButtons'}
-<td  class="actionEditButtons" recipe="{$recipe->id}" step="{$step->id}" row="{$row}" aid="{$aid}">
+<td  class="actionButton" recipe="{$recipe->id}" step="{$step->id}" row="{$row}" aid="{$aid}">
 	<button type="button" class="btn btn-danger canceleditaction" recipe="{$recipe->id}" step="{$step->id}" row="{$row}" aid="{$aid}">
 		<i class="icon-trash"></i>
 	</button>

@@ -69,7 +69,8 @@
 					'step' => $s,
 					'row' => $post['row']
 				)
-			);			
+			);						
+			if ($post['time'] == 'actionEditButtons' && !(array_key_exists('editmode',$post))) return;
 			$tpl = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'massivo/classes/actions/templates/stepActionCombinationReferenceAppendProductDetail.tpl');   			
 			return $tpl;
 		}

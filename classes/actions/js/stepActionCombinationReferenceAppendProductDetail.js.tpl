@@ -3,6 +3,7 @@
 	// Time 1 -> Data loaded (Combo select)	
 	{literal}
 	var combo = $('.inputSelectAction[recipe="{/literal}{$recipe->id}{literal}"][step="{/literal}{$step->id}{literal}"][row="{/literal}{$row}{literal}"]');
+	combo.unbind('change');
 	combo.on('change',
 		function() {
 			var selector = $(this).find("option:selected").text();
