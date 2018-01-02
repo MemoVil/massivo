@@ -268,6 +268,10 @@
                     'row' => $post['row']
                   )
           );  
+          if (array_key_exists('aid',$post))          
+              $this->context->smarty->assign('aid',$post['aid']);       
+          if (array_key_exists('type',$post))          
+            $this->context->smarty->assign('type',$post['type']);       
           //Some actions will have their own controls, as text editors, and they should handle display functions by its own
           if (array_key_exists('action',$post))
           {            
@@ -275,10 +279,7 @@
             $this->context->smarty->assign('action',$post['action']);                
           }          
               
-          if (array_key_exists('aid',$post))          
-              $this->context->smarty->assign('aid',$post['aid']);       
-          if (array_key_exists('type',$post))          
-            $this->context->smarty->assign('type',$post['type']);       
+          
           switch ($post['time'])
           {
             case 'start':            

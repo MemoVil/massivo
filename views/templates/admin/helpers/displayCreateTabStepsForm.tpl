@@ -176,6 +176,76 @@
 			jatad.massivo_key = "{/literal}{$massivo_key}{literal}";
 			jatad.operation = 'getScript';
 		}
+		function expandDefault(options,getscript)
+		{
+			if (options.operation == 'displayConditionCreateMode')
+				expandDefaultCondition(options,getscript);
+			else
+				expandDefaultAction(options,getscript);
+		}
+
+		function expandDefaultCondition(options,getscript)
+		{
+			    $.ajax({
+	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+	              method: "POST",
+	              data: options,
+	              dataType: "html",
+	              context: document.body,
+	              error: function(xhr,status,error) {
+	              	console.log(xhr);
+	              },
+	              success:  function (response) {	     
+	              	var tr = $('tr[type="newcondition"][recipe=' + options.recipe + '][step=' + options.step + '][row=' + options.row + ']');
+	              	tr.replaceWith(response);		              	
+           			var r = $.get(
+              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+              			getscript,
+              			null,
+              			'script'
+          			);	    
+          			r.fail(
+          				function(o,text,error) {
+          					console.log(error);
+          					console.log(text);
+          				}
+          			);          	       
+	              }
+	          	});
+		}
+		function expandDefaultAction(options,getscript)
+		{
+
+			   $.ajax({
+	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+	              method: "POST",
+	              data: options ,
+	              dataType: "html",
+	              context: document.body,
+	              error: function(xhr,status,error) {
+	              	console.log(xhr);
+	              },
+	              success:  function (response) {	     
+	              	var tr = $('tr[type="newaction"][recipe=' + options.recipe + '][step=' + options.step + '][row=' + options.row + ']');
+	              	tr.replaceWith(response);		   
+	              	var tr = $('tr[type="stepaction"][recipe=' + options.recipe + '][step=' + options.step + '][row=' +options.row + ']');           	
+	              	console.log(tr.html());
+           			var r = $.get(
+              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+              			getscript,
+              			null,
+              			'script'
+          			);	    
+          			r.fail(
+          				function(o,text,error) {
+          					console.log(error);
+          					console.log(text);
+          				}
+          			);          	       
+	              }
+	          	});
+
+		}
 		function attachEditableFunctionToStepList(el)
 		{				
 				var id = el.attr('recipe');
@@ -211,33 +281,7 @@
     			jatad.operation = 'getScript';
     			jatad.script = atad.operation;
     			jatad.row = atad.row;
-    			$.ajax({
-	              url: "{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-	              method: "POST",
-	              data: atad ,
-	              dataType: "html",
-	              context: document.body,
-	              error: function(xhr,status,error) {
-	              	console.log(xhr);
-	              },
-	              success:  function (response) {	     
-	              	var tr = $('tr[type=' + perform + '][recipe=' + id + '][step=' + stepid + '][row=' + cpos + ']');
-	              	tr.replaceWith(response);	
-           			var r = $.get(
-              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
-              			jatad,
-              			null,
-              			'script'
-          			);	    
-          			r.fail(
-          				function(o,text,error) {
-          					console.log(error);
-          					console.log(text);
-          				}
-          			);          	       
-	              }
-	          	});
-    			
+    			expandDefault(atad,jatad);
 		}
 		function doEval(response)
 		{
