@@ -227,22 +227,55 @@
 	              },
 	              success:  function (response) {	     
 	              	var tr = $('tr[type="newaction"][recipe=' + options.recipe + '][step=' + options.step + '][row=' + options.row + ']');
-	              	tr.replaceWith(response);		   
-	              	var tr = $('tr[type="stepaction"][recipe=' + options.recipe + '][step=' + options.step + '][row=' +options.row + ']');           	
-	              	console.log(tr.html());
+	              	tr.replaceWith(response);		   	              	
            			var r = $.get(
               			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
               			getscript,
               			null,
               			'script'
-          			);	    
+          			);	              			
           			r.fail(
           				function(o,text,error) {
           					console.log(error);
           					console.log(text);
           				}
-          			);          	       
-	              }
+          			);      
+          			//If default action is showed we must load its content via new ajax calls, including scripts
+          			var tr = $('tr[type="stepaction"][recipe=' + options.recipe + '][step=' + options.step + '][row=' +options.row + ']');           	
+	              	var td = tr.find('.inputSelectAction');
+	              	var sel = td.find("option:selected").attr('value');		              		              	
+	              	options.time = 'actionDescription';
+	              	options.type = sel;
+	              	var r = $.get(
+              			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+              			options,
+              			function(data,status,xhr){
+              				tr.find('.actionDescription').replaceWith(data);
+              				getscript.time='actionDescription';
+              				$.get(
+              					"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+              					getscript,
+              					function(data,status){
+              						options.time = 'actionParam';
+              						$.get(
+              							"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+              							options,
+              							function(data,status){
+              								tr.find('.actionParam').replaceWith(data);
+              								getscript.time = 'actionParam';
+              								$.get(
+              									"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
+              									getscript,
+              									null,
+              									'script'
+              								);              								
+              							}
+              						);
+              					},
+              					'script'
+              				);
+              			});
+	           	   }
 	          	});
 
 		}
