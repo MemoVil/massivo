@@ -225,7 +225,13 @@
 	              error: function(xhr,status,error) {
 	              	console.log(xhr);
 	              },
-	              success:  function (response) {	     
+	              success:  function (response) {	    
+    				var t = response.split("$");
+	              	if (t[0] == "Error") {
+	              		showError(t[1]);
+	              		return;
+	              	}
+
 	              	var tr = $('tr[type="newaction"][recipe=' + options.recipe + '][step=' + options.step + '][row=' + options.row + ']');
 	              	tr.replaceWith(response);		   	              	
            			var r = $.get(
@@ -250,7 +256,7 @@
               			"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",
               			options,
               			function(data,status,xhr){
-              				tr.find('.actionDescription').replaceWith(data);
+		              		tr.find('.actionDescription').replaceWith(data);
               				getscript.time='actionDescription';
               				$.get(
               					"{/literal}{$module_dir}{literal}massivo/classes/ajax/ajaxWorker.php",

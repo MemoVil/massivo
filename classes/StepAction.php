@@ -118,7 +118,21 @@
 		public function l($string, $specific = false){
  			return Translate::getModuleTranslation(Module::getInstanceByName('massivo'), $string, ($specific) ? $specific : 'massivo');
  		}
- 		
+ 		//returns true if this condition doesn't match $conditions on Step.
+ 		public function isLocked($conditions)
+ 		{
+ 			$valid = false;
+ 			if (count($conditions) > 0)
+ 			{
+
+ 				foreach ($conditions as $condition)
+				{
+					if (array_intersect($this->lock, $condition->key))
+						$valid = true;
+				}				
+ 			}
+ 			return $valid;
+ 		}
  		
  		public function getSelectable()
  		{

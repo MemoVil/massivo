@@ -206,6 +206,24 @@
 			}
 			return $r;
 		}
+		// Returns array of unlocked actions
+		public function getUnlockedActions()
+		{		
+ 			$valid = array();
+ 			if (count($this->conditions) > 0)
+ 			{
+ 				foreach ($this->conditions as $condition)
+				{
+					foreach($this->declaredActions as $action)
+						{
+						$action = new $action($this);
+						if (array_intersect($action->lock, $condition->key))
+							$valid[] = $action;
+						}
+				}				
+ 			}
+ 			return $valid;
+		}
 		/**
 		 * [addCondition adds a Condition to this step]
 		 * @param [type] $type      [StepConditionAttribute ....]

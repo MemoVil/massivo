@@ -451,19 +451,30 @@ class AjaxWorker extends ModuleAdminController {
 				if ($this->arePost('row','step','recipe'))
 				{					
 					$h = new HelperMassivo();
+
 					if ($this->post['time'])
 					{
+						$r = Recipe::load($this->post['recipe']);
+						$s = $r->getStepById($this->post['step']);  
 						switch ($this->post['time'])
 						{		
-							case 'start':							
+							case 'start':									
+								$enabledActions = $s->getUnlockedActions();	
+			        			if (count($enabledActions) == 0)        		
+			        			{
+			        				$this->error("Actions are related to conditions, so you can't add an action if no condition is set");			      
+			        				return;  				
+			        			}						
 								if ($this->arePost('action') && $this->post['action'] !== 'newaction')
 								{
-									$p = $this->post['selected'];
-									$r = Recipe::load($this->post['recipe']);
-				        			$s = $r->getStepById($this->post['step']);   			        			
-									foreach ($s->getDeclaredActions() as $class)
+									$p = $this->post['selected'];									
+				        			$enabledActions = $s->getUnlockedActions();	
+				        			
+									foreach ($enabledActions as $class)
 									{
 										$a = new $class($s);
+										if ($a->isLocked($s->conditions))
+											continue;
 										if (strcmp($a->actionDescription['short_description'],$p) == 0 )
 										{		
 											$this->post['action'] = $a;											
@@ -473,17 +484,15 @@ class AjaxWorker extends ModuleAdminController {
 									}
 								}
 								else if ($this->arePost('type')) 
-								{
-									$r = Recipe::load($this->post['recipe']);
-				        			$s = $r->getStepById($this->post['step']);   			        					
+								{									
 				        			$a = new $this->post['type']($s);
 									$this->post['aid'] = $a->getId();
 									$this->post['action'] = $a;
 								}
 							break;
-							case 'actionDescription':	
-								$r = Recipe::load($this->post['recipe']);
-			        			$s = $r->getStepById($this->post['step']);   			        					
+							case 'actionDescription':									
+			        			if (!isset($this->post['type'])) 			        				
+			        				return;	
 			        			$a = new $this->post['type']($s);
 								$a->id = $this->post['aid'];
 								$this->post['action'] = $a;
@@ -499,7 +508,9 @@ class AjaxWorker extends ModuleAdminController {
 			        		break;
 						}
 					}
-					else $this->post['time'] = 'start';
+					else {						
+						 $this->post['time'] = 'start';
+					}
 					//Time is the switcher on helper	
 					if (!$this->arePost('aid'))	
 						$this->post['aid'] = '';
